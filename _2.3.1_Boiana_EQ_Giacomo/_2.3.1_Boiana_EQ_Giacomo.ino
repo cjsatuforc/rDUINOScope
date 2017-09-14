@@ -24,6 +24,9 @@
 //          
 //  
 //    SOME EDIT:
+//      - ILI9488 SPI TFT display version
+//      - Added AD7873 Touch IC and init funcion + tft message
+//      - Changed color for Name and Description when tracking object
 //      - 
 //
 
