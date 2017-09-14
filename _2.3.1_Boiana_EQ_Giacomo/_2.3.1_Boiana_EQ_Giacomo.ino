@@ -27,7 +27,7 @@
 //      - ILI9488 SPI TFT display version
 //      - Added AD7873 Touch IC and init funcion + tft message
 //      - Changed color for Name and Description when tracking object
-//      - 
+//      - New pin arrangement
 //
 
 // HERE GOES THE Mount, Gears and Drive information.
@@ -65,7 +65,6 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include "DHT.h"
 #include <TinyGPS++.h>
 #include <Time.h>
-//#include <XPT2046_Touchscreen.h>
 #include <XPT2046_Touchscreen.h>
 #include <SPI.h>
 #include <SD.h>
@@ -111,7 +110,7 @@ int sd_cs = 42;
 #define DAY_NIGHT_PIN A6
 
 const String FirmwareDate   = "03 08 17";
-const String FirmwareNumber = "v2.3.1 Boiana EQ";
+const String FirmwareNumber = "v2.3.1 Boiana EQ - giacu92";
 const String FirmwareName   = "rDUINOScope";
 const String FirmwareTime   = "03:14:15";
 
