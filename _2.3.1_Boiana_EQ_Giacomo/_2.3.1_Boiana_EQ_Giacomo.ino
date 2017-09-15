@@ -29,6 +29,8 @@
 //      - Added AD7873 Touch IC and init funcion + tft message
 //      - Changed color for Name and Description when tracking object
 //      - New pin arrangement...
+//      - Custom line can be appended to the .csv files to display custom strings.
+//          Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
 //
 
 // HERE GOES THE Mount, Gears and Drive information.
@@ -590,13 +592,6 @@ void loop(void)
         IS_MANUAL_MOVE = false;
       }
 
-      // TOUCH SCREEN Inputs ? ... if any
-      //uint8_t flag;
-      //int tx, ty;
-      //p=touch.getpos(&flag);
-      //tx=(p.x- 310)/14;
-      //ty=(p.y- 150)/9;
-
       // This will take care of turning OFF the TFT's background light if the device is not used
       // for XXX amont of seconds and IS_IN_OPERATION = TRUE
       if ((TFT_timeout > 0) && (millis() - TFT_Timer > TFT_timeout) && (IS_TFT_ON)&&(IS_IN_OPERATION)){
@@ -610,15 +605,14 @@ void loop(void)
       
       if (myTouch.touched())
       {  
-          uint8_t flag;
           p = myTouch.getPoint();
-          tx = (p.x - 265)/7.3;
-          ty = (p.y - 350)/10.5;
+          tx = (p.x - 208)/7.6;
+          ty = (p.y - 407)/10.46;
 
-          Serial.print(" Touched: ");
-          Serial.print(tx);
-          Serial.print(", y = ");
-          Serial.println(ty);
+          //Serial.print(" Touched: ");
+          //Serial.print(tx);
+          //Serial.print(", y = ");
+          //Serial.println(ty);
        }
       considerTouchInput(ty, tx);
 
@@ -831,8 +825,9 @@ void selectOBJECT_M(int index_, int objects) {
       int i5 = Treasure_Array[index_].indexOf(';',i4+1);
       int i6 = Treasure_Array[index_].indexOf(';',i5+1);
       int i7 = Treasure_Array[index_].indexOf(';',i6+1);
+      int i8 = Treasure_Array[index_].indexOf(';',i7+1);
       OBJECT_NAME = Treasure_Array[index_].substring(0,i1);
-      OBJECT_DESCR = Treasure_Array[index_].substring(i7+1,Treasure_Array[index_].length()-1);
+      OBJECT_DESCR = Treasure_Array[index_].substring(i7+1,i8);
       String OBJ_RA = Treasure_Array[index_].substring(i1,i2);
       OBJECT_RA_H = OBJ_RA.substring(1,OBJ_RA.indexOf('h')).toFloat();
       OBJECT_RA_M = OBJ_RA.substring(OBJ_RA.indexOf('h')+1,OBJ_RA.length()-1).toFloat();
@@ -849,6 +844,7 @@ void selectOBJECT_M(int index_, int objects) {
       OBJECT_DETAILS += Treasure_Array[index_].substring(i3+1,i4) + ", with visible magnitude of ";
       OBJECT_DETAILS += Treasure_Array[index_].substring(i5+1,i6) + " and size of ";
       OBJECT_DETAILS += Treasure_Array[index_].substring(i6+1,i7);
+      OBJECT_DETAILS += "\n" + Treasure_Array[index_].substring(i8+1, Treasure_Array[index_].length()-1);
 
    }else if (objects == 2){                                     // I'm selecting a STAR for Synchronization - 1 Star ALLIGNMENT
       int i1 = Stars[index_].indexOf(';');
