@@ -1,5 +1,13 @@
 #rDUINOScope
 
+ILI9488 SPI version:
+      - Auto data and time settings on clockScreen from GPS data
+      - Added AD7873 (ADS2046/XPT2046) Touch IC. The software is able to detect and display problem with the touch IC.
+      - Changed color for Name and Description when tracking object
+      - Custom line of text can be appended to the .csv files to display custom strings.
+          Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
+      - New pin arrangement...
+
 THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
 rDUINOScope is an Open Source, Arduino Due based Telescope Control System (GOTO). Drafted as stand alone system, rDUINOScope does not need PC, Tablet or Cell Phone, nor Internet connection in order to operate and deliver stunning views! It does however supports Bluetooth and LX200 protocol to connect and be controlled by smart devices!
@@ -17,20 +25,12 @@ HACKADAY.IO Project: https://hackaday.io/project/21024-rduinoscope
 Facebook: https://www.facebook.com/rDUINOScope/
 
 
-#rDUINOScope v2.3.1 Boiana EQ 
+#rDUINOScope _2.3.1_Boiana_EQ_Giacomo
 ===========================================================
 Release date: 03 August 2017
 Status: Stable Version
 Author: Dessislav Gouzgounov / Десислав Гузгнов /(deskog@gmail.com) 
 Edited: Giacomo Mammarella (mammarella.g@gmail.com)
-
-ILI9488 SPI version:
-      - Auto data and time settings on clockScreen
-      - Added AD7873 Touch IC and init funcion + tft message
-      - Changed color for Name and Description when tracking object
-      - New pin arrangement...
-      - Custom line can be appended to the .csv files to display custom strings.
-          Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
 
 v2.3.1 aims to bring all existing hardware platforms into one code base. Additionally this version introduces new features to the rDUINOScope like Screensaver, TFT brightness, MosFET to control power to DRV8825 and etc.
 
