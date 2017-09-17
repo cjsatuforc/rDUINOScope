@@ -2,7 +2,7 @@
 
 ILI9488 SPI version:
       - Auto data and time settings on clockScreen from GPS data
-      - Added AD7873 (ADS2046/XPT2046) Touch IC. The software is able to detect and display problem with the touch IC.
+      - Added AD7873 (TSC2046/XPT2046 compatibile with ADS7843 & AD7843) Touch IC. The software is able to detect and display problem with the touch IC.
       - Changed color for Name and Description when tracking object
       - Custom line of text can be appended to the .csv files to display custom strings.
           Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
