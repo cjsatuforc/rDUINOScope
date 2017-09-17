@@ -6,7 +6,8 @@ ILI9488 SPI version:
       - Changed color for Name and Description when tracking object
       - Custom line of text can be appended to the .csv files to display custom strings.
           Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
-      - New pin arrangement...
+      - Different pin arrangement
+      - Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
 
 THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
