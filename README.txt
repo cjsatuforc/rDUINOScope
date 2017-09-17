@@ -22,7 +22,15 @@ Facebook: https://www.facebook.com/rDUINOScope/
 Release date: 03 August 2017
 Status: Stable Version
 Author: Dessislav Gouzgounov / Десислав Гузгнов /(deskog@gmail.com) 
+Edited: Giacomo Mammarella (mammarella.g@gmail.com)
 
+ILI9488 SPI version:
+      - Auto data and time settings on clockScreen
+      - Added AD7873 Touch IC and init funcion + tft message
+      - Changed color for Name and Description when tracking object
+      - New pin arrangement...
+      - Custom line can be appended to the .csv files to display custom strings.
+          Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
 
 v2.3.1 aims to bring all existing hardware platforms into one code base. Additionally this version introduces new features to the rDUINOScope like Screensaver, TFT brightness, MosFET to control power to DRV8825 and etc.
 
