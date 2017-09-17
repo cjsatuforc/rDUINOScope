@@ -616,13 +616,14 @@ void drawStarMap(){
   tft.setTextSize(2);
   DrawButton(240,5,70,25, "<back", btn_d_border, btn_l_border, btn_l_text, 2);
 
-  // Draw Star Map...
+ // Draw Star Map...
   String PIC_StarMap = "starmap/";
   if (IS_NIGHTMODE){
     PIC_StarMap += "night/";
   }else{
     PIC_StarMap += "day/";
   }
+    
   // Need to calculate which image to show
   // Images are named as in a matrix 
   // (1,8 1,7 1,6 .... 1,1)
@@ -659,48 +660,65 @@ void drawStarMap(){
    map_r = tmp_map_r;
  }
 
+   
    if (!IS_CUSTOM_MAP_SELECTED){
        map_c = tmp_map_c;
        map_r = tmp_map_r;
       // Now decide where is the Telescope Pointing...
       // Only calculate Telescope IF: -70 < DEC < 70 deg.
       if ((DEC_dd < 70) && (DEC_dd > -70)){
-          telescope_X = 240 - (80*((curr_RA_H + curr_RA_M/60) - (tmp_map_c - 1)*3));
+          telescope_X = 320 - (106*((curr_RA_H + curr_RA_M/60) - (tmp_map_c - 1)*3)); 
+        
           if (tmp_map_r == 2){
+            
             if ((DEC_dd > -20) && (DEC_dd < 20)){
-               telescope_Y = 220 + DEC_dd * -5.35;
+               telescope_Y = 280 + DEC_dd * -7.35;  //  Was   -5.35
+               
+         // Example Targets M 15,M53  //M5, M77, M61 > 0 //M2, M14, M73 <0  
+          
             }else if (DEC_dd > 20){
-               telescope_Y = 113 - (DEC_dd - 20) * 7.1;
+               telescope_Y = 138 - (DEC_dd - 20) * 9.1;
+// Example Targets  M1,M64,M3 
+
             }else if (DEC_dd < -20){
-               telescope_Y = 327 + (abs(DEC_dd) - 20) * 7.1;          
+               telescope_Y = 420 + (abs(DEC_dd) - 20) * 9.1; // was 327
+  // Example Targets  M4, M30, M75,M83 
+   
             }
           }else{
             if ((abs(DEC_dd) > 30) && (abs(DEC_dd) < 40)){
-              telescope_Y = 400 - (DEC_dd - 30) * 5.2;
+              telescope_Y = 505 - (DEC_dd - 30) * 7.2;        // Was 483
+    // Example Targets  M13,M36, M37, M38,M57 
+              
+          
             }else if ((abs(DEC_dd) > 40) && (abs(DEC_dd) < 60)){
-               telescope_Y = 347 - (DEC_dd - 40) * 8.4;
+               telescope_Y = 452 - (DEC_dd - 40) * 10.4;              // 438         // Was 8.4
+     // Example Targets   M110 , M92, M39, M102,M101, M51,M63, M76 
+     
             }else if (DEC_dd > 60){
-               telescope_Y = 177 - (DEC_dd - 60) * 13.7;          
+               telescope_Y = 243 - (DEC_dd - 60) * 18.7;   //Was 177    // 13.7
+       // Example Targets  M82, M81                   
             }  
             if (DEC_dd < 0){ 
-              telescope_Y = 400 - telescope_Y;
+              telescope_Y = 480 - telescope_Y; // Was 480                
+      
             }
           }
       }
   }
-  PIC_StarMap += String(map_r) + "-" + String(map_c) + ".bmp";
-  StarMaps = SD.open(PIC_StarMap);
-  drawPic(&StarMaps, 0, 40);
-  StarMaps.close();
+
+char My_Map[50];
+PIC_StarMap += String(map_r) + "-" + String(map_c) + ".bmp";
+PIC_StarMap.toCharArray(My_Map,50);
+bmpDraw(My_Map, 0, 40);
+   
   if (!IS_CUSTOM_MAP_SELECTED){
-    tft.drawCircle(telescope_X, telescope_Y, 7, RED);
+    tft.drawCircle(telescope_X, telescope_Y, 16, RED);
     tft.drawLine(0, telescope_Y, 320, telescope_Y, RED);
     tft.drawLine(telescope_X, 40, telescope_X, 480, RED);
   }
   IS_CUSTOM_MAP_SELECTED = false;
 }
-
-
 
 void drawStarSyncScreen(){
   CURRENT_SCREEN = 12;

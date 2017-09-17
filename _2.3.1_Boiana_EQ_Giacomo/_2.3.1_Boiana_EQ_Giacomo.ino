@@ -25,7 +25,7 @@
 //  
 //    SOME EDIT:
 //      - ILI9488 SPI TFT display version
-//      - Auto data and time settings on clockScreen
+//      - Auto data and time settings from GPS on clockScreen
 //      - Added AD7873 Touch IC and init funcion + tft message
 //      - Changed color for Name and Description when tracking object
 //      - New pin arrangement...
@@ -69,13 +69,13 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <TinyGPS++.h>
 #include <Time.h>
 #include <XPT2046_Touchscreen.h>
-#include <SPI.h>
+//#include <SPI.h>
 #include <SD.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <ILI9488.h>
 #include <DueTimer.h> // interruptions library0
 #include <DS3231.h>
-#include <math.h>
+//#include <math.h>
 
 #include "defines.h"  //notes, colors and stars
 
@@ -1472,73 +1472,112 @@ void DrawButton(int X, int Y, int Width, int Height, String Caption, int16_t Bod
    }
 }
 
+#define BUFFPIXEL 80 
 
-void drawPic(File *StarMaps, uint16_t x, uint16_t y){
-  uint8_t header[14 + 124]; // maximum length of bmp file header
-  uint16_t color[240];     
-  uint8_t color_l, color_h, color_tmp_l, color_tmp_h;
-  uint32_t i,j,k;
-  uint32_t width;
-  uint32_t height;
-  uint16_t bits;
-  uint32_t compression;
-  uint32_t alpha_mask = 0;
-  uint32_t pic_offset, dib_size;
-  
-  /** read header of the bmp file */
-  i=0;
-  while (StarMaps->available()) {
-    header[i] = StarMaps->read();
-    i++;
-    if(i==14){
-      break;
+void bmpDraw(char *filename, uint8_t x, uint16_t y) {
+
+  File     bmpFile;
+  int      bmpWidth, bmpHeight;   // W+H in pixels
+  uint8_t  bmpDepth;              // Bit depth (currently must be 24)
+  uint32_t bmpImageoffset;        // Start of image data in file
+  uint32_t rowSize;               // Not always = bmpWidth; may have padding
+  uint8_t  sdbuffer[3*BUFFPIXEL]; // pixel buffer (R+G+B per pixel)
+  uint8_t  buffidx = sizeof(sdbuffer); // Current position in sdbuffer
+  boolean  goodBmp = false;       // Set to true on valid header parse
+  boolean  flip    = true;        // BMP is stored bottom-to-top
+  int      w, h, row, col;
+  uint8_t  r, g, b;
+  uint32_t pos = 0, startTime = millis();
+
+  if((x >= tft.width()) || (y >= tft.height())) return;
+  // Open requested file on SD card
+  if ((bmpFile = SD.open(filename)) == NULL) {
+    return;
+  }
+  // Parse BMP header
+  if(read16(bmpFile) == 0x4D42) { // BMP signature
+    
+    Serial.println(read32(bmpFile));
+    (void)read32(bmpFile); // Read & ignore creator bytes
+    bmpImageoffset = read32(bmpFile); // Start of image data
+    
+    // Read DIB header
+    Serial.println(read32(bmpFile));
+    bmpWidth  = read32(bmpFile);
+    bmpHeight = read32(bmpFile);
+    if(read16(bmpFile) == 1) { // # planes -- must be '1'
+    bmpDepth = read16(bmpFile); // bits per pixel
+    
+    if((bmpDepth == 24) && (read32(bmpFile) == 0)) { // 0 = uncompressed
+    goodBmp = true; // Supported BMP format -- proceed!
+    // BMP rows are padded (if needed) to 4-byte boundary
+    rowSize = (bmpWidth * 3 + 3) & ~3;
+
+    // If bmpHeight is negative, image is in top-down order.
+    // This is not canon but has been observed in the wild.
+    if(bmpHeight < 0) {
+    bmpHeight = -bmpHeight;
+    flip      = false;
+     }
+        // Crop area to be loaded
+        w = bmpWidth;
+        h = bmpHeight;
+        if((x+w-1) >= tft.width())  w = tft.width()  - x;
+        if((y+h-1) >= tft.height()) h = tft.height() - y;
+
+        // Set TFT address window to clipped image bounds
+        tft.setAddrWindow(x, y, x+w-1, y+h-1);
+
+        for (row=0; row<h; row++) { // For each scanline...
+
+        if(flip) // Bitmap is stored bottom-to-top order (normal BMP)
+          pos = bmpImageoffset + (bmpHeight - 1 - row) * rowSize;
+          else     // Bitmap is stored top-to-bottom
+            pos = bmpImageoffset + row * rowSize;
+          if(bmpFile.position() != pos) { // Need seek?
+            bmpFile.seek(pos);
+            buffidx = sizeof(sdbuffer); // Force buffer reload
+          }
+
+          for (col=0; col<w; col++) { // For each pixel...
+            // Time to read more pixel data?
+            if (buffidx >= sizeof(sdbuffer)) { // Indeed
+              bmpFile.read(sdbuffer, sizeof(sdbuffer));
+              buffidx = 0; // Set index to beginning
+            }
+
+            // Convert pixel from BMP to TFT format, push to display
+            b = sdbuffer[buffidx++];
+            g = sdbuffer[buffidx++];
+            r = sdbuffer[buffidx++];
+            tft.pushColor(tft.color565(r,g,b));
+          } // end pixel
+        } // end scanline
+      } // end goodBmp
     }
   }
-  
-  pic_offset = (((uint32_t)header[0x0A+3])<<24) + (((uint32_t)header[0x0A+2])<<16) + (((uint32_t)header[0x0A+1])<<8)+(uint32_t)header[0x0A];
-  while (StarMaps->available()) {
-    header[i] = StarMaps->read();
-    i++;
-    if(i==pic_offset){
-      break;
-    }
-  }
-  
-  /** calculate picture width ,length and bit numbers of color */
-  width = (((uint32_t)header[0x12+3])<<24) + (((uint32_t)header[0x12+2])<<16) + (((uint32_t)header[0x12+1])<<8)+(uint32_t)header[0x12];
-  height = (((uint32_t)header[0x16+3])<<24) + (((uint32_t)header[0x16+2])<<16) + (((uint32_t)header[0x16+1])<<8)+(uint32_t)header[0x16];
-  compression = (((uint32_t)header[0x1E + 3])<<24) + (((uint32_t)header[0x1E + 2])<<16) + (((uint32_t)header[0x1E + 1])<<8)+(uint32_t)header[0x1E];
-  bits = (((uint16_t)header[0x1C+1])<<8) + (uint16_t)header[0x1C];
-  if(pic_offset>0x42){
-    alpha_mask = (((uint32_t)header[0x42 + 3])<<24) + (((uint32_t)header[0x42 + 2])<<16) + (((uint32_t)header[0x42 + 1])<<8)+(uint32_t)header[0x42];
-  }
+  bmpFile.close();
+ }
 
-  /** set position to pixel table */
-  StarMaps->seek(pic_offset);
-  
-  /** check picture format */
-  if(pic_offset == 70 && alpha_mask == 0){
-    /** 565 format */
-    tft.setRotation(0);
+// These read 16- and 32-bit types from the SD card file.
+// BMP data is stored little-endian, Arduino is little-endian too.
+// May need to reverse subscript order if porting elsewhere.
 
-    /** read from SD card, write to TFT LCD */
-    for(j=0; j<360; j++){
-      for(k=0; k<240; k++){
-          color_l = StarMaps->read();
-          color_h = StarMaps->read();
-          color[k]=0;
-          color[k] += color_h;
-          color[k] <<= 8;
-          color[k] += color_l;
-      }
-      tft.setAddrWindow(x, y+j, x+width-1, y+j);
-      tft.pushColors(color, 240, true);
-      
-      // dummy read twice to align for 4 
-      if(width%2){
-        StarMaps->read();StarMaps->read();
-      }
-    }
-  }
+uint16_t read16(File &f) {
+  uint16_t result;
+  ((uint8_t *)&result)[0] = f.read(); // LSB
+  ((uint8_t *)&result)[1] = f.read(); // MSB
+  return result;
 }
+
+uint32_t read32(File &f) {
+  uint32_t result;
+  ((uint8_t *)&result)[0] = f.read(); // LSB
+  ((uint8_t *)&result)[1] = f.read();
+  ((uint8_t *)&result)[2] = f.read();
+  ((uint8_t *)&result)[3] = f.read(); // MSB
+  return result;
+}
+
+
 
