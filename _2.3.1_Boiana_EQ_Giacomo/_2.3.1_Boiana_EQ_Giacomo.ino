@@ -75,15 +75,15 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <ILI9488.h>
 #include <DueTimer.h> // interruptions library0
 #include <DS3231.h>
-//#include <math.h>
+#include <math.h>
 
 #include "defines.h"  //notes, colors and stars
 
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
-#define TFT_CS  10
-#define TFT_DC   9
-#define TFT_RST 13
+#define TFT_CS  47
+#define TFT_DC  48
+#define TFT_RST 46
 
 ILI9488 tft(TFT_CS, TFT_DC, TFT_RST);
 
@@ -237,12 +237,12 @@ int DEC_DIR = 7;
 // int RA_MODE1 = 13;
 // int RA_MODE2 = 12;
 
-int RA_MODE0 = 30;     
-int RA_MODE1 = 31;
-int RA_MODE2 = 32;
-int DEC_MODE0 = 33;     
-int DEC_MODE1 = 34;
-int DEC_MODE2 = 35;
+int RA_MODE0 = 11;     
+int RA_MODE1 = 13;
+int RA_MODE2 = 12;
+int DEC_MODE0 = 10;     
+int DEC_MODE1 = 9;
+int DEC_MODE2 = 8;
 // RTC (A4, A5); // (SDA, SCL) from the RTC board
 // 17 (RX) - goes to TX on GPS;
 // 16 (TX) - goes to RX on GPS;
@@ -520,12 +520,9 @@ void setup(void)
 
 void loop(void)
 {
-  //considerTimeUpdates();
-  //return;
   // This is done in order to prevent multiple calculations of LST_HA per second (especially while SlewTo) and only 
   // do it once the DEC SlewTo slows down, but before stopping OR once every 10 seconds (in order to do the Meridian Flip)
-  if (RA_move_ending == 1)
-  {
+  if (RA_move_ending == 1){
      calculateLST_HA();
   }
 
@@ -550,10 +547,8 @@ void loop(void)
 
     // HINT: you can try to play with the Current/Voltage that powers the mottors to get faster speeds.
     if (IS_STEPPERS_ON){
-      //cosiderSlewTo();
-    }
-    else
-    {
+      cosiderSlewTo();
+    }else{
       IS_OBJECT_RA_FOUND = true;
       IS_OBJECT_DEC_FOUND = true;
       IS_OBJ_FOUND = true;
@@ -568,14 +563,14 @@ void loop(void)
   // The fastes possible from this board in the current state of the software is approx 3 turns/sec (600 steps/sec)
   // IS_OBJ_FOUND == true --> Means that SLEW command have completed
   //
+   if (IS_OBJ_FOUND == true){    
 
-  if (IS_OBJ_FOUND == true)
-  {
+
       // BLUETOOTH Considerations ? ... if any
       if ((IS_BT_MODE_ON == true)&&(Serial3.available()>0)&&(IS_MANUAL_MOVE == false)){
            BT_COMMAND_STR = Serial3.readStringUntil('#');
            //Serial.println(BT_COMMAND_STR);
-           //considerBTCommands();
+           considerBTCommands();
       }
 
 
@@ -583,8 +578,8 @@ void loop(void)
       xPosition = analogRead(xPin);
       yPosition = analogRead(yPin);
       
-      if ((xPosition < 470) || (xPosition > 620) || (yPosition < 470) || (yPosition > 620)){
-        IS_MANUAL_MOVE = false;
+      if ((xPosition < 500) || (xPosition > 800) || (yPosition < 500) || (yPosition > 800)){
+         IS_MANUAL_MOVE = false;
         if (IS_STEPPERS_ON){
           //consider_Manual_Move(xPosition, yPosition);
         }
