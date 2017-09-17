@@ -198,9 +198,23 @@ void drawMainScreen(){
   tft.print(_humid,0);
   tft.setCursor(295, 65);
   tft.print("%");
-  tft.setTextColor(l_text);
-  tft.setCursor(1, 98);
+
   tft.setTextSize(1.5);
+  tft.setTextColor(btn_l_border); //  Green   >>> Beautiful
+  tft.setCursor(1, 98);
+  tft.print("Date:");
+  tft.setCursor(110, 98);
+  tft.print("@");
+
+ tft.setTextColor(l_text);
+  tft.setCursor(35, 98);
+  tft.print(String(rtc.getDateStr()).substring(0,2));
+  tft.print(" ");
+  tft.print(rtc.getMonthStr(FORMAT_SHORT));
+  tft.print(" ");
+  tft.print(String(rtc.getDateStr()).substring(6));
+  
+  tft.setCursor(120, 98);
   tft.print("LAT:");
   tft.print(OBSERVATION_LATTITUDE,4);
   tft.print(" LONG:");
@@ -1011,14 +1025,14 @@ void drawMainScreen_Menu(int fill){
           DrawButton( 110, 405, 100, 70, "+", 0, btn_l_border, btn_l_text, 2);
       }
       if (IS_DEV1_ON){
-          DrawButton( 220, 325, 100, 70, "DEV 1", btn_d_border, btn_l_border, btn_l_text, 2);
+          DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
       }else{
-          DrawButton( 220, 325, 100, 70, "DEV 1", 0, btn_l_border, btn_l_text, 2);
+          DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
       }
       if (IS_DEV2_ON){
-          DrawButton( 220, 405, 100, 70, "DEV 2", btn_d_border, btn_l_border, btn_l_text, 2);
+          DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
       }else{
-          DrawButton( 220, 405, 100, 70, "DEV 2", 0, btn_l_border, btn_l_text, 2);
+          DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
       }
       MAIN_SCREEN_MENU = 1;
   }

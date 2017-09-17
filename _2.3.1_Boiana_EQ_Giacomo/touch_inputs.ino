@@ -966,12 +966,12 @@ void considerTouchInput(int lx, int ly){
          if (IS_DEV1_ON){
             IS_DEV1_ON = false;
             tft.fillRect(220, 325, 100, 70,BLACK);
-            DrawButton( 220, 325, 100, 70, "DEV 1", 0, btn_l_border, btn_l_text, 2);
+            DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(DEV1,LOW);
          }else{
             IS_DEV1_ON = true;
             tft.fillRect(220, 325, 100, 70,BLACK);
-            DrawButton( 220, 325, 100, 70, "DEV 1", btn_d_border, btn_l_border, btn_l_text, 2);
+            DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
             digitalWrite(DEV1,HIGH);     
     
          }
@@ -985,12 +985,12 @@ void considerTouchInput(int lx, int ly){
          if (IS_DEV2_ON){
             IS_DEV2_ON = false;
             tft.fillRect(220, 405, 100, 70,BLACK);
-            DrawButton( 220, 405, 100, 70, "DEV 2", 0, btn_l_border, btn_l_text, 2);
+            DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(DEV2,LOW);
          }else{
             IS_DEV2_ON = true;
             tft.fillRect(220, 405, 100, 70,BLACK);
-            DrawButton( 220, 405, 100, 70, "DEV 2", btn_d_border, btn_l_border, btn_l_text, 2);
+            DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
             digitalWrite(DEV2,HIGH);
          }
         }
