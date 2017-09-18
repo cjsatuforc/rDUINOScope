@@ -81,11 +81,12 @@ void drawGPSScreen(){
   tft.setCursor(90, 440);
   tft.print("Will assign coordinates");
   tft.setCursor(100, 450);
-  tft.print("for Chieti, Italy");
+  tft.print("for Sofia, Bulgaria");
 }
 
 
-void drawClockScreen(){
+void drawClockScreen()
+{
   CURRENT_SCREEN = 1;
   tft.fillScreen(BLACK);
   tft.fillRect(0, 0, 400, 50, title_bg);
@@ -149,29 +150,160 @@ void drawSelectAlignment(){
 }
 
 
-void drawMainScreen(){
+void drawMainScreen()
+{
   tft.fillScreen(BLACK);
   CURRENT_SCREEN = 4;
   w_DateTime[0] = 0;
   calculateLST_HA();
   update_time = millis();
   tft.fillScreen(BLACK);
-  tft.fillRect(1, 1, 400, 90, title_bg);
-  tft.drawLine(0, 92, 400, 92, title_bg);
-  tft.setTextColor(title_texts);
+  tft.fillRect(0, 1, 320, 90, title_bg);
+  tft.drawLine(0, 27, 320, 27, Button_State_OFF);
+  tft.drawLine(0, 92, 320, 92, title_bg);
+   
+tft.setTextSize(1);
+tft.setTextColor(Button_Title);
+
+tft.setCursor(3, 4);
+tft.print("Bright");
+
+tft.setCursor(47, 4);
+tft.print("T-out");
+
+tft.setCursor(85, 4);
+tft.print("Track-M");
+
+tft.setCursor(138, 4);
+tft.print("Mer-F");
+
+tft.setCursor(177, 4);
+tft.print("Fan1");
+
+tft.setCursor(210, 4);
+tft.print("Fan2");
+
+tft.setCursor(244, 4);
+tft.print("Sound");
+
+tft.setCursor(283, 4);
+tft.print("Motors");
+
+
+if(TFT_Brightness>=254)
+{ 
+tft.setTextColor(Button_State_ON);
+tft.setCursor(5, 15);
+tft.print(TFT_Brightness*100/255);
+}
+
+if(TFT_Brightness<=253)
+{ 
+tft.setTextColor(Button_State_OFF);
+tft.setCursor(5, 15);
+tft.print(TFT_Brightness*100/255);
+}
+
+tft.setCursor(30, 15);
+tft.print("%");
+
+tft.setCursor(47, 15);
+tft.setTextColor(Button_State_ON);
+tft.print(TFT_Time);
+
+if (Tracking_Mode=="Celest") {
+tft.setCursor(88, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("Celest");
+}
+
+if (Tracking_Mode=="Lunar") {
+tft.setCursor(88, 15);
+ tft.setTextColor(Button_State_OFF);
+  tft.print("Lunar");
+}
+
+if (Tracking_Mode=="Solar") {
+tft.setCursor(88, 15);
+ tft.setTextColor(Purple);
+  tft.print("Solar");
+}
+
+tft.setCursor(141, 15);
+ tft.setTextColor(Button_State_ON);
+ tft.print("AUTO");
+ 
+if (Mer_Flip_State=="AUTO") {
+   tft.fillRect(140,14,30,10, title_bg);
+tft.setCursor(141, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("AUTO");
+}
+
+if (Mer_Flip_State=="OFF") {
+tft.fillRect(140,14,30,10, title_bg);
+tft.setCursor(141, 15);
+ tft.setTextColor(Button_State_OFF);
+  tft.print("OFF");
+}
+
+if (Fan1_State=="ON") {
+  tft.setCursor(180, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("ON");
+}
+
+if (Fan1_State=="OFF") {
+  tft.setCursor(180, 15);
+  tft.setTextColor(Button_State_OFF);
+  tft.print("OFF");
+}
+
+if (Fan2_State=="ON") {
+  tft.setCursor(214, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("ON");
+}
+
+if (Fan2_State=="OFF") {
+  tft.setCursor(214, 15);
+  tft.setTextColor(Button_State_OFF);
+  tft.print("OFF");
+}
+
+if (Sound_State=="ON") {
+  tft.setCursor(252, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("ON");
+}
+
+if (Sound_State=="OFF") {
+  tft.setCursor(252, 15);
+  tft.setTextColor(Button_State_OFF);
+  tft.print("OFF");
+}
+
+if (Stepper_State=="ON") {
+tft.setCursor(292, 15);
+ tft.setTextColor(Button_State_ON);
+  tft.print("ON");
+}
+
+if (Stepper_State=="OFF") {
+tft.setCursor(292, 15);
+tft.setTextColor(Button_State_OFF);
+  tft.print("OFF");
+}
+
+tft.setTextColor(title_texts);
+
   tft.setTextSize(3);
-  tft.setCursor(60, 8);
-  tft.print(String(rtc.getDateStr()).substring(0,2));
-  tft.print(" ");
-  tft.print(rtc.getMonthStr(FORMAT_SHORT));
-  tft.print(" ");
-  tft.print(String(rtc.getDateStr()).substring(6));
-  tft.setCursor(6, 35);
+  tft.setCursor(1, 35);
   tft.setTextSize(3);
   tft.print("Time:");
   tft.print(String(rtc.getTimeStr()).substring(0,5));
   
-  tft.setCursor(6, 65);
+  tft.setCursor(1, 65);
   tft.print("LST :");
   if ((int)LST < 10){
     tft.print("0");
@@ -187,34 +319,48 @@ void drawMainScreen(){
     tft.print((LST - (int)LST)*60, 0);
   }
 
-  tft.setCursor(240, 35);
+  tft.setTextSize(2);
+  tft.setTextColor(Button_Title);
+
+  tft.setCursor(195, 36);
+  tft.print("Temp:");
+
+  tft.setCursor(195, 69);
+  tft.print("Hum:");
+
+  tft.setTextSize(2);
+  tft.setTextColor(title_texts);
+
+  tft.setCursor(261, 38);
   tft.print(_temp,0);
-  tft.setCursor(285, 35);
+  tft.setCursor(290, 33);
   tft.setTextSize(2);
   tft.print("o");
-  tft.setTextSize(3);
+  tft.setTextSize(2);
+  tft.setCursor(305, 38);
   tft.print("C");
-  tft.setCursor(240, 65);
+  tft.setCursor(261, 70);
   tft.print(_humid,0);
-  tft.setCursor(295, 65);
+  tft.setCursor(300, 70);
   tft.print("%");
 
-  tft.setTextSize(1.5);
+  tft.setTextSize(1);
   tft.setTextColor(btn_l_border); //  Green   >>> Beautiful
-  tft.setCursor(1, 98);
+  
+  tft.setCursor(1, 102);
   tft.print("Date:");
-  tft.setCursor(110, 98);
+  tft.setCursor(110, 102);
   tft.print("@");
-
- tft.setTextColor(l_text);
-  tft.setCursor(35, 98);
+  
+  tft.setTextColor(l_text);
+  tft.setCursor(35, 102);
   tft.print(String(rtc.getDateStr()).substring(0,2));
   tft.print(" ");
   tft.print(rtc.getMonthStr(FORMAT_SHORT));
   tft.print(" ");
   tft.print(String(rtc.getDateStr()).substring(6));
   
-  tft.setCursor(120, 98);
+  tft.setCursor(120, 102);
   tft.print("LAT:");
   tft.print(OBSERVATION_LATTITUDE,4);
   tft.print(" LONG:");
@@ -362,10 +508,7 @@ void drawLoadScreen(){
  DrawButton(210,5,100,40, "<Back", btn_d_border, btn_l_border, btn_l_text, 3);
  DrawButton(0,420,100,60, "< Prev", btn_d_border, btn_l_border, btn_l_text, 2);
  DrawButton(220,420,100,60, "Next >", btn_d_border, btn_l_border, btn_l_text, 2);
-
-
-
-   
+ 
       ///////     Messier Screen /////////////
       
    if (LOAD_SELECTOR == 1){
@@ -441,7 +584,13 @@ void drawOptionsScreen(){
   // Screen Brightnes
   tft.setCursor(5, 140);
   tft.println("Screen Brightnes");
+
+   if (TFTBright>=240){
+    DrawButton(275,160,45,40, "MAX", btn_d_border, btn_l_border, btn_l_text, 1);
+ }else{
   DrawButton(275,160,45,40, "MAX", 0, btn_l_border, btn_l_text, 1);
+  }
+  
   tft.fillTriangle(5,200,265,200,265,155,btn_d_border);
 
   // Screen Brightnes
@@ -482,7 +631,6 @@ void drawOptionsScreen(){
     DrawButton(275,230,45,40, "10m", 0, btn_l_border, btn_l_text, 1);
   }
   
-
   // Auto Meridian Flip
   tft.setCursor(5, 280);
   tft.setTextSize(2.5);
@@ -491,11 +639,10 @@ void drawOptionsScreen(){
       DrawButton(0,300,100,40, "Auto", btn_d_border, btn_l_border, btn_l_text, 2);
       DrawButton(110,300,100,40, "OFF", 0, btn_l_border, btn_l_text, 2);
   }else{
-      DrawButton(0,300,100,40, "ON", 0, btn_l_border, btn_l_text, 2);
+      DrawButton(0,300,100,40, "AUTO", 0, btn_l_border, btn_l_text, 2);
       DrawButton(110,300,100,40, "OFF", btn_d_border, btn_l_border, btn_l_text, 2);    
   }
 
- //tft.drawLine (5, 195, 235, 195, btn_l_text);
 
   // Sound On/Off
   tft.setCursor(5, 350);
@@ -615,125 +762,6 @@ void drawSTATScreen(){
             }
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void drawStarMap(){
-  CURRENT_SCREEN = 11;
-  tft.fillScreen(BLACK);;
-  tft.fillRect(1, 1, 319, 35, title_bg);
-  tft.drawLine(0, 37, 320, 37, title_bg);
-  tft.setCursor(10, 6);
-  tft.setTextColor(title_texts);
-  tft.setTextSize(3);
-  tft.print("StarMap");
-  tft.setTextColor(btn_l_text);
-  tft.setTextSize(2);
-  DrawButton(240,5,70,25, "<back", btn_d_border, btn_l_border, btn_l_text, 2);
-
- // Draw Star Map...
-  String PIC_StarMap = "starmap/";
-  if (IS_NIGHTMODE){
-    PIC_StarMap += "night/";
-  }else{
-    PIC_StarMap += "day/";
-  }
-    
-  // Need to calculate which image to show
-  // Images are named as in a matrix 
-  // (1,8 1,7 1,6 .... 1,1)
-  // (2,8 2,7 2,6 .... 2,1)
-  // (3,8 3,7 3,6 .... 3,1)
-  // 1,1  = DEC > 30 deg and 3h > RA > 0h;
-  // 1,2  = DEC > 30 deg and 6h> RA > 3h;
-  // 2,1 = -30 deg > DEC > 30 deg and 3h > RA > 0h;
-  // ......
-
-  Current_RA_DEC();
-  float DEC_dd = curr_DEC_D + curr_DEC_M/60;
-  int telescope_X = 0;
-  int telescope_Y = 0;
-
-  int tmp_map_r = 0;
-  int tmp_map_c = 0;
-        if (DEC_dd > 30){
-          tmp_map_r = 1;
-        }else if (DEC_dd < -30){
-          tmp_map_r = 3;
-        }else{
-          tmp_map_r = 2;
-        }
-        tmp_map_c = int((curr_RA_H+curr_RA_M/60)/3)+1;
-
- if ((tmp_map_c == map_c) && (tmp_map_r == map_r)){
-    IS_CUSTOM_MAP_SELECTED = false;
- }
- 
- // First time only after you Start the rDUINOScope map, it needs this routine!
- if ((map_c == 0) && (map_r == 0)){
-   map_c = tmp_map_c;
-   map_r = tmp_map_r;
- }
-
-   
-   if (!IS_CUSTOM_MAP_SELECTED){
-       map_c = tmp_map_c;
-       map_r = tmp_map_r;
-      // Now decide where is the Telescope Pointing...
-      // Only calculate Telescope IF: -70 < DEC < 70 deg.
-      if ((DEC_dd < 70) && (DEC_dd > -70)){
-          telescope_X = 320 - (106*((curr_RA_H + curr_RA_M/60) - (tmp_map_c - 1)*3)); 
-        
-          if (tmp_map_r == 2){
-            
-            if ((DEC_dd > -20) && (DEC_dd < 20)){
-               telescope_Y = 280 + DEC_dd * -7.35;  //  Was   -5.35
-               
-         // Example Targets M 15,M53  //M5, M77, M61 > 0 //M2, M14, M73 <0  
-          
-            }else if (DEC_dd > 20){
-               telescope_Y = 138 - (DEC_dd - 20) * 9.1;
-// Example Targets  M1,M64,M3 
-
-            }else if (DEC_dd < -20){
-               telescope_Y = 420 + (abs(DEC_dd) - 20) * 9.1; // was 327
-  // Example Targets  M4, M30, M75,M83 
-   
-            }
-          }else{
-            if ((abs(DEC_dd) > 30) && (abs(DEC_dd) < 40)){
-              telescope_Y = 505 - (DEC_dd - 30) * 7.2;        // Was 483
-    // Example Targets  M13,M36, M37, M38,M57 
-              
-          
-            }else if ((abs(DEC_dd) > 40) && (abs(DEC_dd) < 60)){
-               telescope_Y = 452 - (DEC_dd - 40) * 10.4;              // 438         // Was 8.4
-     // Example Targets   M110 , M92, M39, M102,M101, M51,M63, M76 
-     
-            }else if (DEC_dd > 60){
-               telescope_Y = 243 - (DEC_dd - 60) * 18.7;   //Was 177    // 13.7
-       // Example Targets  M82, M81                   
-            }  
-            if (DEC_dd < 0){ 
-              telescope_Y = 480 - telescope_Y; // Was 480                
-      
-            }
-          }
-      }
-  }
-
-char My_Map[50];
-PIC_StarMap += String(map_r) + "-" + String(map_c) + ".bmp";
-PIC_StarMap.toCharArray(My_Map,50);
-bmpDraw(My_Map, 0, 40);
-   
-  if (!IS_CUSTOM_MAP_SELECTED){
-    tft.drawCircle(telescope_X, telescope_Y, 16, RED);
-    tft.drawLine(0, telescope_Y, 320, telescope_Y, RED);
-    tft.drawLine(telescope_X, 40, telescope_X, 480, RED);
-  }
-  IS_CUSTOM_MAP_SELECTED = false;
-}
-
 void drawStarSyncScreen(){
   CURRENT_SCREEN = 12;
    tft.fillScreen(BLACK);
@@ -749,7 +777,6 @@ void drawStarSyncScreen(){
 
   tft.fillRect(0, 414, 320, 2, btn_d_border);
   tft.drawLine(0, 415, 320, 415, btn_l_border);
-  
    
    DrawButton(0,420,100,60, "< Prev", btn_d_border, btn_l_border, btn_l_text, 2);
    DrawButton(220,420,100,60, "Next >", btn_d_border, btn_l_border, btn_l_text, 2);
@@ -925,7 +952,7 @@ void OnScreenMsg(int Msg){
 
 void considerDayNightMode(){
   boolean prev_night_mode = IS_NIGHTMODE;
-          if (analogRead(A6) > 800){
+          if (analogRead(DAY_NIGHT_PIN) > 800){
               IS_NIGHTMODE = true;
           } else {
               IS_NIGHTMODE = false;
@@ -933,33 +960,41 @@ void considerDayNightMode(){
       // Now make sure it works for all screen - redraws them when mode switched  
       if (prev_night_mode != IS_NIGHTMODE){
          if (IS_NIGHTMODE == true){   // Night Mode
-            texts = Maroon;
-            l_text = RED;
-            d_text = Maroon;
-            title_bg = RED;
-            title_texts = BLACK;
-            messie_btn = Maroon;
-            btn_l_text = RED;
-            btn_d_text = Maroon;
-            btn_l_border = RED;
-            btn_d_border = Maroon;
-            btn_l_selection = RED;
-            MsgBox_bg = RED;
-            MsgBox_t = BLACK;
-         }else{     // Day Mode
-            texts = LightGrey;
-            l_text = WHITE;
-            d_text = LightGrey;
-            btn_l_text = GreenYellow;
-            btn_d_text = DarkGreen;
-            btn_l_border = GREEN;
-            btn_d_border = DarkGreen;
-            btn_l_selection = DarkGreen;
-            title_bg = Orange;
-            title_texts = BLACK;
-            messie_btn = DarkGrey;
-            MsgBox_bg = Purple;
-            MsgBox_t = GreenYellow;
+             IS_NIGHTMODE = true;
+    texts = Maroon;
+    l_text = RED;
+    d_text = Maroon;
+    title_bg = RED;
+    title_texts = BLACK;
+    messie_btn = Maroon;
+    btn_l_text = RED;
+    btn_d_text = Maroon;
+    btn_l_border = RED;
+    btn_d_border = Maroon;
+    btn_l_selection = RED;
+    MsgBox_bg = RED;
+    MsgBox_t = BLACK;
+    Button_State_ON=BLACK;
+   Button_State_OFF=BLACK;
+   Button_Title=BLACK;
+  } else {
+    IS_NIGHTMODE = false;
+    texts = LightGrey;
+    l_text = WHITE;
+    d_text = LightGrey;
+    btn_l_text = GreenYellow;
+    btn_d_text = DarkGreen;
+    btn_l_border = GREEN;
+    btn_d_border = DarkGreen;
+    btn_l_selection = DarkGreen;
+    title_bg = Orange;
+    title_texts = BLACK;
+    messie_btn = DarkGrey;
+    MsgBox_bg = Purple;
+    MsgBox_t = GreenYellow;
+    Button_State_ON=DarkGreen;
+    Button_State_OFF=RED;
+    Button_Title=Purple;
          } 
 
           if (CURRENT_SCREEN == 0){
@@ -1024,12 +1059,12 @@ void drawMainScreen_Menu(int fill){
           DrawButton( 1, 405, 100, 70, "", 0, btn_d_border, btn_l_text, 2);
           DrawButton( 110, 405, 100, 70, "+", 0, btn_l_border, btn_l_text, 2);
       }
-      if (IS_DEV1_ON){
+      if (IS_FAN1_ON){
           DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
       }else{
           DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
       }
-      if (IS_DEV2_ON){
+      if (IS_FAN2_ON){
           DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
       }else{
           DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
@@ -1065,4 +1100,271 @@ void TimerUpdateDraw(int z){
    }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void drawStarMap(){
+  CURRENT_SCREEN = 11;
+  tft.fillScreen(BLACK);;
+  tft.fillRect(1, 1, 319, 35, title_bg);
+  tft.drawLine(0, 37, 320, 37, title_bg);
+  tft.setCursor(10, 6);
+  tft.setTextColor(title_texts);
+  tft.setTextSize(3);
+  tft.print("StarMap");
+  tft.setTextColor(btn_l_text);
+  tft.setTextSize(2);
+  DrawButton(240,5,70,25, "<back", btn_d_border, btn_l_border, btn_l_text, 2);
+
+ // Draw Star Map...
+  String PIC_StarMap = "starmap/";
+  if (IS_NIGHTMODE){
+    PIC_StarMap += "night/";
+  }else{
+    PIC_StarMap += "day/";
+  }
+    
+  // Need to calculate which image to show
+  // Images are named as in a matrix 
+  // (1,8 1,7 1,6 .... 1,1)
+  // (2,8 2,7 2,6 .... 2,1)
+  // (3,8 3,7 3,6 .... 3,1)
+  // 1,1  = DEC > 30 deg and 3h > RA > 0h;
+  // 1,2  = DEC > 30 deg and 6h> RA > 3h;
+  // 2,1 = -30 deg > DEC > 30 deg and 3h > RA > 0h;
+  // ......
+
+  Current_RA_DEC();
+  float DEC_dd = curr_DEC_D + curr_DEC_M/60;
+  int telescope_X = 0;
+  int telescope_Y = 0;
+
+  int tmp_map_r = 0;
+  int tmp_map_c = 0;
+        if (DEC_dd > 30){
+          tmp_map_r = 1;
+        }else if (DEC_dd < -30){
+          tmp_map_r = 3;
+        }else{
+          tmp_map_r = 2;
+        }
+        tmp_map_c = int((curr_RA_H+curr_RA_M/60)/3)+1;
+
+ if ((tmp_map_c == map_c) && (tmp_map_r == map_r)){
+    IS_CUSTOM_MAP_SELECTED = false;
+ }
+ 
+ // First time only after you Start the rDUINOScope map, it needs this routine!
+ if ((map_c == 0) && (map_r == 0)){
+   map_c = tmp_map_c;
+   map_r = tmp_map_r;
+ }
+
+   
+   if (!IS_CUSTOM_MAP_SELECTED){
+       map_c = tmp_map_c;
+       map_r = tmp_map_r;
+      // Now decide where is the Telescope Pointing...
+      // Only calculate Telescope IF: -70 < DEC < 70 deg.
+      if ((DEC_dd < 70) && (DEC_dd > -70)){
+          telescope_X = 320 - (106*((curr_RA_H + curr_RA_M/60) - (tmp_map_c - 1)*3)); 
+        
+          if (tmp_map_r == 2){
+            
+            if ((DEC_dd > -20) && (DEC_dd < 20)){
+               telescope_Y = 280 + DEC_dd * -7.35;  //  Was   -5.35
+               
+         // Example Targets M 15,M53  //M5, M77, M61 > 0 //M2, M14, M73 <0  
+          
+            }else if (DEC_dd > 20){
+               telescope_Y = 138 - (DEC_dd - 20) * 9.1;
+// Example Targets  M1,M64,M3 
+
+            }else if (DEC_dd < -20){
+               telescope_Y = 420 + (abs(DEC_dd) - 20) * 9.1; // was 327
+  // Example Targets  M4, M30, M75,M83 
+   
+            }
+          }else{
+            if ((abs(DEC_dd) > 30) && (abs(DEC_dd) < 40)){
+              telescope_Y = 505 - (DEC_dd - 30) * 7.2;        // Was 483
+    // Example Targets  M13,M36, M37, M38,M57 
+              
+          
+            }else if ((abs(DEC_dd) > 40) && (abs(DEC_dd) < 60)){
+               telescope_Y = 452 - (DEC_dd - 40) * 10.4;              // 438         // Was 8.4
+     // Example Targets   M110 , M92, M39, M102,M101, M51,M63, M76 
+     
+            }else if (DEC_dd > 60){
+               telescope_Y = 243 - (DEC_dd - 60) * 18.7;   //Was 177    // 13.7
+       // Example Targets  M82, M81                   
+            }  
+            if (DEC_dd < 0){ 
+              telescope_Y = 480 - telescope_Y; // Was 480                
+      
+            }
+          }
+      }
+  }
+
+char My_Map[50];
+PIC_StarMap += String(map_r) + "-" + String(map_c) + ".bmp";
+PIC_StarMap.toCharArray(My_Map,50);
+bmpDraw(My_Map, 0, 40);
+   
+  if (!IS_CUSTOM_MAP_SELECTED){
+    tft.drawCircle(telescope_X, telescope_Y, 16, RED);
+    tft.drawLine(0, telescope_Y, 320, telescope_Y, RED);
+    tft.drawLine(telescope_X, 40, telescope_X, 480, RED);
+  }
+  IS_CUSTOM_MAP_SELECTED = false;
+}
+
+void drawStatusBar()
+{
+  tft.fillRect(0, 1, 320, 26, title_bg);
+     
+  tft.setTextSize(1);
+  tft.setTextColor(Button_Title);
+  
+  tft.setCursor(3, 4);
+  tft.print("Bright");
+  
+  tft.setCursor(47, 4);
+  tft.print("T-out");
+  
+  tft.setCursor(85, 4);
+  tft.print("Track-M");
+  
+  tft.setCursor(138, 4);
+  tft.print("Mer-F");
+  
+  tft.setCursor(177, 4);
+  tft.print("Fan1");
+  
+  tft.setCursor(210, 4);
+  tft.print("Fan2");
+  
+  tft.setCursor(244, 4);
+  tft.print("Sound");
+  
+  tft.setCursor(283, 4);
+  tft.print("Motors");
+
+  if(TFT_Brightness>=254)
+  { 
+    tft.setTextColor(Button_State_ON);
+    tft.setCursor(5, 15);
+    tft.print(TFT_Brightness*100/255);
+  }
+  
+  if(TFT_Brightness<=253)
+  { 
+    tft.setTextColor(Button_State_OFF);
+    tft.setCursor(5, 15);
+    tft.print(TFT_Brightness*100/255);
+  }
+  
+  tft.setCursor(30, 15);
+  tft.print("%");
+  
+  tft.setCursor(47, 15);
+  tft.setTextColor(Button_State_ON);
+  tft.print(TFT_Time);
+  
+  if (Tracking_Mode=="Celest")
+  {
+    tft.setCursor(88, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("Celest");
+  }
+  
+  if (Tracking_Mode=="Lunar")
+  {
+    tft.setCursor(88, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("Lunar");
+  }
+  
+  if (Tracking_Mode=="Solar")
+  {
+    tft.setCursor(88, 15);
+    tft.setTextColor(Purple);
+    tft.print("Solar");
+  }
+  
+  tft.setCursor(141, 15);
+  tft.setTextColor(Button_State_ON);
+  tft.print("AUTO");
+   
+  if (Mer_Flip_State=="AUTO")
+  {
+    tft.fillRect(140,14,30,10, title_bg);
+    tft.setCursor(141, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("AUTO");
+  }
+  
+  if (Mer_Flip_State=="OFF")
+  {
+    tft.fillRect(140,14,30,10, title_bg);
+    tft.setCursor(141, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("OFF");
+  }
+  
+  if (Fan1_State=="ON")
+  {
+    tft.setCursor(180, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("ON");
+  }
+  
+  if (Fan1_State=="OFF")
+  {
+    tft.setCursor(180, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("OFF");
+  }
+  
+  if (Fan2_State=="ON")
+  {
+    tft.setCursor(214, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("ON");
+  }
+  
+  if (Fan2_State=="OFF")
+  {
+    tft.setCursor(214, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("OFF");
+  }
+  
+  if (Sound_State=="ON")
+  {
+    tft.setCursor(252, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("ON");
+  }
+  
+  if (Sound_State=="OFF")
+  {
+    tft.setCursor(252, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("OFF");
+  }
+  
+  if (Stepper_State=="ON") 
+  {
+    tft.setCursor(292, 15);
+    tft.setTextColor(Button_State_ON);
+    tft.print("ON");
+  }
+  
+  if (Stepper_State=="OFF")
+  {
+    tft.setCursor(292, 15);
+    tft.setTextColor(Button_State_OFF);
+    tft.print("OFF");
+  }
+}
 

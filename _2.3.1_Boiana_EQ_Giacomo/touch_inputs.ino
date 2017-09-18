@@ -206,7 +206,8 @@ void considerTouchInput(int lx, int ly){
 
        
     }else if (CURRENT_SCREEN == 4){     // captures touches on drawMainScreen()
-      if (lx > 0 && lx < 90 && ly > 0 && ly < 90){
+      if (lx > 0 && lx < 90 && ly > 0 && ly < 100){
+       // Left Side Touched
        // Load the GPS screen to capture new data && correct time if needed on the next screen (Time Screen)
          tft.drawRect(0,0,90,90, btn_l_border);
          CURRENT_SCREEN =0;
@@ -215,6 +216,12 @@ void considerTouchInput(int lx, int ly){
          ALLIGN_STEP = 0;
          ALLIGN_TYPE = 0; 
          drawGPSScreen();
+      }
+
+      if (lx > 250 && lx < 320 && ly > 0 && ly < 100){
+         tft.drawRect(250,0,90,90, btn_l_border);
+       // Right Side Touched
+        drawOptionsScreen();
       }
       if (lx > 1 && lx < 100 && ly > 325 && ly < 395 && IS_BT_MODE_ON == false){
        // BTN 1 pressed
@@ -273,9 +280,6 @@ void considerTouchInput(int lx, int ly){
        // BTN back pressed
          drawMainScreen();
        }
-
-
-
        
     }else if (CURRENT_SCREEN == 6){   // captures touches on drawLoadScreen() .. the one that loads objects from DB
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
@@ -369,8 +373,6 @@ void considerTouchInput(int lx, int ly){
               }
             }
          }
-
-
                ///////     Treasures Screen /////////////
 
        }else if (LOAD_SELECTOR == 2){       
@@ -421,72 +423,86 @@ void considerTouchInput(int lx, int ly){
         if (lx > 0 && lx < 100 && ly > 85 && ly < 125){
        // Celestial Tracking Selected
          Tracking_type = 1;
+         Tracking_Mode="Celest";
          drawOptionsScreen();
         }
        if (lx > 110 && lx < 210 && ly > 85 && ly < 125){
        // Lunar Tracking Selected
          Tracking_type = 0;
+         Tracking_Mode="Lunar";
          drawOptionsScreen();
         }
        if (lx > 220 && lx < 320 && ly > 85 && ly < 125){
        // Solar Tracking Selected
          Tracking_type = 2;
+         Tracking_Mode="Solar";
          drawOptionsScreen();
         }
 
       
-       if (lx > 275 && lx < 320 && ly > 160 && ly < 200){
+       if (lx > 275 && lx < 400 && ly > 160 && ly < 200){
        // Screen MAX Brightness
-          analogWrite(TFTBright, 255);
+       analogWrite(TFTBright,255);
+       TFT_Brightness=255;
+       drawOptionsScreen();
+         
         }
        if (lx > 5 && lx < 265 && ly > 155 && ly < 200){
        // Screen REDUCE Brightness   "Triangle"
           TFT_Brightness = 190 +((lx - 5)*0.25);
           analogWrite(TFTBright, TFT_Brightness);
-          Serial.println(TFT_Brightness);
+          drawOptionsScreen();
+          //Serial.println(TFT_Brightness);
         }
 
 
        if (lx > 0 && lx < 45 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  Never
           TFT_timeout = 0;
+          TFT_Time="AL-ON";
           drawOptionsScreen();
         }
        if (lx > 55 && lx < 100 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  30 Seconds
           TFT_timeout = 30000;
+          TFT_Time="30 S";
           drawOptionsScreen();
         }
        if (lx > 110 && lx < 155 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   60 Seconds
           TFT_timeout = 60000;
+          TFT_Time="60 S";
           drawOptionsScreen();
         }
        if (lx > 165 && lx < 210 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   2 Minutes
           TFT_timeout = 120000;
+          TFT_Time="2 M";
           drawOptionsScreen();
         }
        if (lx > 220 && lx < 265 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  5 Minutes
           TFT_timeout = 300000;
+          TFT_Time="5 M";
           drawOptionsScreen();
         }
        if (lx > 275 && lx < 320 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  10 Minutes
           TFT_timeout = 600000;
+          TFT_Time="10 M";
           drawOptionsScreen();
         }
-
 
        if (lx > 0 && lx < 100 && ly > 300 && ly < 340){
        // ON Meridian Flip
          IS_MERIDIAN_FLIP_AUTOMATIC = true;
+         Mer_Flip_State="AUTO";
          drawOptionsScreen();
         }
        if (lx > 110 && lx < 210 && ly > 300 && ly < 340){
        // OFF Meridian Flip
          IS_MERIDIAN_FLIP_AUTOMATIC = false;
+         Mer_Flip_State="OFF";
          drawOptionsScreen();
         }
 
@@ -494,11 +510,13 @@ void considerTouchInput(int lx, int ly){
        if (lx > 0 && lx < 100 && ly > 370 && ly < 410){
        // ON Sound
          IS_SOUND_ON = true;
+         Sound_State="ON";
          drawOptionsScreen();
         }
        if (lx > 110 && lx < 210 && ly > 370 && ly < 410){
        // OFF Sound
          IS_SOUND_ON = false;
+         Sound_State="OFF";
          drawOptionsScreen();
         }
 
@@ -507,12 +525,14 @@ void considerTouchInput(int lx, int ly){
        // ON Stepper Motors
          IS_STEPPERS_ON = true;
          digitalWrite(POWER_DRV8825, HIGH);
+         Stepper_State="ON";
          drawOptionsScreen();
         }
        if (lx > 110 && lx < 210 && ly > 440 && ly < 480){
        // OFF Stepper Motors
          IS_STEPPERS_ON = false;
          digitalWrite(POWER_DRV8825, LOW);
+         Stepper_State="OFF";
          drawOptionsScreen();
         }
         
@@ -529,7 +549,7 @@ void considerTouchInput(int lx, int ly){
          IS_IN_OPERATION = true;
          drawMainScreen();
         }
-        // Take care of Map move...                         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Take care of Map move...                         
         // When user touches left, right, top and bottom part of the image,
         // the system loads the corresponding Star Map - moving left, right, top and bottom.
         if (lx > 0 && lx < 50 && ly > 90 && ly < 420){
@@ -565,13 +585,8 @@ void considerTouchInput(int lx, int ly){
             drawStarMap();
           }
         }
-    
-    
-    
-    
-    
-    
-    
+
+        
     }else if (CURRENT_SCREEN == 12){    // captures touches on drawStarSyncScreen()
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
        // BTN Done pressed
@@ -963,17 +978,20 @@ void considerTouchInput(int lx, int ly){
         }
         if (last_button == 9){
          last_button = 0;
-         if (IS_DEV1_ON){
-            IS_DEV1_ON = false;
+         if (IS_FAN1_ON){
+            IS_FAN1_ON = false;
             tft.fillRect(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
-            digitalWrite(DEV1,LOW);
+            digitalWrite(FAN1,LOW);
+            Fan1_State="OFF";
+            drawStatusBar();
          }else{
-            IS_DEV1_ON = true;
+            IS_FAN1_ON = true;
             tft.fillRect(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
-            digitalWrite(DEV1,HIGH);     
-    
+            digitalWrite(FAN1,HIGH);
+            Fan1_State="ON";     
+            drawStatusBar();
          }
         }
         if (last_button == 10){
@@ -982,16 +1000,20 @@ void considerTouchInput(int lx, int ly){
         }
         if (last_button == 12){
          last_button = 0;
-         if (IS_DEV2_ON){
-            IS_DEV2_ON = false;
+         if (IS_FAN2_ON){
+            IS_FAN2_ON = false;
             tft.fillRect(220, 405, 100, 70,BLACK);
             DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
-            digitalWrite(DEV2,LOW);
+            digitalWrite(FAN2,LOW);
+            Fan2_State="OFF";
+            drawStatusBar();
          }else{
-            IS_DEV2_ON = true;
+            IS_FAN2_ON = true;
             tft.fillRect(220, 405, 100, 70,BLACK);
             DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
-            digitalWrite(DEV2,HIGH);
+            digitalWrite(FAN2,HIGH);
+            Fan2_State="ON";
+            drawStatusBar();
          }
         }
     }

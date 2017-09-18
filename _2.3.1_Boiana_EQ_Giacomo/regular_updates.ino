@@ -32,17 +32,15 @@ void considerTempUpdates(){                                 // Temperature && Hu
           _temp = tTemp - 2;  // I need to calibrate my sensor... it reads 2 deg. higher temp.
           _humid = tHum;
        }
-       tft.setTextSize(3);
+       tft.setTextSize(2);
        tft.setTextColor(title_texts);
        if (_temp > -75 && _temp < 75 && _humid < 100 && _humid > 0){
-         tft.fillRect(240,35,35,55, title_bg);
-           tft.setCursor(210, 35);
-           tft.print("T");
-         tft.setCursor(240, 35);
+         tft.fillRect(258,35,30,55, title_bg);
+           
+         tft.setCursor(261, 38);
          tft.print(_temp,0);
-         tft.setCursor(210, 65);
-           tft.print("H");
-         tft.setCursor(240, 65);
+        
+         tft.setCursor(261, 70);
          tft.print(_humid,0);
        }
        Tupdate_time = millis();
@@ -63,23 +61,25 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
     }
   }
   if (CURRENT_SCREEN == 4 && (millis()-update_time) > 10000){
-      tft.setTextSize(3);
-      tft.setTextColor(title_texts);
+      tft.setTextSize(1);
+      tft.setTextColor(l_text);
       if (old_d != rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/')){
-            tft.fillRect(55,8,400,22, title_bg);
-            tft.setCursor(60,8);
+            tft.fillRect(35,102,60,6, title_texts);
+            tft.setCursor(35,102);
             tft.print(String(rtc.getDateStr()).substring(0,2));
             tft.print(" ");
             tft.print(rtc.getMonthStr(FORMAT_SHORT));
             tft.print(" ");
             tft.print(String(rtc.getDateStr()).substring(6));
       }
-      tft.fillRect(95,35,115,22, title_bg);
+      tft.setTextColor(title_texts);
+      tft.fillRect(90,35,95,22, title_bg);
       tft.setTextSize(3);
-      tft.setCursor(95, 35);
-      tft.print(String(rtc.getTimeStr()).substring(0,5));       
-      tft.fillRect(95,65,115,22, title_bg);
-      tft.setCursor(95, 65);
+      tft.setCursor(90, 35);
+      tft.print(String(rtc.getTimeStr()).substring(0,5));  
+           
+      tft.fillRect(90,65,95,22, title_bg);
+      tft.setCursor(90, 65);
       if ((int)LST < 10){
         tft.print("0");
         tft.print((int)LST);
@@ -134,7 +134,9 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
       }   
           
       update_time = millis();
-  }else if (CURRENT_SCREEN == 5 && (millis()-update_time) > 2000){
+  }
+  else if (CURRENT_SCREEN == 5 && (millis()-update_time) > 2000)
+  {
       Current_RA_DEC();
       tft.setTextSize(3);
       
@@ -152,7 +154,9 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
 
       update_time = millis();  
 
-   }else if (CURRENT_SCREEN == 1 && (millis()-update_time) > 10000 && changes == 0){
+   }
+   else if (CURRENT_SCREEN == 1 && (millis()-update_time) > 10000 && changes == 0)
+   {
       tft.setCursor(110, 115);
       tft.setTextColor(l_text);
       tft.fillRect(110,115,200,30, BLACK);
@@ -163,7 +167,9 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           tft.print(rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/'));
       }
       update_time = millis();      
-  }else if (CURRENT_SCREEN == 0 && (millis()-update_time) > 5000){
+  }
+  else if (CURRENT_SCREEN == 0 && (millis()-update_time) > 5000)
+  {
         tft.fillRect(10,200,320,200, BLACK);
         tft.setTextColor(btn_l_text);
         tft.setTextSize(3);
@@ -185,23 +191,30 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
         tft.setCursor(75, 350);
         tft.print("Altitude: ");
         tft.print(gps.altitude.meters());
-        if (gps.satellites.value()==0){
+        if (gps.satellites.value()==0)
+        {
           smartDelay(1000);
-        }else{
+        }
+        else
+        {
           GPS_iterrations += 1;
           smartDelay(1000);
         }
 
-         if ((GPS_iterrations > 2) && (gps.location.lat() != 0)){
+         if ((GPS_iterrations > 2) && (gps.location.lat() != 0))
+         {
           OBSERVATION_LONGITUDE = gps.location.lng();
           OBSERVATION_LATTITUDE = gps.location.lat();
           OBSERVATION_ALTITUDE = gps.altitude.meters();
           // Set the earth rotation direction depending on the Hemisphere...
           // HIGH and LOW are substituted 
-          if (OBSERVATION_LATTITUDE > 0){
+          if (OBSERVATION_LATTITUDE > 0)
+          {
             STP_FWD = LOW;
             STP_BACK = HIGH;
-          }else{
+          }
+          else
+          {
             STP_FWD = HIGH;
             STP_BACK = LOW;
           }
@@ -215,14 +228,23 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           }
           CURRENT_SCREEN = 1;
           // Serial2.end();
+
+          int time_delay = round(gps.location.lng() * 4/60); //rough calculation of the timezone delay
+          if(isSummerTime(gps.time.value()))
+          {
+            time_delay += 1;
+            Summer_Time = 1;
+          }
           
-         rtc.setDate(gps.date.day(),gps.date.month(),gps.date.year());
-         rtc.setTime(gps.time.hour()+2,gps.time.minute(),gps.time.second());
+          rtc.setDate(gps.date.day(), gps.date.month(), gps.date.year());
+          rtc.setTime(gps.time.hour()+time_delay, gps.time.minute(), gps.time.second());
           
           drawClockScreen();
         }
         update_time = millis(); 
-  }else if ((CURRENT_SCREEN == 13) && (IS_OBJ_FOUND == true) && ((millis()-update_time) > 2000)){
+  }
+  else if ((CURRENT_SCREEN == 13) && (IS_OBJ_FOUND == true) && ((millis()-update_time) > 2000))
+  {
        tft.setTextColor(btn_l_text);
        tft.setTextSize(2);
        float HAHh;
