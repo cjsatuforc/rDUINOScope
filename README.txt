@@ -1,13 +1,13 @@
 #rDUINOScope
 
 ILI9488 SPI version:
-      - Auto data and time settings on clockScreen from GPS data
-      - Added AD7873 (TSC2046/XPT2046 compatibile with ADS7843 & AD7843) Touch IC. The software is able to detect and display problem with the touch IC.
-      - Changed color for Name and Description when tracking object
-      - Custom line of text can be appended to the .csv files to display custom strings.
-          Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
-      - Different pin arrangement
-      - Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
+	- Empirial March sound function moved after good initialization of the device.
+      	- Auto data and time settings on clockScreen from GPS data: the software is able to calculate the location's time zone and auto sets summer time based of GPS date.
+      	- Using AD7873 touch IC. Also compatibile with TSC2046/XPT2046 and ADS7843/AD7843 ICs. The software is able to detect and display any communications error with the touch IC.
+	- Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
+      	- Changed color for Name and Description when tracking objects.
+   	- Different pin arrangement
+      	- Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
 
 THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
