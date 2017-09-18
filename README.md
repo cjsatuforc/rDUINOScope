@@ -1,6 +1,7 @@
-#rDUINOScope
+# rDUINOScope
 
-ILI9488 SPI version:
+### ILI9488 SPI version:
+	- Uses ILI9488 480x320px display
 	- Empirial March sound function moved after good initialization of the device.
       	- Auto data and time settings on clockScreen from GPS data: the software is able to calculate the location's time zone and to auto update to summer or winter time.
       	- Using AD7873 touch IC. Also compatibile with TSC2046/XPT2046 and ADS7843/AD7843 ICs. The software is able to detect and display any communications error with the touch IC.
@@ -9,7 +10,7 @@ ILI9488 SPI version:
    	- Different pin arrangement
       	- Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
 
-THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
+## THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
 rDUINOScope is an Open Source, Arduino Due based Telescope Control System (GOTO). Drafted as stand alone system, rDUINOScope does not need PC, Tablet or Cell Phone, nor Internet connection in order to operate and deliver stunning views! It does however supports Bluetooth and LX200 protocol to connect and be controlled by smart devices!
 
@@ -26,7 +27,7 @@ HACKADAY.IO Project: https://hackaday.io/project/21024-rduinoscope
 Facebook: https://www.facebook.com/rDUINOScope/
 
 
-#rDUINOScope _2.3.1_Boiana_EQ_Giacomo
+# rDUINOScope _2.3.1_Boiana_EQ_Giacomo
 ===========================================================
 Release date: 03 August 2017
 Status: Stable Version
