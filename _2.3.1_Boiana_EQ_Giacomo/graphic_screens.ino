@@ -81,7 +81,7 @@ void drawGPSScreen(){
   tft.setCursor(90, 440);
   tft.print("Will assign coordinates");
   tft.setCursor(100, 450);
-  tft.print("for Sofia, Bulgaria");
+  tft.print("for Chieti, Italy");
 }
 
 
@@ -333,16 +333,16 @@ tft.setTextColor(title_texts);
 
   tft.setCursor(261, 38);
   tft.print(_temp,0);
-  tft.setCursor(290, 33);
+  tft.setCursor(290, 30);
   tft.setTextSize(2);
   tft.print("o");
   tft.setTextSize(2);
-  tft.setCursor(305, 38);
-  tft.print("C");
+  tft.setCursor(295, 38);
+  tft.print(" C");
   tft.setCursor(261, 70);
   tft.print(_humid,0);
-  tft.setCursor(300, 70);
-  tft.print("%");
+  tft.setCursor(290, 70);
+  tft.print(" %");
 
   tft.setTextSize(1);
   tft.setTextColor(btn_l_border); //  Green   >>> Beautiful
@@ -845,42 +845,51 @@ void drawConstelationScreen(int indx){
   tft.fillRect(0, 414, 320, 2, btn_d_border);
   tft.drawLine(0, 415, 320, 415, btn_l_border);
   
-  if (ALLIGN_TYPE != 3){
+  if (ALLIGN_TYPE != 3)
+  {
       DrawButton(0,420,100,60, "<Repeat", 0, btn_l_border, btn_l_text, 2);
-  }else{
+  }
+  else
+  {
       DrawButton(0,420,100,60, "<Exit", 0, btn_l_border, btn_l_text, 2);
   }
-  if (ALLIGN_STEP == 1){
+  if (ALLIGN_STEP == 1)
+  {
       DrawButton(220,420,100,60, "SYNC !", 0, btn_l_border, btn_l_text, 2); 
       tft.setCursor(0, 80);
-      tft.println("-Use manual motor movement to center the star!");
-      tft.println("");
-      tft.println("-Once centered, hit 'SYNC !' button.");  
-      if (ALLIGN_TYPE == 3){
-          tft.println("");
-          tft.print("NB! Selected Object ->");   
-          tft.println(OBJECT_NAME);     
-      }  
-  }else if (ALLIGN_STEP == 2){
-      if (ALLIGN_TYPE == 3){
+      tft.println("Use manual motor movement to center the star!\n");
+      tft.println("Once centered, hit 'SYNC !' button\n");  
+
+      tft.print("Selected Object:");
+      tft.setCursor(50, 210);
+      tft.setTextColor(title_bg);
+      tft.println(OBJECT_NAME);
+      tft.setTextColor(l_text);    
+  }
+  else if (ALLIGN_STEP == 2)
+  {
+      if (ALLIGN_TYPE == 3)
+      {
           DrawButton(220,420,100,60, "NEXT>", 0, btn_l_border, btn_l_text, 2); 
           tft.setCursor(0,80);
-          tft.println("-Use Alt/Az (phisical) knobs on your mount to center on Polaris!");
+          tft.println("Use Alt/Az (phisical) knobs on your mount to center on Polaris!\n");
+          tft.println("Once centered, hit 'ALIGN' button.");        
           tft.println("");
-          tft.println("-Once centered, hit 'ALIGN' button.");        
-          tft.println("");
-          tft.print("NB! Only correct halfway to center! ->");   
-          tft.println(OBJECT_NAME);     
-      }else{
+          tft.println("NB! Only correct halfway to center!:");   
+          tft.setTextColor(title_bg);
+          tft.println(OBJECT_NAME);
+          tft.setTextColor(l_text);     
+      }
+      else
+      {
           DrawButton(220,420,100,60, "CENTER", 0, btn_l_border, btn_l_text, 2); 
           tft.setCursor(0,80);
-          tft.println("-Use manual motor movement to center the star!");
+          tft.println("Use manual motor movement to center the star!");
           tft.println("");
-          tft.println("-Once centered, hit 'SYNC !' button.");  
+          tft.println("Once centered, hit 'SYNC !' button.");  
       }
   }
 }
-
 
 void OnScreenMsg(int Msg){
 // Msg = 1 -> Moving;

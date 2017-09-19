@@ -261,20 +261,21 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
        HA_deci = (HAHh+(HAMm/60))*15;   // In degrees - decimal
 
 
-        if (ALLIGN_STEP == 1){                  
-            tft.fillRect(0,245,240,100, BLACK);
-            tft.setCursor(0, 248);
+        if (ALLIGN_STEP == 1)
+        {                  
+            tft.fillRect(0, 295, 320, 80, BLACK);
+            tft.setCursor(0, 300);
+            tft.setTextSize(2);
 
-             delta_a_RA = (double(RA_microSteps) - double(HA_deci * HA_H_CONST))/double(HA_H_CONST);
+            delta_a_RA = (double(RA_microSteps) - double(HA_deci * HA_H_CONST))/double(HA_H_CONST);
             delta_a_DEC = (double(DEC_microSteps) - double(SLEW_DEC_microsteps))/double(DEC_D_CONST);
           
             tft.print("Delta_RA: ");
-            tft.println(delta_a_RA*60, 6);
-            tft.println(" arc min.");
-            //tft.setCursor(0, 270);
+            tft.print(delta_a_RA*60, 6);
+            tft.println(" arcmin");
             tft.print("Delta_DEC: ");
-            tft.println(delta_a_DEC*60, 6);
-            tft.println(" arc min.");
+            tft.print(delta_a_DEC*60, 6);
+            tft.println(" arcmin");
             
         }
         tft.setTextSize(2);           // To make sure that when a button is Pressed, it will be re-drawn sith Size 2 text!

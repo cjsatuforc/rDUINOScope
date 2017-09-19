@@ -196,6 +196,7 @@ void considerTouchInput(int lx, int ly){
               }
               int_star_count = floor(cc/15) + 1;    
           }
+          delay(500);
           drawStarSyncScreen();
        }else if (lx > 30 && lx < 250 && ly > 400 && ly < 455){
          // BTN "Skip Alignment" pressed
