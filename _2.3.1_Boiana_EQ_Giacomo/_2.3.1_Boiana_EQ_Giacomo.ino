@@ -27,7 +27,7 @@
 /*    
  *     Major differences from main release:
  *     
- *     -  Uses ILI9488 480x320 px display instead of HX... 400x240 px display, so bigger screen.
+ *     -  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used.
  *     -  Small code optimization to maximize speed (the ILI9488 supports only 24bit/px so it's quite slow as screen compared to HX... ones)
  *     -  Joypad calibration at startup. No more panic to find right values for the joypad.
  *     -  Empirial March sound function moved to confirm good initialization of the device. If no sound then you're having problems! :'(
@@ -488,9 +488,9 @@ void setup(void)
   tft.println("... initializing GPS");
 
   calibrateJoypad(&x_cal, &y_cal);
-  Serial.println(x_cal);
-  Serial.println(y_cal);
-  Serial.println("");
+  //Serial.println(x_cal);
+  //Serial.println(y_cal);
+  //Serial.println("");
 
   // EMPIRIAL MARCH - if sounds everything was initialized well   :)
   if (IS_SOUND_ON)
