@@ -4,14 +4,14 @@
 
 -  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used.
 -  Using AD7873 touch IC. Also compatibile with TSC2046/XPT2046 and ADS7843/AD7843 ICs. The software is able to detect and display any communications error with the touch IC.
--  Small code optimization to maximize speed (the ILI9488 supports only 24bit/px so it's quite slow as screen compared to HX... ones)
--  Joypad calibration at startup. No more panic to find right values for the joypad.
+-  Small code optimization to maximize speed (the ILI9488 supports only 24bit/px so it's quite slow as screen compared to HX... ones).
+-  Joypad calibration at startup. No more panic to find the right values for the joypad.
 -  Empirial March sound function moved to confirm good initialization of the device. If no sound then you're having problems! :'(
--  Automatic data and time set on clockScreen() derived from GPS data: the software is able to calculate the location's time zone and to auto update to summer or winter time.
--  Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
+-  Automatic data and time set on clockScreen() derived from GPS data: the software is able to calculate the location's time zone and to auto update from summer or winter time.
+-  Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv.
 -  Changed color for Name and Description when tracking objects.
--  Different pin arrangement
--  Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
+-  Different pin arrangement.
+-  Added custom.csv wich can be used to add more custom sky objects (still to be implemented).
 
 ## THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
