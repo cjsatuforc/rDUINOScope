@@ -19,7 +19,7 @@
 //    ALLIGNMENT Method: 1 Star Alignment - The method I have implemented is part of Mr. Ralph Pass alignment procedure described on http://rppass.com/
 //                       Mr. Pass helped rDUINOScope by providing the calculations needed to implement the method. http://rppass.com/align.pdf - the actual PDF
 //
-//                       Iterative Alignment - The method is based on article from "New" Hamilton Astronomy.com website: http://astro.hcadvantage.com
+//                       Iterative alignment - The method is based on article from "New" Hamilton Astronomy.com website: http://astro.hcadvantage.com
 //                       Actual PDF document: http://astro.hcadvantage.com/ASTRO_ARTICLES/Polar_Alignment_Part_II.pdf
 //
 //
@@ -29,6 +29,7 @@
  *     
  *     -  Uses ILI9488 480x320 px display instead of HX... 400x240 px display, so bigger screen.
  *     -  Small code optimization to maximize speed (the ILI9488 supports only 24bit/px so it's quite slow as screen compared to HX... ones)
+ *     -  Joypad calibration at startup. No more panic to find right values for the joypad.
  *     -  Empirial March sound function moved to confirm good initialization of the device. If no sound then you're having problems! :'(
  *     -  Automatic data and time set on clockScreen() derived from GPS data: the software is able to calculate the location's time zone and to auto update to summer or winter time.
  *     -  Using AD7873 touch IC. Also compatibile with TSC2046/XPT2046 and ADS7843/AD7843 ICs. The software is able to detect and display any communications error with the touch IC.
@@ -44,7 +45,7 @@
 // ---------------------------------------------
 // NB: RA and DEC uses the same gear ratio (144 tooth in my case)!
 //----------------------------------------------
-int WORM = 1;
+int WORM = 144;
 int REDUCTOR = 4;      // 1:4 gear reduction
 int DRIVE_STP = 200;   // Stepper drive have 200 steps per revolution
 int MICROSteps = 16;   // I'll use 1/16 microsteps mode to drive sidereal - also determines the LOWEST speed.
@@ -262,6 +263,7 @@ int FAN2 = A3;
 int TFTBright = DAC0;
 int Joy_SW = A11;
 int POWER_DRV8825 = A8;
+int x_cal, y_cal = 0;
 
 
 void setup(void)
@@ -485,6 +487,11 @@ void setup(void)
   delay(100);
   tft.println("... initializing GPS");
 
+  calibrateJoypad(&x_cal, &y_cal);
+  Serial.println(x_cal);
+  Serial.println(y_cal);
+  Serial.println("");
+
   // EMPIRIAL MARCH - if sounds everything was initialized well   :)
   if (IS_SOUND_ON)
   {
@@ -581,11 +588,11 @@ void loop(void)
     xPosition = analogRead(xPin);
     yPosition = analogRead(yPin);
 
-    if ((xPosition < 500) || (xPosition > 800) || (yPosition < 500) || (yPosition > 800))
+    if ((xPosition < x_cal-50) || (xPosition > x_cal+50) || (yPosition < y_cal-50) || (yPosition > x_cal+50))
     {
-      IS_MANUAL_MOVE = false;
+      IS_MANUAL_MOVE = true;
       if (IS_STEPPERS_ON) {
-        //consider_Manual_Move(xPosition, yPosition);
+        consider_Manual_Move(xPosition, yPosition);
       }
     }
     else
@@ -607,7 +614,7 @@ void loop(void)
     if (myTouch.touched())
     {
       p = myTouch.getPoint();
-      if (p.z < 1000) myTouch.getPoint(); //to remove noise
+      if (p.z < 600) myTouch.getPoint(); //to remove noise
       tx = (p.x - 257) >> 3;
       ty = (p.y - 445) / 11.56;
 
@@ -1583,18 +1590,12 @@ uint32_t read32(File &f) {
 }
 
 /*
-   LegalTime
-   ---------
-   Questa funzione verifica se la data in parametri ricade nell'ora solare [S] o legale [L]
-
-   PARAMETRI:   iYear = anno    (aaaa ex. 2008)
-                iMont = mese    (m [1-12])
-                day()  = giorno  (g [1-31])
-                iHour = ora     [h [0-24])
-
-   RITORNO: S = SOLARE
-            L = LEGALE
-
+ * isSummerTime(time_t t) : uses Time.h
+ * ---------
+ * 
+ * Given t, this function versifies if the date time needs to be updated by adding 1h due to Summer time
+ * 
+ * Return: true if summer time, false otherwise
 */
 
 bool isSummerTime(time_t t) //in Italy: Summer time ends the last sunday of october and begins the last of march
@@ -1638,4 +1639,34 @@ bool isSummerTime(time_t t) //in Italy: Summer time ends the last sunday of octo
   return summer_time;
 }
 
+// Performs ~310.000 readings to find the mean value of the joypad (error: 3*10^-4 % )
+void calibrateJoypad(int *x_cal, int *y_cal)
+{
+  tft.println("\n");
+  tft.setTextColor(title_bg);
+  tft.println("Please avoid touching the Joypad for the next 3 seconds to let the software calibrate.\n");
+  tft.setTextColor(l_text);
+
+  int now_t = millis();
+  int prev_t = millis();
+  int c = 3;
+
+  tft.print("3.. ");
+  while(millis() < now_t + 3000)
+  {
+    if(millis() > prev_t + 1000)
+    {
+      c--;
+      tft.print(c);
+      tft.print(".. ");
+      prev_t = millis();
+    }
+    *x_cal = (*x_cal + analogRead(A0)) / 2;
+    *y_cal = (*y_cal + analogRead(A1)) / 2;
+  }
+
+  tft.setTextColor(GREEN);
+  tft.print("done!");
+  tft.setTextColor(l_text);
+}
 
