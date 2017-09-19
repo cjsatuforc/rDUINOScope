@@ -492,6 +492,16 @@ void setup(void)
   //Serial.println(y_cal);
   //Serial.println("");
 
+  // Draw Supporters Logos
+  char logo_n[50];
+  String logo_name = "hackad24.bmp";
+  logo_name.toCharArray(logo_n,50);
+  bmpDraw(logo_n, 100, 390);
+  delay(200);
+  tft.setCursor(0, 370);
+  tft.setTextColor(l_text);
+  tft.println("SUPPORTERS:");
+
   // EMPIRIAL MARCH - if sounds everything was initialized well   :)
   if (IS_SOUND_ON)
   {
@@ -1501,31 +1511,42 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
 
   if ((x >= tft.width()) || (y >= tft.height())) return;
   // Open requested file on SD card
-  if ((bmpFile = SD.open(filename)) == NULL) {
+  if ((bmpFile = SD.open(filename)) == NULL)
+  {
+    Serial.println("file not found on the SD card");
     return;
   }
   // Parse BMP header
-  if (read16(bmpFile) == 0x4D42) { // BMP signature
+  if (read16(bmpFile) == 0x4D42 || read16(bmpFile) == 0x424D) // BMP signature
+  {
 
-    Serial.println(read32(bmpFile));
+    Serial.print("BMP file found.\nImage offset: ");
+    Serial.println(read32(bmpFile), HEX);
     (void)read32(bmpFile); // Read & ignore creator bytes
     bmpImageoffset = read32(bmpFile); // Start of image data
 
     // Read DIB header
-    Serial.println(read32(bmpFile));
+    Serial.print("Image DIB header: ");
+    Serial.println(read32(bmpFile), HEX);
     bmpWidth  = read32(bmpFile);
     bmpHeight = read32(bmpFile);
-    if (read16(bmpFile) == 1) { // # planes -- must be '1'
+    if (read16(bmpFile) == 1) // # planes -- must be '1'
+    { 
+      Serial.println("one plane file");
       bmpDepth = read16(bmpFile); // bits per pixel
+      Serial.print("bmpDepth: ");
+      Serial.println(bmpDepth);
 
-      if ((bmpDepth == 24) && (read32(bmpFile) == 0)) { // 0 = uncompressed
+      if ((bmpDepth == 24) && (read32(bmpFile) == 0)) // 0 = uncompressed
+      { 
         goodBmp = true; // Supported BMP format -- proceed!
         // BMP rows are padded (if needed) to 4-byte boundary
         rowSize = (bmpWidth * 3 + 3) & ~3;
 
         // If bmpHeight is negative, image is in top-down order.
         // This is not canon but has been observed in the wild.
-        if (bmpHeight < 0) {
+        if (bmpHeight < 0)
+        {
           bmpHeight = -bmpHeight;
           flip      = false;
         }
@@ -1565,6 +1586,10 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
         } // end scanline
       } // end goodBmp
     }
+  }
+  else
+  {
+    Serial.println("invalid BMP file signature");
   }
   bmpFile.close();
 }
