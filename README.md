@@ -13,6 +13,9 @@
 -  Different pin arrangement.
 -  Added custom.csv wich can be used to add more custom sky objects (still to be implemented).
 
+![Board1](http://i68.tinypic.com/2qbdsuc.png)
+![Board2](http://i63.tinypic.com/sgsgmd.png)
+
 ## THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
 rDUINOScope is an Open Source, Arduino Due based Telescope Control System (GOTO). Drafted as stand alone system, rDUINOScope does not need PC, Tablet or Cell Phone, nor Internet connection in order to operate and deliver stunning views! It does however supports Bluetooth and LX200 protocol to connect and be controlled by smart devices!
