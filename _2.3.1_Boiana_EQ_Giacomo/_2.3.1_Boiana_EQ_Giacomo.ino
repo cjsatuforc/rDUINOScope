@@ -85,6 +85,8 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 
 #include "defines.h"  //notes, colors and stars
 
+#define serial_debug
+
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
 #define TFT_CS  47
@@ -110,7 +112,7 @@ DHT dht(DHTPIN, DHTTYPE);
 TinyGPSPlus gps;
 
 /** DS3231 RTC pin map */
-DS3231 rtc(A4, A5);           // (SDA, SCL) from the RTC board
+DS3231 rtc(20, 21);           // (SDA, SCL) from the RTC board
 
 /** SD CARD pin map */
 int sd_cs = 42;
@@ -268,7 +270,9 @@ int x_cal, y_cal = 0;
 
 void setup(void)
 {
-  Serial.begin(9600);
+  #ifdef serial_debug
+    Serial.begin(57600);
+  #endif
   Serial2.begin(9600); // Initialize GPS communication on PINs: 17 (RX) and 16 (TX)
   Serial3.begin(9600); // Bluetooth communication on PINs:  15 (RX) and 14 (TX)
   pinMode(speakerOut, OUTPUT);
@@ -413,7 +417,7 @@ void setup(void)
   {
     tft.println("ERROR: Card failed, or not present\n");
     // don't do anything more:
-    while (1);
+    //while (1);
   }
   tft.println("... card initialized!");
   delay(200);
@@ -488,9 +492,6 @@ void setup(void)
   tft.println("... initializing GPS");
 
   calibrateJoypad(&x_cal, &y_cal);
-  //Serial.println(x_cal);
-  //Serial.println(y_cal);
-  //Serial.println("");
 
   // Draw Supporters Logos
   char logo_n[50];
@@ -590,7 +591,9 @@ void loop(void)
     if ((IS_BT_MODE_ON == true) && (Serial3.available() > 0) && (IS_MANUAL_MOVE == false))
     {
       BT_COMMAND_STR = Serial3.readStringUntil('#');
-      //Serial.println(BT_COMMAND_STR);
+      #ifdef serial_debug
+        Serial.println(BT_COMMAND_STR);
+      #endif
       considerBTCommands();
     }
 
@@ -627,12 +630,16 @@ void loop(void)
       if (p.z < 600) myTouch.getPoint(); //to remove noise
       tx = (p.x - 257) >> 3;
       ty = (p.y - 445) / 11.56;
+      delay(100); // slow down touch identification
 
       //Useful to debug touch:
-      //Serial.print(" Touched: ");
-      //Serial.print(tx);
-      //Serial.print(", y = ");
-      //Serial.println(ty);
+      #ifdef serial_debug
+        Serial.print(" -> Touched: ");
+        Serial.print(tx);
+        Serial.print(", y = ");
+        Serial.println(ty);
+      #endif
+      
     }
     considerTouchInput(ty, tx);
 
@@ -1513,29 +1520,38 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
   // Open requested file on SD card
   if ((bmpFile = SD.open(filename)) == NULL)
   {
-    Serial.println("file not found on the SD card");
+    #ifdef serial_debug
+      Serial.println("file not found on the SD card");
+    #endif
+    
     return;
   }
   // Parse BMP header
   if (read16(bmpFile) == 0x4D42 || read16(bmpFile) == 0x424D) // BMP signature
   {
-
-    Serial.print("BMP file found.\nImage offset: ");
-    Serial.println(read32(bmpFile), HEX);
+    #ifdef serial_debug
+      Serial.print("BMP file found.\nImage offset: ");
+      Serial.println(read32(bmpFile), HEX);
+    #endif
     (void)read32(bmpFile); // Read & ignore creator bytes
     bmpImageoffset = read32(bmpFile); // Start of image data
 
     // Read DIB header
-    Serial.print("Image DIB header: ");
-    Serial.println(read32(bmpFile), HEX);
+    #ifdef serial_debug
+      Serial.print("Image DIB header: ");
+      Serial.println(read32(bmpFile), HEX);
+    #endif
     bmpWidth  = read32(bmpFile);
     bmpHeight = read32(bmpFile);
     if (read16(bmpFile) == 1) // # planes -- must be '1'
     { 
-      Serial.println("one plane file");
       bmpDepth = read16(bmpFile); // bits per pixel
-      Serial.print("bmpDepth: ");
-      Serial.println(bmpDepth);
+
+      #ifdef serial_debug
+        Serial.println("one plane file");
+        Serial.print("bmpDepth: ");
+        Serial.println(bmpDepth);
+      #endif
 
       if ((bmpDepth == 24) && (read32(bmpFile) == 0)) // 0 = uncompressed
       { 
@@ -1589,7 +1605,9 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
   }
   else
   {
-    Serial.println("invalid BMP file signature");
+    #ifdef serial_debug
+      Serial.println("invalid BMP file signature");
+    #endif
   }
   bmpFile.close();
 }
@@ -1626,7 +1644,6 @@ uint32_t read32(File &f) {
 bool isSummerTime(time_t t) //in Italy: Summer time ends the last sunday of october and begins the last of march
 {
   bool summer_time = false;
-  setTime(t);
 
   // If i'm in October
   if (month() == 10)
@@ -1693,5 +1710,11 @@ void calibrateJoypad(int *x_cal, int *y_cal)
   tft.setTextColor(GREEN);
   tft.print("done!");
   tft.setTextColor(l_text);
+  #ifdef serial_debug
+    Serial.print("x_cal: ");
+    Serial.println(*x_cal);
+    Serial.print("y_cal: ");
+    Serial.println(*y_cal);
+  #endif
 }
 
