@@ -52,7 +52,8 @@ void removeTime_addXX(){
   }
 }
 
-void drawGPSScreen(){
+void drawGPSScreen()
+{
   CURRENT_SCREEN = 0;
   tft.fillScreen(BLACK);
   tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);

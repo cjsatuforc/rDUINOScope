@@ -22,19 +22,25 @@
 //  - On each TimeInterval (~10 sec.) - Updates screens accordingly (e.g. Time, LST, Temperature, Humidity and etc.)
 //
 
-void considerTempUpdates(){                                 // Temperature && Humidity Updates
-  if (CURRENT_SCREEN == 4 && (millis()-Tupdate_time) > 30000){
+void considerTempUpdates() // Temperature && Humidity Updates
+{                                
+  if (CURRENT_SCREEN == 4 && (millis()-Tupdate_time) > 30000)
+  {
        float tHum = dht.readHumidity();
        float tTemp = dht.readTemperature();
-       if (isnan(tHum) || isnan(tTemp)) {
+       if (isnan(tHum) || isnan(tTemp))
+       {
           return;
-       }else{
+       }
+       else
+       {
           _temp = tTemp - 2;  // I need to calibrate my sensor... it reads 2 deg. higher temp.
           _humid = tHum;
        }
        tft.setTextSize(2);
        tft.setTextColor(title_texts);
-       if (_temp > -75 && _temp < 75 && _humid < 100 && _humid > 0){
+       if (_temp > -75 && _temp < 75 && _humid < 100 && _humid > 0)
+       {
          tft.fillRect(258,35,30,55, title_bg);
            
          tft.setCursor(261, 38);
@@ -229,15 +235,34 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           CURRENT_SCREEN = 1;
           // Serial2.end();
 
+          int ora, date_delay = 0;
           int time_delay = round(gps.location.lng() * 4/60); //rough calculation of the timezone delay
-          if(isSummerTime(gps.time.value()))
+          
+          // convert to epoch
+          setTime(gps.time.hour(), gps.time.minute(),gps.time.second(), gps.date.day(), gps.date.month(), gps.date.year());
+          Serial.print("epoch: ");
+          Serial.println(now());
+          
+          if(isSummerTime(now()))
           {
+            //If in summer time sum 1h and put summer_time flag as 1
             time_delay += 1;
             Summer_Time = 1;
           }
-          
-          rtc.setDate(gps.date.day(), gps.date.month(), gps.date.year());
-          rtc.setTime(gps.time.hour()+time_delay, gps.time.minute(), gps.time.second());
+            
+          //update the value of the variable ora
+          ora = gps.time.hour() + time_delay;
+
+          //to update the real time
+          if(ora >= 24)
+          {
+            ora -= 24;
+            date_delay = 1;
+          }
+
+          setTime(ora, gps.time.minute(), gps.time.second(), gps.date.day()+date_delay, gps.date.month(), gps.date.year());
+          rtc.setDate(gps.date.day()+date_delay, gps.date.month(), gps.date.year());
+          rtc.setTime(ora, gps.time.minute(), gps.time.second());
           
           drawClockScreen();
         }
