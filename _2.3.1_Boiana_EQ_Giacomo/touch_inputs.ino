@@ -56,22 +56,30 @@ void considerTouchInput(int lx, int ly){
       return;
     }
     TFT_Timer = millis();
-    if (CURRENT_SCREEN == 0){   // captures touches on drawGPSScreen()
-       if (lx > 60 && lx < 260 && ly > 400 && ly < 475){
+    if (CURRENT_SCREEN == 0)
+    {   // captures touches on drawGPSScreen()
+       if (lx > 60 && lx < 260 && ly > 400 && ly < 475)
+       {
         last_button = 1;
         tft.fillRect(60,400,200,65, btn_l_border);
       }
-    }else if (CURRENT_SCREEN == 1){   // captures touches on drawClockScreen()
-      if (lx > 220 && lx < 320 && ly > 405 && ly < 480){
+    }
+    else if (CURRENT_SCREEN == 1)
+    {   // captures touches on drawClockScreen()
+      if (lx > 220 && lx < 320 && ly > 405 && ly < 480)
+      {
          // BTN OK pressed
            tft.fillRect(226,406,70,55, btn_l_border);
            int changes=0;
-           for (int y=0; y<12; y++){
-             if (w_DateTime[y]!=0){
+           for (int y=0; y<12; y++)
+           {
+             if (w_DateTime[y]!=0)
+             {
                changes=1;
              }
            }
-           if (changes == 1){
+           if (changes == 1)
+           {
              // Do the magic as the date and time has been updated... Update the RTC accordingly
              int hh = (w_DateTime[8]*10) + w_DateTime[9];
              int mm = (w_DateTime[10]*10) + w_DateTime[11];
@@ -90,77 +98,104 @@ void considerTouchInput(int lx, int ly){
            drawSelectAlignment();
            //drawStarSyncScreen();
            //drawMainScreen();
-       }else if (lx > 30 && lx < 100 && ly > 170 && ly < 230){
+       }
+       else if (lx > 30 && lx < 100 && ly > 170 && ly < 230)
+       {
          // BTN 1 pressed
           tft.drawRect(25,170,73,58, btn_l_border);
           last_button = 1;
           removeTime_addXX();
           
-       }else if (lx > 125 && lx < 200 && ly > 170 && ly < 230){
+       }
+       else if (lx > 125 && lx < 200 && ly > 170 && ly < 230)
+       {
          // BTN 2 pressed
           tft.drawRect(125,170,73,58, btn_l_border);
           last_button = 2;
           removeTime_addXX();
           
-       }else if (lx > 225 && lx < 290 && ly > 170 && ly < 230){
+       }
+       else if (lx > 225 && lx < 290 && ly > 170 && ly < 230)
+       {
          // BTN 3 pressed
           tft.drawRect(225,170,73,58, btn_l_border);
           last_button = 3;
           removeTime_addXX();
           
-       }else if (lx > 30 && lx < 100 && ly > 250 && ly < 306){
+       }
+       else if (lx > 30 && lx < 100 && ly > 250 && ly < 306)
+       {
          // BTN 4 pressed
           tft.drawRect(25,250,73,58, btn_l_border);
           last_button = 4;
           removeTime_addXX();
           
-       }else if (lx > 125 && lx < 200 && ly > 250 && ly < 306){
+       }
+       else if (lx > 125 && lx < 200 && ly > 250 && ly < 306)
+       {
          // BTN 5 pressed
           tft.drawRect(125,250,73,58, btn_l_border);
           last_button = 5;
           removeTime_addXX();
           
-       }else if (lx > 225 && lx < 290 && ly > 250 && ly < 306){
+       }
+       else if (lx > 225 && lx < 290 && ly > 250 && ly < 306)
+       {
          // BTN 6 pressed
           tft.drawRect(225,250,73,58, btn_l_border);
           last_button = 6;
           removeTime_addXX();
           
-       }else if (lx > 30 && lx < 100 && ly > 330 && ly < 385){
+       }
+       else if (lx > 30 && lx < 100 && ly > 330 && ly < 385)
+       {
          // BTN 7 pressed
           tft.drawRect(25,330,73,58, btn_l_border);
           last_button = 7;
           removeTime_addXX();
           
-       }else if (lx > 125 && lx < 200 && ly > 330 && ly < 385){
+       }
+       else if (lx > 125 && lx < 200 && ly > 330 && ly < 385)
+       {
          // BTN 8 pressed
           tft.drawRect(125,330,73,58, btn_l_border);
           last_button = 8;
           removeTime_addXX();
           
-       }else if (lx > 225 && lx < 290 && ly > 330 && ly < 385){
+       }
+       else if (lx > 225 && lx < 290 && ly > 330 && ly < 385)
+       {
          // BTN 9 pressed
           tft.drawRect(225,330,73,58, btn_l_border);
           last_button = 9;
           removeTime_addXX();
           
-       }else if (lx > 125 && lx < 200 && ly > 405 && ly < 460){
+       }
+       else if (lx > 125 && lx < 200 && ly > 405 && ly < 460)
+       {
          // BTN 0 pressed
           tft.drawRect(125,405,71,56, btn_l_border);
           last_button = 10;
           removeTime_addXX();
           
-       } else if (lx > 30 && lx < 100 && ly > 405 && ly < 460){
+       }
+       else if (lx > 30 && lx < 100 && ly > 405 && ly < 460)
+       {
        // BTN SummerTime pressed
          last_button = 22;
       }
-    }else if (CURRENT_SCREEN == 3){
-      if (lx > 30 && lx < 250 && ly > 150 && ly < 215){
+    }
+    else if (CURRENT_SCREEN == 3)
+    {
+      if (lx > 30 && lx < 250 && ly > 150 && ly < 215)
+      {
          // BTN "1 Star Alignment" pressed
           DrawButton(30,150,250,65, "1 Star Alignment", btn_l_border, 0, btn_l_text, 2);
           ALLIGN_TYPE = 1;
           drawStarSyncScreen();
-       }else if (lx > 30 && lx < 250 && ly > 250 && ly < 315){
+       }
+       else if (lx > 30 && lx < 250 && ly > 250 && ly < 315)
+       {
          // BTN "Iterative Alignment" pressed
           DrawButton(30,250,250,65, "Iterative Align", btn_l_border, 0, btn_l_text, 2);
           ALLIGN_TYPE = 3;
@@ -168,7 +203,8 @@ void considerTouchInput(int lx, int ly){
           // I'll take some time to Initialize the Sub ARRAY with suitable stars (only for Northern Hemi)
           tft.setCursor(0, 5);
           int cc = 0;
-          for (int t=0; t < 203; t++){
+          for (int t=0; t < 203; t++)
+          {
               int i1 = Stars[t].indexOf(';');
               int i2 = Stars[t].indexOf(';',i1+1);
               int i3 = Stars[t].indexOf(';',i2+1);
@@ -180,17 +216,21 @@ void considerTouchInput(int lx, int ly){
               String OBJ_DEC = Stars[t].substring(i3,Stars[t].length());
               String sign = OBJ_DEC.substring(0, 1);
               OBJECT_DEC_D = OBJ_DEC.substring(1,OBJ_DEC.indexOf('°')).toFloat();
-              if (sign == "-"){ 
+              if (sign == "-")
+              { 
                   OBJECT_DEC_D *= (-1);
               }
               OBJECT_DEC_M = 0;
-              if (ts_RA > 5.3 && ts_RA < 23.3){
+              if (ts_RA > 5.3 && ts_RA < 23.3)
+              {
                   calculateLST_HA();
-                  if (AZ > 90 && AZ < 270 && ALT > 20){
+                  if (AZ > 90 && AZ < 270 && ALT > 20)
+                  {
                        Iter_Stars[cc] = Stars[t];
                        cc += 1;
-                       if (cc > 49){
-                            break;
+                       if (cc > 49)
+                       {
+                          break;
                        }
                   }
               }
@@ -206,7 +246,9 @@ void considerTouchInput(int lx, int ly){
        }
 
        
-    }else if (CURRENT_SCREEN == 4){     // captures touches on drawMainScreen()
+    }
+    else if (CURRENT_SCREEN == 4)
+    {     // captures touches on drawMainScreen()
       if (lx > 0 && lx < 90 && ly > 0 && ly < 100){
        // Left Side Touched
        // Load the GPS screen to capture new data && correct time if needed on the next screen (Time Screen)
@@ -219,7 +261,8 @@ void considerTouchInput(int lx, int ly){
          drawGPSScreen();
       }
 
-      if (lx > 250 && lx < 320 && ly > 0 && ly < 100){
+      if (lx > 250 && lx < 320 && ly > 0 && ly < 100)
+      {
          tft.drawRect(250,0,90,90, btn_l_border);
        // Right Side Touched
         drawOptionsScreen();
