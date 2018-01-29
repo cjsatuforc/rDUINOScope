@@ -323,10 +323,10 @@ tft.setTextColor(title_texts);
   tft.setTextSize(2);
   tft.setTextColor(Button_Title);
 
-  tft.setCursor(195, 36);
+  tft.setCursor(200, 36);
   tft.print("Temp:");
 
-  tft.setCursor(195, 69);
+  tft.setCursor(200, 69);
   tft.print("Hum:");
 
   tft.setTextSize(2);
@@ -968,50 +968,57 @@ void considerDayNightMode(){
               IS_NIGHTMODE = false;
           }
       // Now make sure it works for all screen - redraws them when mode switched  
-      if (prev_night_mode != IS_NIGHTMODE){
-         if (IS_NIGHTMODE == true){   // Night Mode
-             IS_NIGHTMODE = true;
-    texts = Maroon;
-    l_text = RED;
-    d_text = Maroon;
-    title_bg = RED;
-    title_texts = BLACK;
-    messie_btn = Maroon;
-    btn_l_text = RED;
-    btn_d_text = Maroon;
-    btn_l_border = RED;
-    btn_d_border = Maroon;
-    btn_l_selection = RED;
-    MsgBox_bg = RED;
-    MsgBox_t = BLACK;
-    Button_State_ON=BLACK;
-   Button_State_OFF=BLACK;
-   Button_Title=BLACK;
-  } else {
-    IS_NIGHTMODE = false;
-    texts = LightGrey;
-    l_text = WHITE;
-    d_text = LightGrey;
-    btn_l_text = GreenYellow;
-    btn_d_text = DarkGreen;
-    btn_l_border = GREEN;
-    btn_d_border = DarkGreen;
-    btn_l_selection = DarkGreen;
-    title_bg = Orange;
-    title_texts = BLACK;
-    messie_btn = DarkGrey;
-    MsgBox_bg = Purple;
-    MsgBox_t = GreenYellow;
-    Button_State_ON=DarkGreen;
-    Button_State_OFF=RED;
-    Button_Title=Purple;
+      if (prev_night_mode != IS_NIGHTMODE)
+      {
+         if (IS_NIGHTMODE == true)
+         {
+          // Night Mode
+          IS_NIGHTMODE = true;
+          texts = Maroon;
+          l_text = RED;
+          d_text = Maroon;
+          title_bg = RED;
+          title_texts = BLACK;
+          messie_btn = Maroon;
+          btn_l_text = RED;
+          btn_d_text = Maroon;
+          btn_l_border = RED;
+          btn_d_border = Maroon;
+          btn_l_selection = RED;
+          MsgBox_bg = RED;
+          MsgBox_t = BLACK;
+          Button_State_ON=BLACK;
+          Button_State_OFF=DarkGreen;
+          Button_Title=BLACK;
+         }
+         else
+         {
+          IS_NIGHTMODE = false;
+          texts = LightGrey;
+          l_text = WHITE;
+          d_text = LightGrey;
+          btn_l_text = GreenYellow;
+          btn_d_text = DarkGreen;
+          btn_l_border = GREEN;
+          btn_d_border = DarkGreen;
+          btn_l_selection = DarkGreen;
+          title_bg = Orange;
+          title_texts = BLACK;
+          messie_btn = DarkGrey;
+          MsgBox_bg = Purple;
+          MsgBox_t = GreenYellow;
+          Button_State_ON=Magenta;
+          Button_State_OFF=BLACK;
+          Button_Title=Purple;
          } 
-
-          if (CURRENT_SCREEN == 0){
-                drawGPSScreen();
-           }else if (CURRENT_SCREEN == 1){
-                drawClockScreen();
-           }else if (CURRENT_SCREEN == 3){
+         if (CURRENT_SCREEN == 0)
+         {
+          drawGPSScreen();
+         }
+         else if (CURRENT_SCREEN == 1)
+         {
+          drawClockScreen();
+         }else if (CURRENT_SCREEN == 3){
                 drawSelectAlignment();
            }else if (CURRENT_SCREEN == 4){
                 drawMainScreen();

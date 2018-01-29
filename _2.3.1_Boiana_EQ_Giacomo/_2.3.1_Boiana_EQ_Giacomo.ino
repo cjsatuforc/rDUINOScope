@@ -260,8 +260,8 @@ int DEC_MODE2 = 8;
 
 int yPin = A0;
 int xPin = A1;
-int FAN1 = A2;
-int FAN2 = A3;
+int FAN1 = 37;
+int FAN2 = 39;
 int TFTBright = DAC0;
 int Joy_SW = A11;
 int POWER_DRV8825 = A8;
