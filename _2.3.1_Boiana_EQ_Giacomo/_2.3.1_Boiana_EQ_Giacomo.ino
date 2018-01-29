@@ -75,7 +75,7 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <TinyGPS++.h>
 #include <TimeLib.h>
 #include <XPT2046_Touchscreen.h>
-//#include <SPI.h>
+#include <SPI.h>
 #include <SD.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <ILI9488.h>
@@ -85,7 +85,7 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 
 #include "defines.h"  //notes, colors and stars
 
-#define serial_debug
+//#define serial_debug
 
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
@@ -96,10 +96,10 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 ILI9488 tft(TFT_CS, TFT_DC, TFT_RST);
 
 /** ADS7873 pin map */
-#define CS_PIN  4
-#define IRQ_PIN 2
+#define TP_CS  4
+#define TP_IRQ 2
 
-XPT2046_Touchscreen myTouch(CS_PIN, IRQ_PIN);
+XPT2046_Touchscreen myTouch(TP_CS, TP_IRQ);
 TS_Point p;
 
 /** DHT22 pin map */
@@ -115,7 +115,7 @@ TinyGPSPlus gps;
 DS3231 rtc(20, 21);           // (SDA, SCL) from the RTC board
 
 /** SD CARD pin map */
-int sd_cs = 42;
+int SD_CS = 42;
 
 /** NIGHT MODE ANALOG pin */
 #define DAY_NIGHT_PIN A6
@@ -413,11 +413,16 @@ void setup(void)
     while (1);
   }
   else  tft.println("...  Touchscreen initialized!\n");
-  if (!SD.begin(sd_cs))
+  for (int i=0; i<10 && !SD.begin(SD_CS); i++)
   {
-    tft.println("ERROR: Card failed, or not present\n");
-    // don't do anything more:
-    //while (1);
+    if (i == 9)
+    {
+      tft.println("ERROR: Card failed, or not present\n");
+    
+      // don't do anything more:
+      //while (1);
+    }
+    delay(50);
   }
   tft.println("... card initialized!");
   delay(200);
