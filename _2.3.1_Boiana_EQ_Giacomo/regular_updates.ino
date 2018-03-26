@@ -239,11 +239,11 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           int time_delay = round(gps.location.lng() * 4/60); //rough calculation of the timezone delay
           
           // convert to epoch
-          setTime(gps.time.hour(), gps.time.minute(),gps.time.second(), gps.date.day(), gps.date.month(), gps.date.year());
+          setTime(gps.time.hour(), gps.time.minute(), gps.time.second(), gps.date.day(), gps.date.month(), gps.date.year());
           Serial.print("epoch: ");
           Serial.println(now());
           
-          if(isSummerTime(now()))
+          if(isSummerTime())
           {
             //If in summer time sum 1h and put summer_time flag as 1
             time_delay += 1;

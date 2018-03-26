@@ -85,7 +85,7 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 
 #include "defines.h"  //notes, colors and stars
 
-//#define serial_debug
+#define serial_debug
 
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
@@ -406,26 +406,42 @@ void setup(void)
   TREAS_PAGER = 0;
   STARS_PAGER = 0;
 
+  tft.print("--> Initializing touchscreen... ");
   if (!touch_init)
   {
     tft.println("ERROR: Unable to initialize touchscreen.\n Check connections!\n");
     // don't do anything more:
     while (1);
   }
-  else  tft.println("...  Touchscreen initialized!\n");
+  else
+  {
+    tft.setTextColor(GREEN);
+    tft.println("OK");
+    tft.setTextColor(d_text);
+  }
+  tft.print("--> Initializing SD card... ");
   for (int i=0; i<10 && !SD.begin(SD_CS); i++)
   {
     if (i == 9)
     {
+      tft.setTextColor(RED);
       tft.println("ERROR: Card failed, or not present\n");
+      tft.println("Try formatting the SD card to FAT32 and replace the files.");
+      tft.setTextColor(d_text);
     
-      // don't do anything more:
-      //while (1);
+      //go on if in serial_debug mode, else don't do anything more
+      #ifndef serial_debug
+        while (1);
+      #endif
     }
     delay(50);
   }
-  tft.println("... card initialized!");
-  delay(200);
+  //Debug or card initialized:
+  tft.setTextColor(GREEN);
+  tft.println("OK");
+  tft.setTextColor(d_text);
+  
+  delay(100);
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
   File dataFile = SD.open("messier.csv");
@@ -433,7 +449,7 @@ void setup(void)
   // if the file is available, write to it:
   if (dataFile)
   {
-    tft.println("... loading data from messier.csv");
+    tft.print("--> loading Messier cathalog... ");
     delay(100);
     while (dataFile.available())
     {
@@ -447,13 +463,17 @@ void setup(void)
         items = "";
       }
     }
-    tft.println("... loading Messier COMPLETED");
+    tft.setTextColor(GREEN);
+    tft.println("OK");
+    tft.setTextColor(d_text);
     delay(100);
 
   }
   else
   {
+    tft.setTextColor(RED);
     tft.println("ERROR opening: messier.csv");
+    tft.setTextColor(d_text);
   }
 
   dataFile.close();
@@ -466,7 +486,7 @@ void setup(void)
   // if the file is available, write to it:
   if (dataFile)
   {
-    tft.println("... loading data from TREASURE.CSV");
+    tft.print("--> loading Treasure cathalog... ");
     delay(100);
     while (dataFile.available()) {
       in_char = dataFile.read();
@@ -479,22 +499,26 @@ void setup(void)
         items = "";
       }
     }
-    tft.println("... loading Treasures COMPLETED");
+    tft.setTextColor(GREEN);
+    tft.println("OK");
+    tft.setTextColor(d_text);
     delay(100);
 
   }
   else
   {
+    tft.setTextColor(RED);
     tft.println("ERROR opening: treasure.csv");
+    tft.setTextColor(d_text);
   }
   dataFile.close();
   last_button = 0;
   LOAD_SELECTOR = 0;
 
   tft.println("\n.................................\n");
-  tft.println("... initializing BlueTooth");
+  tft.println("--> initializing BlueTooth");
   delay(100);
-  tft.println("... initializing GPS");
+  tft.println("--> initializing GPS");
 
   calibrateJoypad(&x_cal, &y_cal);
 
@@ -504,7 +528,7 @@ void setup(void)
   logo_name.toCharArray(logo_n,50);
   bmpDraw(logo_n, 100, 390);
   delay(200);
-  tft.setCursor(0, 370);
+  tft.setCursor(0, 380);
   tft.setTextColor(l_text);
   tft.println("SUPPORTERS:");
 
@@ -1646,44 +1670,62 @@ uint32_t read32(File &f) {
  * Return: true if summer time, false otherwise
 */
 
-bool isSummerTime(time_t t) //in Italy: Summer time ends the last sunday of october and begins the last of march
+bool isSummerTime() //in Italy: Summer time ends the last sunday of october and begins the last of march
 {
   bool summer_time = false;
 
+  #ifdef serial_debug
+    Serial.print(day());
+    Serial.print("/");
+    Serial.print(month());
+    Serial.print("/");
+    Serial.print(year());
+    Serial.print("  weekday: ");
+    Serial.println(weekday());
+    Serial.print(hour());
+    Serial.print(":");
+    Serial.print(minute());
+  #endif
+
   // If i'm in October
-  if (month() == 10)
-  {
-    if (weekday() == 0 && (day() + 7) > 31 && hour() >= 3) summer_time = false;
-    else
+    if (month() == 10)
     {
-      // Se non è domenica, ma l'ultima è già passata
-      if ((day() + (7 - weekday())) > 31) summer_time = false;
-      else  summer_time = true;
-
+        if (weekday() == 1)
+        {
+            if (day() + 7 > 31 && hour() >= 3) summer_time = false;
+            else summer_time = true;
+        }
+        else
+        {
+            // Se non è domenica, ma l'ultima è già passata
+            if ((day() + 7 - (weekday() - 1)) > 31) summer_time = false;
+            else  summer_time = true;
+            
+        }
     }
-  }
-  // Se sono a marzo
-  else if (month() == 3)
-  {
-    // Se è domenica
-    if (weekday() == 0)
+    // Se sono a marzo
+    else if (month() == 3)
     {
-      // Se è l'ultima domenica
-      if ((day() + 7) > 31 && hour() >= 2) summer_time = true;
+        // Se è domenica
+        if (weekday() == 1)
+        {
+            // Se è l'ultima domenica
+            if ((day() + 7) > 31 && hour() >= 2) summer_time = true;
+            else summer_time = false;
+        }
+        else
+        {
+            // Se non è domenica, ma l'ultima è già passata
+            if ((day() + 7 - (weekday() - 1)) > 31) summer_time = true;
+            else  summer_time = false;
+        }
     }
-    else
-    {
-      // Se non è domenica, ma l'ultima è già passata
-      if ((day() + (7 - weekday())) > 31) summer_time = true;
-      else  summer_time = false;
-    }
-  }
-  // Se sono nel periodo dell'ora legale
-  else if (month() >= 4 && month() <= 9) summer_time = true;
-  // Se sono nel periodo dell'ora solare
-  else if ((month() >= 1 && month() <= 2) || (month() >= 11 && month() <= 12)) summer_time = false;
-
-  return summer_time;
+    // Se sono nel periodo dell'ora legale
+    else if (month() >= 4 && month() <= 9) summer_time = true;
+    // Se sono nel periodo dell'ora solare
+    else if ((month() >= 1 && month() <= 2) || (month() >= 11 && month() <= 12)) summer_time = false;
+    
+    return summer_time;
 }
 
 // Performs ~310.000 readings to find the mean value of the joypad (error: 3*10^-4 % )
