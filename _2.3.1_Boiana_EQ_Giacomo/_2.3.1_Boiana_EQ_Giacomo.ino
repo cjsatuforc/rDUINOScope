@@ -39,13 +39,20 @@
  *     -  Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
 */
 
+#define reverse_logic true //set true if the stepper drivers logic is "neglected enabled"
+#define serial_debug    // comment out to deactivate the serial debug mode
+
 // HERE GOES THE Mount, Gears and Drive information.
 // ... used to calculate the HourAngle to microSteps ratio
 // UPDATE THIS PART according to your SET-UP
 // ---------------------------------------------
 // NB: RA and DEC uses the same gear ratio (144 tooth in my case)!
 //----------------------------------------------
-int WORM = 144;
+#ifdef serial_debug
+  int WORM = 1;
+#else
+  int WORM = 144;
+#endif
 int REDUCTOR = 4;      // 1:4 gear reduction
 int DRIVE_STP = 200;   // Stepper drive have 200 steps per revolution
 int MICROSteps = 16;   // I'll use 1/16 microsteps mode to drive sidereal - also determines the LOWEST speed.
@@ -81,11 +88,9 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <ILI9488.h>
 #include <DueTimer.h> // interruptions library0
 #include <DS3231.h>
-#include <math.h>
+//#include <math.h>
 
 #include "defines.h"  //notes, colors and stars
-
-#define serial_debug
 
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
@@ -189,7 +194,7 @@ boolean IS_FAN1_ON = true;
 boolean IS_FAN2_ON = true;
 boolean IS_CUSTOM_MAP_SELECTED = false;
 boolean IS_SOUND_ON = true;
-int TFT_Brightness = 255;
+int TFT_Brightness = 230;
 int MAIN_SCREEN_MENU = 0;
 int CURRENT_SCREEN = 0;
 int LOAD_SELECTOR;   // selector to show which LOADING mechanism is used: 1 - Messier, 2 - File, 3 - NGCs
@@ -201,6 +206,7 @@ String Sound_State = "ON";
 String Stepper_State = "ON";
 String Mer_Flip_State = "Auto";
 String Tracking_Mode = "Celest";
+
 
 int RA_microSteps, DEC_microSteps, rev_RA_microSteps, rev_DEC_microSteps;              // Current position of the motors in MicroSteps! - when movement occures, values are changed accordingly (manual, tracking or slew to);
 int RA_mode_steps, DEC_mode_steps;
@@ -241,7 +247,7 @@ double det = 0;
 
 // PIN selection
 int speakerOut = 28;
-int RA_STP = 4;
+int RA_STP = 8;
 int RA_DIR = 5;
 int DEC_STP = 6;
 int DEC_DIR = 7;
@@ -393,7 +399,14 @@ void setup(void)
   tft.print("GNU General Public License");
   tft.setCursor(10, 160);
   tft.setTextColor(d_text);
-  tft.println("Version: " + FirmwareNumber);
+  tft.print("Version: " + FirmwareNumber);
+
+  #ifdef serial_debug
+    tft.setTextColor(title_bg);
+    tft.println(" - DEBUG MODE");
+    tft.setTextColor(d_text);
+  #endif
+  
   tft.setCursor(0, 220);
   tft.setTextSize(1);
 
@@ -406,12 +419,14 @@ void setup(void)
   TREAS_PAGER = 0;
   STARS_PAGER = 0;
 
+  volatile bool check = true;
   tft.print("--> Initializing touchscreen... ");
   if (!touch_init)
   {
-    tft.println("ERROR: Unable to initialize touchscreen.\n Check connections!\n");
-    // don't do anything more:
-    while (1);
+    tft.setTextColor(RED);
+    tft.println("FAIL");
+    tft.setTextColor(d_text);
+    check = false;
   }
   else
   {
@@ -419,6 +434,42 @@ void setup(void)
     tft.println("OK");
     tft.setTextColor(d_text);
   }
+  
+  tft.print("--> Initializing DHT sensor... ");
+  if(isnan(dht.readTemperature()) || isnan(dht.readHumidity()))
+  {
+    tft.setTextColor(RED);
+    tft.println("FAIL");
+    tft.setTextColor(d_text);
+  }
+  else
+  {
+    tft.setTextColor(GREEN);
+    tft.println("OK");
+    tft.setTextColor(d_text);
+  }
+
+  tft.print("--> Initializing RTC... ");
+  int prev_mil = millis(); 
+  if(isnan(rtc.getTemp()))
+  {
+    tft.setTextColor(RED);
+    tft.println("FAIL");
+    tft.setTextColor(d_text);
+    check = false;
+  }
+  else
+  {
+    tft.setTextColor(GREEN);
+    tft.print("OK   ");
+    #ifdef serial_debug
+      tft.println(rtc.getTemp());
+    #else
+      tft.println("");  
+    #endif
+    tft.setTextColor(d_text);
+  }
+  
   tft.print("--> Initializing SD card... ");
   for (int i=0; i<10 && !SD.begin(SD_CS); i++)
   {
@@ -428,11 +479,7 @@ void setup(void)
       tft.println("ERROR: Card failed, or not present\n");
       tft.println("Try formatting the SD card to FAT32 and replace the files.");
       tft.setTextColor(d_text);
-    
-      //go on if in serial_debug mode, else don't do anything more
-      #ifndef serial_debug
-        while (1);
-      #endif
+      check = false;
     }
     delay(50);
   }
@@ -520,17 +567,22 @@ void setup(void)
   delay(100);
   tft.println("--> initializing GPS");
 
+  #ifndef serial_debug
+    if (check == false)  while(1);  //don't do anything more
+  #endif
+
   calibrateJoypad(&x_cal, &y_cal);
 
   // Draw Supporters Logos
-  char logo_n[50];
-  String logo_name = "hackad24.bmp";
-  logo_name.toCharArray(logo_n,50);
-  bmpDraw(logo_n, 100, 390);
-  delay(200);
   tft.setCursor(0, 380);
   tft.setTextColor(l_text);
   tft.println("SUPPORTERS:");
+  
+  char logo_n[50];
+  String logo_name = "hackad24.bmp";
+  logo_name.toCharArray(logo_n,50);
+  bmpDraw(logo_n, 100, 410);
+  delay(200);
 
   // EMPIRIAL MARCH - if sounds everything was initialized well   :)
   if (IS_SOUND_ON)
@@ -565,7 +617,7 @@ void setup(void)
   RA_move_ending = 0;
   considerTempUpdates();
 
-  digitalWrite(POWER_DRV8825, HIGH); // Switch on the Motor Driver Power!
+  digitalWrite(POWER_DRV8825, HIGH == !reverse_logic); // Switch on the Motor Driver Power!
 }
 
 void loop(void)
@@ -630,7 +682,7 @@ void loop(void)
     xPosition = analogRead(xPin);
     yPosition = analogRead(yPin);
 
-    if ((xPosition < x_cal-50) || (xPosition > x_cal+50) || (yPosition < y_cal-50) || (yPosition > x_cal+50))
+    if ((xPosition < x_cal-100) || (xPosition > x_cal+100) || (yPosition < y_cal-100) || (yPosition > x_cal+100))
     {
       IS_MANUAL_MOVE = true;
       if (IS_STEPPERS_ON) {
@@ -682,7 +734,8 @@ void loop(void)
       considerTempUpdates();
       // I need to make sure the Drives are not moved to track the stars,
       // if Object is below horizon ALT < 0 - Stop tracking.
-      if ((ALT <= 0) && (IS_TRACKING == true) && (IS_IN_OPERATION == true)) {
+      if ((ALT <= 0) && (IS_TRACKING == true) && (IS_IN_OPERATION == true))
+      {
         IS_TRACKING = false;
         Timer3.stop();
         drawMainScreen();
@@ -942,9 +995,9 @@ void Sidereal_rate() {
       setmStepsMode("R", MICROSteps);
     }
     digitalWrite(RA_DIR, STP_BACK);
-    PIOC->PIO_SODR = (1u << 26);
+    PIOC->PIO_SODR = (1u << 22);
     delayMicroseconds(2);
-    PIOC->PIO_CODR = (1u << 26);
+    PIOC->PIO_CODR = (1u << 22);
     //    digitalWrite(RA_STP,HIGH);
     RA_microSteps += 1;
     //    digitalWrite(RA_STP,LOW);
@@ -1094,17 +1147,17 @@ void cosiderSlewTo() {
         digitalWrite(RA_DIR, STP_BACK);
         //digitalWrite(RA_STP,HIGH);
         //digitalWrite(RA_STP,LOW);
-        PIOC->PIO_SODR = (1u << 26);
+        PIOC->PIO_SODR = (1u << 22);
         delayMicroseconds(5);
-        PIOC->PIO_CODR = (1u << 26);
+        PIOC->PIO_CODR = (1u << 22);
         RA_microSteps += RA_mode_steps;
       } else {
         digitalWrite(RA_DIR, STP_FWD);
         //digitalWrite(RA_STP,HIGH);
         //digitalWrite(RA_STP,LOW);
-        PIOC->PIO_SODR = (1u << 26);
+        PIOC->PIO_SODR = (1u << 22);
         delayMicroseconds(5);
-        PIOC->PIO_CODR = (1u << 26);
+        PIOC->PIO_CODR = (1u << 22);
         RA_microSteps -= RA_mode_steps;
       }
     }
@@ -1662,12 +1715,12 @@ uint32_t read32(File &f) {
 }
 
 /*
- * isSummerTime(time_t t) : uses Time.h
+ * isSummerTime() : uses Time.h
  * ---------
  * 
- * Given t, this function versifies if the date time needs to be updated by adding 1h due to Summer time
+ * This function versifies if the date time needs to be updated by adding 1h due to summer-time
  * 
- * Return: true if summer time, false otherwise
+ * Return: true if in summer-time, false otherwise
 */
 
 bool isSummerTime() //in Italy: Summer time ends the last sunday of october and begins the last of march
@@ -1687,9 +1740,10 @@ bool isSummerTime() //in Italy: Summer time ends the last sunday of october and 
     Serial.print(minute());
   #endif
 
-  // If i'm in October
+  // If I'm in October
     if (month() == 10)
     {
+        // If it's Sunday
         if (weekday() == 1)
         {
             if (day() + 7 > 31 && hour() >= 3) summer_time = false;
@@ -1697,13 +1751,13 @@ bool isSummerTime() //in Italy: Summer time ends the last sunday of october and 
         }
         else
         {
-            // Se non è domenica, ma l'ultima è già passata
+            // If last sunday has passed
             if ((day() + 7 - (weekday() - 1)) > 31) summer_time = false;
             else  summer_time = true;
             
         }
     }
-    // Se sono a marzo
+    // If I'm in March
     else if (month() == 3)
     {
         // Se è domenica
@@ -1725,7 +1779,7 @@ bool isSummerTime() //in Italy: Summer time ends the last sunday of october and 
     // Se sono nel periodo dell'ora solare
     else if ((month() >= 1 && month() <= 2) || (month() >= 11 && month() <= 12)) summer_time = false;
     
-    return summer_time;
+    return summer_time; 
 }
 
 // Performs ~310.000 readings to find the mean value of the joypad (error: 3*10^-4 % )

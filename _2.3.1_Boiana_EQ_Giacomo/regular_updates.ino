@@ -34,7 +34,8 @@ void considerTempUpdates() // Temperature && Humidity Updates
        }
        else
        {
-          _temp = tTemp - 2;  // I need to calibrate my sensor... it reads 2 deg. higher temp.
+          //_temp = tTemp - 2;  // I need to calibrate my sensor... it reads 2 deg. higher temp.
+          _temp = tTemp;
           _humid = tHum;
        }
        tft.setTextSize(2);
@@ -185,9 +186,9 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
         tft.setCursor(55, 260);
         tft.print("LNG: ");
         tft.print(gps.location.lng(),4);
-        tft.setCursor(90, 300);
+        tft.setCursor(85, 300);
         tft.setTextSize(2);
-        tft.print("Satelites: ");
+        tft.print("Satellites: ");
         tft.print(gps.satellites.value());
         tft.setCursor(110, 325);
         tft.print("GMT: ");

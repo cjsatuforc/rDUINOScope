@@ -459,7 +459,9 @@ void considerTouchInput(int lx, int ly){
             }
          }
        }
-    }else if (CURRENT_SCREEN == 7){   // captures touches on drawOptionsScreen()
+    }
+    else if (CURRENT_SCREEN == 7)
+    {   // captures touches on drawOptionsScreen()
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
        // BTN <Back pressed
          drawMainScreen();
@@ -468,35 +470,38 @@ void considerTouchInput(int lx, int ly){
        // Celestial Tracking Selected
          Tracking_type = 1;
          Tracking_Mode="Celest";
-         drawOptionsScreen();
+         updateTrackingMode_opt();
         }
        if (lx > 110 && lx < 210 && ly > 85 && ly < 125){
        // Lunar Tracking Selected
          Tracking_type = 0;
          Tracking_Mode="Lunar";
-         drawOptionsScreen();
+         updateTrackingMode_opt();
         }
        if (lx > 220 && lx < 320 && ly > 85 && ly < 125){
        // Solar Tracking Selected
          Tracking_type = 2;
          Tracking_Mode="Solar";
-         drawOptionsScreen();
+         updateTrackingMode_opt();
         }
 
       
-       if (lx > 275 && lx < 400 && ly > 160 && ly < 200){
-       // Screen MAX Brightness
-       analogWrite(TFTBright,255);
-       TFT_Brightness=255;
-       drawOptionsScreen();
-         
-        }
+       if (lx > 275 && lx < 400 && ly > 160 && ly < 200)
+       {
+        // Screen MAX Brightness
+        analogWrite(TFTBright,255);
+        TFT_Brightness=255;
+        updateTriangleBrightness_opt();
+        //tft.fillTriangle(5, 200, 265, 200, 265, 155, btn_l_border);
+       }
        if (lx > 5 && lx < 265 && ly > 155 && ly < 200){
        // Screen REDUCE Brightness   "Triangle"
           TFT_Brightness = 190 +((lx - 5)*0.25);
           analogWrite(TFTBright, TFT_Brightness);
-          drawOptionsScreen();
-          //Serial.println(TFT_Brightness);
+          updateTriangleBrightness_opt();
+          
+          //tft.fillTriangle(5, 200, lx, 200, lx, 190, btn_l_border);
+          
         }
 
 
@@ -504,50 +509,50 @@ void considerTouchInput(int lx, int ly){
        // ECO Mode - Timeout in seconds  Never
           TFT_timeout = 0;
           TFT_Time="AL-ON";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
        if (lx > 55 && lx < 100 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  30 Seconds
           TFT_timeout = 30000;
           TFT_Time="30 S";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
        if (lx > 110 && lx < 155 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   60 Seconds
           TFT_timeout = 60000;
           TFT_Time="60 S";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
        if (lx > 165 && lx < 210 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   2 Minutes
           TFT_timeout = 120000;
           TFT_Time="2 M";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
        if (lx > 220 && lx < 265 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  5 Minutes
           TFT_timeout = 300000;
           TFT_Time="5 M";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
        if (lx > 275 && lx < 320 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  10 Minutes
           TFT_timeout = 600000;
           TFT_Time="10 M";
-          drawOptionsScreen();
+          updateBrightness_opt();
         }
 
        if (lx > 0 && lx < 100 && ly > 300 && ly < 340){
        // ON Meridian Flip
          IS_MERIDIAN_FLIP_AUTOMATIC = true;
          Mer_Flip_State="AUTO";
-         drawOptionsScreen();
+         updateMeridianFlip_opt();
         }
        if (lx > 110 && lx < 210 && ly > 300 && ly < 340){
        // OFF Meridian Flip
          IS_MERIDIAN_FLIP_AUTOMATIC = false;
          Mer_Flip_State="OFF";
-         drawOptionsScreen();
+         updateMeridianFlip_opt();
         }
 
        
@@ -555,57 +560,86 @@ void considerTouchInput(int lx, int ly){
        // ON Sound
          IS_SOUND_ON = true;
          Sound_State="ON";
-         drawOptionsScreen();
+         updateSound_opt();
         }
        if (lx > 110 && lx < 210 && ly > 370 && ly < 410){
        // OFF Sound
          IS_SOUND_ON = false;
          Sound_State="OFF";
-         drawOptionsScreen();
+         updateSound_opt();
         }
 
 
-       if (lx > 0 && lx < 100 && ly > 440 && ly < 480){
-       // ON Stepper Motors
-         IS_STEPPERS_ON = true;
-         digitalWrite(POWER_DRV8825, HIGH);
-         Stepper_State="ON";
-         drawOptionsScreen();
+       if (lx > 0 && lx < 100 && ly > 440 && ly < 480)
+       {
+        // ON Stepper Motors
+        IS_STEPPERS_ON = true;
+        digitalWrite(POWER_DRV8825, HIGH == !reverse_logic);
+        #ifdef serial_debug
+          Serial.print("Stepper was turned: ");
+          Serial.println(HIGH * !reverse_logic);
+        #endif
+        Stepper_State="ON";
+        updateStepper_opt();
+       }
+       if (lx > 110 && lx < 210 && ly > 440 && ly < 480)
+       {
+        // OFF Stepper Motors
+        IS_STEPPERS_ON = false;
+        digitalWrite(POWER_DRV8825, LOW == !reverse_logic);
+        #ifdef serial_debug
+          Serial.print("Stepper was turned: ");
+          Serial.println(LOW * !reverse_logic);
+        #endif
+        Stepper_State="OFF";
+        updateStepper_opt();
+       }
+
+       //Touched GPS configuration
+       if(lx > 230 && lx < 320 && ly > 300 && ly < 480)
+       {
+        DrawButton(230, 300, 80, 180, "", btn_l_border, 0, btn_l_text, 2);
+        tft.setCursor(252, 330);
+        tft.print("GPS");
+        tft.setCursor(240, 375);
+        tft.print("Clock");
+        tft.setCursor(240, 420);
+        tft.print("Align");
+       
+        CURRENT_SCREEN = 0;
+        drawGPSScreen();
+       }
+    }
+    else if (CURRENT_SCREEN == 10) // captures touches on drawSTATScreen()
+    {
+      if (lx > 210 && lx < 320 && ly > 10 && ly < 60)
+      {
+        // BTN Cancel pressed
+        IS_IN_OPERATION = true;
+        drawMainScreen();
+      }
+    }
+    else if (CURRENT_SCREEN == 11) // captures touches on drawStarMap()
+    {
+      if (lx > 230 && lx < 320 && ly > 0 && ly < 35)
+      {
+        // BTN Back pressed
+        IS_IN_OPERATION = true;
+        drawMainScreen();
+      }
+      // Take care of Map move...                         
+      // When user touches left, right, top and bottom part of the image,
+      // the system loads the corresponding Star Map - moving left, right, top and bottom.
+      if (lx > 0 && lx < 50 && ly > 90 && ly < 420) // Left side touched... show next StarMap image
+      {
+        if (map_c < 8)
+        {
+          map_c += 1;
+          IS_CUSTOM_MAP_SELECTED = true;
+          drawStarMap();
         }
-       if (lx > 110 && lx < 210 && ly > 440 && ly < 480){
-       // OFF Stepper Motors
-         IS_STEPPERS_ON = false;
-         digitalWrite(POWER_DRV8825, LOW);
-         Stepper_State="OFF";
-         drawOptionsScreen();
-        }
-        
-        
-    }else if (CURRENT_SCREEN == 10){   // captures touches on drawSTATScreen()
-       if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
-       // BTN Cancel pressed
-         IS_IN_OPERATION = true;
-         drawMainScreen();
-        }
-    }else if (CURRENT_SCREEN == 11){   // captures touches on drawStarMap()
-       if (lx > 230 && lx < 320 && ly > 0 && ly < 35){
-       // BTN Back pressed
-         IS_IN_OPERATION = true;
-         drawMainScreen();
-        }
-        // Take care of Map move...                         
-        // When user touches left, right, top and bottom part of the image,
-        // the system loads the corresponding Star Map - moving left, right, top and bottom.
-        if (lx > 0 && lx < 50 && ly > 90 && ly < 420){
-          // Left side touched... show next StarMap image
-          if (map_c < 8){
-            map_c += 1;
-            IS_CUSTOM_MAP_SELECTED = true;
-            drawStarMap();
-            
-          }
-        }
-        if (lx > 190 && lx < 320 && ly > 90 && ly < 420){
+      }
+      if (lx > 190 && lx < 320 && ly > 90 && ly < 420){
           // Right side touched... show next StarMap image
           if (map_c > 1){
             map_c -= 1;
