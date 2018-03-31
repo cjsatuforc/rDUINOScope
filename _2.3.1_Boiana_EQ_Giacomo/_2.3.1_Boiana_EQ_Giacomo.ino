@@ -49,7 +49,7 @@
 // NB: RA and DEC uses the same gear ratio (144 tooth in my case)!
 //----------------------------------------------
 #ifdef serial_debug
-  int WORM = 1;
+  int WORM = 144;
 #else
   int WORM = 144;
 #endif
@@ -579,10 +579,18 @@ void setup(void)
   tft.println("SUPPORTERS:");
   
   char logo_n[50];
-  String logo_name = "hackad24.bmp";
+  String logo_name = "logo.bmp";
   logo_name.toCharArray(logo_n,50);
-  bmpDraw(logo_n, 100, 410);
+  bmpDraw(logo_n, 130, 410);
   delay(200);
+  
+  logo_name = "hackad24.bmp";
+  logo_name.toCharArray(logo_n,50);
+  bmpDraw(logo_n, 50, 410);
+  delay(200);
+
+  //char logo_n[50];
+  
 
   // EMPIRIAL MARCH - if sounds everything was initialized well   :)
   if (IS_SOUND_ON)
