@@ -241,8 +241,10 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           
           // convert to epoch
           setTime(gps.time.hour(), gps.time.minute(), gps.time.second(), gps.date.day(), gps.date.month(), gps.date.year());
-          Serial.print("epoch: ");
-          Serial.println(now());
+          #ifdef serial_debug
+            Serial.print("epoch: ");
+            Serial.println(now());
+          #endif
           
           if(isSummerTime())
           {
