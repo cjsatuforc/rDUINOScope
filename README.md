@@ -11,6 +11,7 @@
 -  Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv.
 -  Changed color for Name and Description when tracking objects.
 -  Different pin arrangement.
+-  Options page settings such as tft brightness or sound state, are now saved and restored at each boot.
 -  Added custom.csv wich can be used to add more custom sky objects (still to be implemented).
 
 ![Board1](http://i68.tinypic.com/2qbdsuc.png)
