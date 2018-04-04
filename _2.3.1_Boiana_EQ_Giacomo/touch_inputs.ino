@@ -464,6 +464,7 @@ void considerTouchInput(int lx, int ly){
     {   // captures touches on drawOptionsScreen()
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
        // BTN <Back pressed
+         storeOptions_SD();
          drawMainScreen();
         }
         if (lx > 0 && lx < 100 && ly > 85 && ly < 125){
@@ -514,31 +515,31 @@ void considerTouchInput(int lx, int ly){
        if (lx > 55 && lx < 100 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  30 Seconds
           TFT_timeout = 30000;
-          TFT_Time="30 S";
+          TFT_Time="30 s";
           updateBrightness_opt();
         }
        if (lx > 110 && lx < 155 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   60 Seconds
           TFT_timeout = 60000;
-          TFT_Time="60 S";
+          TFT_Time="60 s";
           updateBrightness_opt();
         }
        if (lx > 165 && lx < 210 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   2 Minutes
           TFT_timeout = 120000;
-          TFT_Time="2 M";
+          TFT_Time="2 m";
           updateBrightness_opt();
         }
        if (lx > 220 && lx < 265 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  5 Minutes
           TFT_timeout = 300000;
-          TFT_Time="5 M";
+          TFT_Time="5 m";
           updateBrightness_opt();
         }
        if (lx > 275 && lx < 320 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  10 Minutes
           TFT_timeout = 600000;
-          TFT_Time="10 M";
+          TFT_Time="10 m";
           updateBrightness_opt();
         }
 
@@ -665,25 +666,32 @@ void considerTouchInput(int lx, int ly){
         }
 
         
-    }else if (CURRENT_SCREEN == 12){    // captures touches on drawStarSyncScreen()
-       if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
-       // BTN Done pressed
+    }
+    else if (CURRENT_SCREEN == 12) // captures touches on drawStarSyncScreen()
+    {  
+       if (lx > 210 && lx < 320 && ly > 10 && ly < 60)
+       {
+         // BTN Done pressed
          IS_IN_OPERATION = true;
          drawMainScreen();
        }
        int do_kolko = 0;
-       if (ALLIGN_TYPE == 3){
+       if (ALLIGN_TYPE == 3)
+       {
         // Chage the 4 to represent the real count of screens.
         // They need to be dynamically calculated... not fixed     
           do_kolko = int_star_count;
-       }else{
+       }
+       else
+       {
           do_kolko = 14;
        }
        if (lx > 220 && lx < 320 && ly > 420 && ly < 480){
        // BTN next> pressed 
              STARS_PAGER += 1;
              if (STARS_PAGER < do_kolko){
-                drawStarSyncScreen();
+                //drawStarSyncScreen();
+                drawAlignObjects_ali();
              }else{
                STARS_PAGER = do_kolko - 1;
              }
@@ -692,7 +700,8 @@ void considerTouchInput(int lx, int ly){
        // BTN <prev pressed
              STARS_PAGER -= 1;
              if (STARS_PAGER >= 0){
-                drawStarSyncScreen();
+                //drawStarSyncScreen();
+                drawAlignObjects_ali();
              }else{
                 STARS_PAGER = 0;
              }
@@ -1054,16 +1063,20 @@ void considerTouchInput(int lx, int ly){
          drawStarMap();
         
         }
-        if (last_button == 9){
+        if (last_button == 9)
+        {
          last_button = 0;
-         if (IS_FAN1_ON){
+         if (IS_FAN1_ON)
+         {
             IS_FAN1_ON = false;
             tft.fillRect(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(FAN1,LOW);
             Fan1_State="OFF";
             drawStatusBar();
-         }else{
+         }
+         else
+         {
             IS_FAN1_ON = true;
             tft.fillRect(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
@@ -1071,28 +1084,35 @@ void considerTouchInput(int lx, int ly){
             Fan1_State="ON";     
             drawStatusBar();
          }
+         storeOptions_SD();
         }
-        if (last_button == 10){
+        if (last_button == 10)
+        {
           last_button = 0;
           drawOptionsScreen();
         }
-        if (last_button == 12){
+        if (last_button == 12)
+        {
          last_button = 0;
-         if (IS_FAN2_ON){
+         if (IS_FAN2_ON)
+         {
             IS_FAN2_ON = false;
             tft.fillRect(220, 405, 100, 70,BLACK);
             DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(FAN2,LOW);
             Fan2_State="OFF";
             drawStatusBar();
-         }else{
-            IS_FAN2_ON = true;
-            tft.fillRect(220, 405, 100, 70,BLACK);
-            DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
-            digitalWrite(FAN2,HIGH);
-            Fan2_State="ON";
-            drawStatusBar();
          }
+         else
+         {
+          IS_FAN2_ON = true;
+          tft.fillRect(220, 405, 100, 70,BLACK);
+          DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
+          digitalWrite(FAN2,HIGH);
+          Fan2_State="ON";
+          drawStatusBar();
+         }
+         storeOptions_SD();
         }
     }
   }
