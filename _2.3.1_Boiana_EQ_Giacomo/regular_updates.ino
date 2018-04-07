@@ -42,7 +42,7 @@ void considerTempUpdates() // Temperature && Humidity Updates
        tft.setTextColor(title_texts);
        if (_temp > -75 && _temp < 75 && _humid < 100 && _humid > 0)
        {
-         tft.fillRect(258,35,30,55, title_bg);
+         tft.fillRect2(258,35,30,55, title_bg);
            
          tft.setCursor(261, 38);
          tft.print(_temp,0);
@@ -71,7 +71,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
       tft.setTextSize(1);
       tft.setTextColor(l_text);
       if (old_d != rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/')){
-            tft.fillRect(35,102,60,6, title_texts);
+            tft.fillRect2(35,102,60,6, title_texts);
             tft.setCursor(35,102);
             tft.print(String(rtc.getDateStr()).substring(0,2));
             tft.print(" ");
@@ -80,12 +80,12 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
             tft.print(String(rtc.getDateStr()).substring(6));
       }
       tft.setTextColor(title_texts);
-      tft.fillRect(90,35,95,22, title_bg);
+      tft.fillRect2(90,35,95,22, title_bg);
       tft.setTextSize(3);
       tft.setCursor(90, 35);
       tft.print(String(rtc.getTimeStr()).substring(0,5));  
            
-      tft.fillRect(90,65,95,22, title_bg);
+      tft.fillRect2(90,65,95,22, title_bg);
       tft.setCursor(90, 65);
       if ((int)LST < 10){
         tft.print("0");
@@ -104,7 +104,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           tft.setCursor(135,290);
           tft.setTextSize(2);
           tft.setTextColor(l_text);
-          tft.fillRect(133,290,112,20, BLACK);
+          tft.fillRect2(133,290,112,20, BLACK);
           tft.print(HAHour,0);
           tft.print("h");
           tft.print(HAMin,1);
@@ -113,7 +113,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           tft.setTextSize(1);
           tft.setCursor(2,240);
           tft.setTextColor(l_text);
-          tft.fillRect(1,239,200,18, BLACK);
+          tft.fillRect2(1,239,200,18, BLACK);
           tft.print("Az/Alt: ");
           tft.print(floor(AZ), 0);
           tft.print("^ ");
@@ -129,7 +129,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           tft.setTextSize(1);
           tft.setCursor(5,256);
           tft.setTextColor(l_text);
-          tft.fillRect(5,255,230,22, BLACK);
+          tft.fillRect2(5,255,230,22, BLACK);
           tft.print("HA: ");
           tft.print(HAHour,0);
           tft.print("h");
@@ -147,15 +147,15 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
       Current_RA_DEC();
       tft.setTextSize(3);
       
-      tft.fillRect(87,77,198,30, btn_d_border);
+      tft.fillRect2(87,77,198,30, btn_d_border);
       tft.setCursor(108, 85);
       tft.print(curr_DEC_lz);
 
-      tft.fillRect(87,132,198,30, btn_d_border);
+      tft.fillRect2(87,132,198,30, btn_d_border);
       tft.setCursor(115, 140);
       tft.print(curr_HA_lz);
 
-      tft.fillRect(87,187,198,30, btn_d_border);
+      tft.fillRect2(87,187,198,30, btn_d_border);
       tft.setCursor(115, 195);
       tft.print(curr_RA_lz);
 
@@ -166,10 +166,10 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
    {
       tft.setCursor(110, 115);
       tft.setTextColor(l_text);
-      tft.fillRect(110,115,200,30, BLACK);
+      tft.fillRect2(110,115,200,30, BLACK);
       tft.print(rtc.getTimeStr(FORMAT_SHORT));
       if (old_d != rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/')){
-          tft.fillRect(70,80,200,30, BLACK);
+          tft.fillRect2(70,80,200,30, BLACK);
           tft.setCursor(70, 80);
           tft.print(rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/'));
       }
@@ -177,7 +177,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
   }
   else if (CURRENT_SCREEN == 0 && (millis()-update_time) > 5000)
   {
-        tft.fillRect(10,200,320,200, BLACK);
+        tft.fillRect2(10,200,320,200, BLACK);
         tft.setTextColor(btn_l_text);
         tft.setTextSize(3);
         tft.setCursor(55, 200);
@@ -291,7 +291,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
 
         if (ALLIGN_STEP == 1)
         {                  
-            tft.fillRect(0, 295, 320, 80, BLACK);
+            tft.fillRect2(0, 295, 320, 80, BLACK);
             tft.setCursor(0, 300);
             tft.setTextSize(2);
 

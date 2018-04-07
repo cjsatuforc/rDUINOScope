@@ -61,7 +61,7 @@ void considerTouchInput(int lx, int ly){
        if (lx > 60 && lx < 260 && ly > 400 && ly < 475)
        {
         last_button = 1;
-        tft.fillRect(60,400,200,65, btn_l_border);
+        tft.fillRect2(60,400,200,65, btn_l_border);
       }
     }
     else if (CURRENT_SCREEN == 1)
@@ -69,7 +69,7 @@ void considerTouchInput(int lx, int ly){
       if (lx > 220 && lx < 320 && ly > 405 && ly < 480)
       {
          // BTN OK pressed
-           tft.fillRect(226,406,70,55, btn_l_border);
+           tft.fillRect2(226,406,70,55, btn_l_border);
            int changes=0;
            for (int y=0; y<12; y++)
            {
@@ -269,7 +269,7 @@ void considerTouchInput(int lx, int ly){
       }
       if (lx > 1 && lx < 100 && ly > 325 && ly < 395 && IS_BT_MODE_ON == false){
        // BTN 1 pressed
-         tft.fillRect(2,326,98,68, btn_l_border);
+         tft.fillRect2(2,326,98,68, btn_l_border);
          if (MAIN_SCREEN_MENU == 0){
              last_button = 1;
          }else{
@@ -277,7 +277,7 @@ void considerTouchInput(int lx, int ly){
          }
       } else if (lx > 1 && lx < 100 && ly > 405 && ly < 475 && IS_BT_MODE_ON == false){
        // BTN 4 pressed
-         tft.fillRect(1,405,100,70, btn_l_border);
+         tft.fillRect2(1,405,100,70, btn_l_border);
          if (MAIN_SCREEN_MENU == 0){
              last_button = 4;
          }else{
@@ -285,7 +285,7 @@ void considerTouchInput(int lx, int ly){
          }
       } else if (lx > 110 && lx < 210 && ly > 325 && ly < 395 && IS_BT_MODE_ON == false){
        // BTN 2 pressed
-         tft.fillRect(110,325,100,70, btn_l_border);
+         tft.fillRect2(110,325,100,70, btn_l_border);
          if (MAIN_SCREEN_MENU == 0){
              last_button = 2;
          }else{
@@ -293,7 +293,7 @@ void considerTouchInput(int lx, int ly){
          }
       } else if (lx > 110 && lx < 210 && ly > 405 && ly < 475){
        // BTN 5 pressed
-         tft.fillRect(110,405,100,70, btn_l_border);
+         tft.fillRect2(110,405,100,70, btn_l_border);
          if (MAIN_SCREEN_MENU == 0){
              last_button = 5;
          }else{
@@ -301,7 +301,7 @@ void considerTouchInput(int lx, int ly){
          }
       } else if (lx > 220 && lx < 290 && ly > 325 && ly < 395){
        // BTN 3 pressed
-         tft.fillRect(220,325,100,70, btn_l_border);
+         tft.fillRect2(220,325,100,70, btn_l_border);
            if (MAIN_SCREEN_MENU == 0){
              last_button = 3;
                }else{
@@ -310,7 +310,7 @@ void considerTouchInput(int lx, int ly){
          }
       } else if (lx > 220 && lx < 290 && ly > 405 && ly < 475){
        // BTN 6 pressed
-         tft.fillRect(220,405,100,70, btn_l_border);
+         tft.fillRect2(220,405,100,70, btn_l_border);
          if (MAIN_SCREEN_MENU == 0){
              last_button = 6;
          }else{
@@ -326,59 +326,93 @@ void considerTouchInput(int lx, int ly){
        }
        
     }else if (CURRENT_SCREEN == 6){   // captures touches on drawLoadScreen() .. the one that loads objects from DB
-       if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
+       if (lx > 210 && lx < 320 && ly > 10 && ly < 60)
+       {
        // BTN Back pressed
          drawMainScreen();
        }
        if (lx > 220 && lx < 320 && ly > 420 && ly < 480){
        // BTN next> pressed  TREAS_PAGER
-          if (LOAD_SELECTOR == 1){
+          if (LOAD_SELECTOR == 1)
+          {
              MESS_PAGER += 1;
              if (MESS_PAGER < 8){
-                drawLoadScreen();
-             }else{
-               MESS_PAGER = 6;
+                //drawLoadScreen();
+                drawLoadObjects();
              }
-          }else {
+             else
+             {
+               MESS_PAGER = 6;
+               drawLoadScreen();
+             }
+          }
+          else
+          {
              TREAS_PAGER += 1;
-             if (TREAS_PAGER < 9){
-                drawLoadScreen();
-             }else{
+             if (TREAS_PAGER < 9)
+             {
+                drawLoadObjects();
+             }
+             else
+             {
                TREAS_PAGER = 8;
+               drawLoadScreen();
              }
           }
        }
-       if (lx > 0 && lx < 100 && ly > 420 && ly < 480){
+       if (lx > 0 && lx < 100 && ly > 420 && ly < 480)
+       {
        // BTN <prev pressed
-          if (LOAD_SELECTOR == 1){
+          if (LOAD_SELECTOR == 1)
+          {
              MESS_PAGER -= 1;
-             if (MESS_PAGER >= 0){
-                drawLoadScreen();
-             }else{
+             if (MESS_PAGER >= 0)
+             {
+                //drawLoadScreen();
+                drawLoadObjects();
+             }
+             else
+             {
                 MESS_PAGER = 0;
              }
-          }else{
+          }
+          else
+          {
              TREAS_PAGER -= 1;
-             if (TREAS_PAGER >= 0){
-                drawLoadScreen();
-             }else{
+             if (TREAS_PAGER >= 0)
+             {
+                //drawLoadScreen();
+                drawLoadObjects();
+             }
+             else
+             {
                 TREAS_PAGER = 0;
              }
           }
        }
-       if (lx > 0 && lx < 150 && ly > 60 && ly < 100){
-       // BTN Messier pressed
-           LOAD_SELECTOR = 1;
-           drawLoadScreen();
+       if (lx > 0 && lx < 150 && ly > 60 && ly < 100)
+       {
+        // BTN Messier pressed
+        LOAD_SELECTOR = 1;
+        if (LOAD_SELECTOR == 1)
+        {
+          DrawButton(0, 60, 150, 40, "Messier", btn_d_border, btn_l_border, btn_l_text, 2);
+          DrawButton(170, 60, 150, 40, "Treasures", 0, btn_l_border, btn_l_text, 2);
+          drawLoadObjects();
+        }
        }
-       if (lx > 170 && lx < 320 && ly > 60 && ly < 100){
-       // BTN Treasures pressed
-           LOAD_SELECTOR = 2;
-           drawLoadScreen();
+       if (lx > 170 && lx < 320 && ly > 60 && ly < 100)
+       {
+        // BTN Treasures pressed
+        LOAD_SELECTOR = 2;
+        DrawButton(0, 60, 150, 40, "Messier", 0, btn_l_border, btn_l_text, 2);
+        DrawButton(170, 60, 150, 40, "Treasures", btn_d_border, btn_l_border, btn_l_text, 2);
+        drawLoadObjects();
 
            //////////////      Messier Screen //////////////
        }       
-       if (LOAD_SELECTOR == 1){       
+       if (LOAD_SELECTOR == 1)
+       {       
          // I'm in MESSIER selector and need to check which Messier object is pressed
          for (int i=0; i<6; i++){
             for (int j=0; j<4; j++){
@@ -418,8 +452,9 @@ void considerTouchInput(int lx, int ly){
             }
          }
                ///////     Treasures Screen /////////////
-
-       }else if (LOAD_SELECTOR == 2){       
+       }
+       else if (LOAD_SELECTOR == 2)
+       {       
          // I'm in TREASURES selector and need to check which Treasure object is pressed
          for (int i=0; i<6; i++){
             for (int j=0; j<4; j++){
@@ -461,7 +496,8 @@ void considerTouchInput(int lx, int ly){
        }
     }
     else if (CURRENT_SCREEN == 7)
-    {   // captures touches on drawOptionsScreen()
+    {
+      // captures touches on drawOptionsScreen()
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
        // BTN <Back pressed
          storeOptions_SD();
@@ -502,7 +538,6 @@ void considerTouchInput(int lx, int ly){
           updateTriangleBrightness_opt();
           
           //tft.fillTriangle(5, 200, lx, 200, lx, 190, btn_l_border);
-          
         }
 
 
@@ -510,37 +545,37 @@ void considerTouchInput(int lx, int ly){
        // ECO Mode - Timeout in seconds  Never
           TFT_timeout = 0;
           TFT_Time="AL-ON";
-          updateBrightness_opt();
+          updateScreenTimeout_opt();
         }
        if (lx > 55 && lx < 100 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  30 Seconds
           TFT_timeout = 30000;
           TFT_Time="30 s";
-          updateBrightness_opt();
+          updateScreenTimeout_opt();
         }
        if (lx > 110 && lx < 155 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   60 Seconds
           TFT_timeout = 60000;
           TFT_Time="60 s";
-          updateBrightness_opt();
+          updateScreenTimeout_opt();
         }
        if (lx > 165 && lx < 210 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds   2 Minutes
           TFT_timeout = 120000;
-          TFT_Time="2 m";
-          updateBrightness_opt();
+          TFT_Time="2 min";
+          updateScreenTimeout_opt();
         }
        if (lx > 220 && lx < 265 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  5 Minutes
           TFT_timeout = 300000;
-          TFT_Time="5 m";
-          updateBrightness_opt();
+          TFT_Time="5 min";
+          updateScreenTimeout_opt();
         }
        if (lx > 275 && lx < 320 && ly > 230 && ly < 270){
        // ECO Mode - Timeout in seconds  10 Minutes
           TFT_timeout = 600000;
-          TFT_Time="10 m";
-          updateBrightness_opt();
+          TFT_Time="10 min";
+          updateScreenTimeout_opt();
         }
 
        if (lx > 0 && lx < 100 && ly > 300 && ly < 340){
@@ -555,7 +590,6 @@ void considerTouchInput(int lx, int ly){
          Mer_Flip_State="OFF";
          updateMeridianFlip_opt();
         }
-
        
        if (lx > 0 && lx < 100 && ly > 370 && ly < 410){
        // ON Sound
@@ -569,7 +603,6 @@ void considerTouchInput(int lx, int ly){
          Sound_State="OFF";
          updateSound_opt();
         }
-
 
        if (lx > 0 && lx < 100 && ly > 440 && ly < 480)
        {
@@ -707,26 +740,36 @@ void considerTouchInput(int lx, int ly){
              }
         }
 
-       if (ALLIGN_TYPE < 3){
+       if (ALLIGN_TYPE < 3)
+       {
            // I'm in STARS selector and need to check which Star object is pressed
-           for (int i=0; i<6; i++){
-              for (int j=0; j<4; j++){
-                if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+85) && ly < ((i*50)+128)){
+           for (int i=0; i<6; i++)
+           {
+              for (int j=0; j<4; j++)
+              {
+                if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+85) && ly < ((i*50)+128))
+                {
                    // found button pressed.... now I need to get his ID and link to the ARRAY;
                   int zz = (STARS_PAGER*24) + (i*4) + j;
-                  if (Stars[zz] != ""){
+                  if (Stars[zz] != "")
+                  {
                     selectOBJECT_M(zz,2);
                     calculateLST_HA();
-                    if (ALT < 0){
+                    if (ALT < 0)
+                    {
                         OnScreenMsg(3);
-                        if (IS_SOUND_ON){
+                        if (IS_SOUND_ON)
+                        {
                           SoundOn(note_C,96);
                           delay(2000);
                         }
                         drawStarSyncScreen();
-                    }else{
+                    }
+                    else
+                    {
                         OnScreenMsg(1);
-                        if (IS_SOUND_ON){
+                        if (IS_SOUND_ON)
+                        {
                           SoundOn(note_C,32);
                           delay(200);
                           SoundOn(note_C,32);
@@ -752,50 +795,58 @@ void considerTouchInput(int lx, int ly){
                 }
               }
            }
-       }else{
-           // I'm in STARS selector and need to check which Star object is pressed
-           for (int i=0; i<6; i++){
-              for (int j=0; j<4; j++){
-                if (lx > ((j*75)+10) && lx < ((j*75)+79) && ly > ((i*50)+86) && ly < ((i*50)+129)){
-                   // found button pressed.... now I need to get his ID and link to the ARRAY;
-                  int zz = (STARS_PAGER*24) + (i*3) + j;
-                  if (Iter_Stars[zz] != ""){
-                    // selectOBJECT_M(zz,3);
-                    Iterative_Star_Index = zz;
-                    
-                    // replaced the above with the below row...
-                    // to make sure each press selects the same star (inital or on Step 2)
-                    // change made after Test on 17th March.
-                    selectOBJECT_M(Iterative_Star_Index,3);
-                    calculateLST_HA();
-                    OnScreenMsg(1);
-                    if (IS_SOUND_ON){
-                      SoundOn(note_C,32);
-                      delay(200);
-                      SoundOn(note_C,32);
-                      delay(200);
-                      SoundOn(note_C,32);
-                      delay(200);
-                    }
-                   // Stop Interrupt procedure for tracking.
-                    Timer3.stop(); // 
-                    IS_TRACKING = false;
-
-                    IS_OBJ_FOUND = false;
-                    IS_OBJECT_RA_FOUND = false;
-                    IS_OBJECT_DEC_FOUND = false;
-                    Slew_timer = millis();
-                    Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
-                    STARS_PAGER == 0;
-                    SELECTED_STAR = zz;
-                    ALLIGN_STEP += 1;
-                    // drawConstelationScreen(zz);
-                  }
-                }
-              }
-           }             
        }
-    }else if (CURRENT_SCREEN==13){    // captures touches on drawConstelationScreen(int indx)
+       else
+       {
+        // I'm in STARS selector and need to check which Star object is pressed
+        for (int i=0; i<6; i++)
+        {
+          for (int j=0; j<4; j++)
+          {
+            if (lx > ((j*75)+10) && lx < ((j*75)+79) && ly > ((i*50)+86) && ly < ((i*50)+129))
+            {
+              // found button pressed.... now I need to get his ID and link to the ARRAY;
+              int zz = (STARS_PAGER*24) + (i*3) + j;
+              if (Iter_Stars[zz] != "")
+              {
+                // selectOBJECT_M(zz,3);
+                Iterative_Star_Index = zz;
+          
+                // replaced the above with the below row...
+                // to make sure each press selects the same star (inital or on Step 2)
+                // change made after Test on 17th March.
+                selectOBJECT_M(Iterative_Star_Index,3);
+                calculateLST_HA();
+                OnScreenMsg(1);
+                if (IS_SOUND_ON)
+                {
+                  SoundOn(note_C,32);
+                   delay(200);
+                   SoundOn(note_C,32);
+                   delay(200);
+                   SoundOn(note_C,32);
+                   delay(200);
+                }
+                // Stop Interrupt procedure for tracking.
+                Timer3.stop(); // 
+                IS_TRACKING = false;
+  
+                IS_OBJ_FOUND = false;
+                IS_OBJECT_RA_FOUND = false;
+                IS_OBJECT_DEC_FOUND = false;
+                Slew_timer = millis();
+                Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
+                STARS_PAGER == 0;
+                SELECTED_STAR = zz;
+                ALLIGN_STEP += 1;
+                // drawConstelationScreen(zz);
+               }
+             }
+           }
+         }             
+       }
+    }
+    else if (CURRENT_SCREEN==13){    // captures touches on drawConstelationScreen(int indx)
        if (lx > 0 && lx < 100 && ly > 420 && ly < 480){
           // BTN "<Repeat" or "<EXIT" pressed
           if (ALLIGN_TYPE == 3){
@@ -966,7 +1017,7 @@ void considerTouchInput(int lx, int ly){
         if (last_button == 22){
             if (Summer_Time == 1){
                 Summer_Time = 0;
-                tft.fillRect(30, 405, 71, 56,BLACK);
+                tft.fillRect2(30, 405, 71, 56,BLACK);
                 DrawButton(30,405,71,56, "SUMMER", 0, btn_l_border, btn_l_text, 1);
             }else{
                 Summer_Time = 1;
@@ -1032,7 +1083,7 @@ void considerTouchInput(int lx, int ly){
             }
           }else{
            IS_TRACKING = false;
-           tft.fillRect(220, 325, 100, 70,BLACK);
+           tft.fillRect2(220, 325, 100, 70,BLACK);
            DrawButton( 220, 325, 100, 70, "TRACK", 0, btn_l_border, btn_l_text, 2);
            OnScreenMsg(2);
            setmStepsMode("R",1);
@@ -1069,7 +1120,7 @@ void considerTouchInput(int lx, int ly){
          if (IS_FAN1_ON)
          {
             IS_FAN1_ON = false;
-            tft.fillRect(220, 325, 100, 70,BLACK);
+            tft.fillRect2(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(FAN1,LOW);
             Fan1_State="OFF";
@@ -1078,7 +1129,7 @@ void considerTouchInput(int lx, int ly){
          else
          {
             IS_FAN1_ON = true;
-            tft.fillRect(220, 325, 100, 70,BLACK);
+            tft.fillRect2(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
             digitalWrite(FAN1,HIGH);
             Fan1_State="ON";     
@@ -1097,7 +1148,7 @@ void considerTouchInput(int lx, int ly){
          if (IS_FAN2_ON)
          {
             IS_FAN2_ON = false;
-            tft.fillRect(220, 405, 100, 70,BLACK);
+            tft.fillRect2(220, 405, 100, 70,BLACK);
             DrawButton( 220, 405, 100, 70, "FAN 2", 0, btn_l_border, btn_l_text, 2);
             digitalWrite(FAN2,LOW);
             Fan2_State="OFF";
@@ -1106,7 +1157,7 @@ void considerTouchInput(int lx, int ly){
          else
          {
           IS_FAN2_ON = true;
-          tft.fillRect(220, 405, 100, 70,BLACK);
+          tft.fillRect2(220, 405, 100, 70,BLACK);
           DrawButton( 220, 405, 100, 70, "FAN 2", btn_d_border, btn_l_border, btn_l_text, 2);
           digitalWrite(FAN2,HIGH);
           Fan2_State="ON";

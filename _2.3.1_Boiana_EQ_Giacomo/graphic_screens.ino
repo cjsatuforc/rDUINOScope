@@ -42,8 +42,8 @@
 
 void removeTime_addXX() {
   if (dateEntryPos == 0) {
-    tft.fillRect(70, 80, 200, 30, BLACK);
-    tft.fillRect(110, 115, 200, 30, BLACK);
+    tft.fillRect2(70, 80, 200, 30, BLACK);
+    tft.fillRect2(110, 115, 200, 30, BLACK);
     tft.setTextColor(btn_l_text);
     tft.setCursor(70, 80);
     tft.print("XX/XX/XXXX");
@@ -55,8 +55,8 @@ void removeTime_addXX() {
 void drawGPSScreen()
 {
   CURRENT_SCREEN = 0;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(17, 13);
   tft.setTextColor(title_texts);
@@ -89,8 +89,8 @@ void drawGPSScreen()
 void drawClockScreen()
 {
   CURRENT_SCREEN = 1;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(27, 13);
   tft.setTextColor(title_texts);
@@ -132,8 +132,8 @@ void drawClockScreen()
 
 void drawSelectAlignment() {
   CURRENT_SCREEN = 3;
-  tft.fillScreen(BLACK);;
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);;
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(50, 13);
   tft.setTextColor(title_texts); // black
@@ -153,13 +153,13 @@ void drawSelectAlignment() {
 
 void drawMainScreen()
 {
-  tft.fillScreen(BLACK);
+  tft.fillScreen2(BLACK);
   CURRENT_SCREEN = 4;
   w_DateTime[0] = 0;
   calculateLST_HA();
   update_time = millis();
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 1, 320, 90, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 1, 320, 90, title_bg);
   tft.drawLine(0, 27, 320, 27, Button_State_OFF);
   tft.drawLine(0, 92, 320, 92, title_bg);
 
@@ -235,14 +235,14 @@ void drawMainScreen()
   tft.print("AUTO");
 
   if (Mer_Flip_State == "AUTO") {
-    tft.fillRect(140, 14, 30, 10, title_bg);
+    tft.fillRect2(140, 14, 30, 10, title_bg);
     tft.setCursor(141, 15);
     tft.setTextColor(Button_State_ON);
     tft.print("AUTO");
   }
 
   if (Mer_Flip_State == "OFF") {
-    tft.fillRect(140, 14, 30, 10, title_bg);
+    tft.fillRect2(140, 14, 30, 10, title_bg);
     tft.setCursor(141, 15);
     tft.setTextColor(Button_State_OFF);
     tft.print("OFF");
@@ -394,7 +394,7 @@ void drawMainScreen()
     if ((OBJECT_NAME != "") && (ALT < 0)) {
       tft.setTextColor(RED);
       tft.println("OBJECT NOT VISIBLE!");
-      tft.fillRect(250, 235, 70, 70, Maroon);
+      tft.fillRect2(250, 235, 70, 70, Maroon);
       tft.setTextSize(5);
       tft.setCursor(272, 252);
       tft.print("!");
@@ -446,8 +446,8 @@ void drawMainScreen()
 
 void drawCoordinatesScreen() {
   CURRENT_SCREEN = 5;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(5, 15);
   tft.setTextColor(title_texts);
@@ -466,11 +466,11 @@ void drawCoordinatesScreen() {
   tft.print("RA : ");
   tft.setCursor(5, 195);
   tft.print("DEC: ");
-  tft.fillRect(85, 75, 200, 35, btn_d_border);
+  tft.fillRect2(85, 75, 200, 35, btn_d_border);
   tft.drawRect(86, 76, 201, 36, btn_l_border);
-  tft.fillRect(85, 130, 200, 35, btn_d_border);
+  tft.fillRect2(85, 130, 200, 35, btn_d_border);
   tft.drawRect(86, 131, 201, 36, btn_l_border);
-  tft.fillRect(85, 185, 200, 35, btn_d_border);
+  tft.fillRect2(85, 185, 200, 35, btn_d_border);
   tft.drawRect(86, 186, 201, 36, btn_l_border);
   tft.setCursor(1, 250);
   tft.setTextSize(2);
@@ -481,8 +481,8 @@ void drawCoordinatesScreen() {
 void drawLoadScreen() {
   CURRENT_SCREEN = 6;
   //  MESS_PAGER = 0;
-  tft.fillScreen(BLACK);;
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);;
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(5, 13);
   tft.setTextColor(title_texts);
@@ -503,55 +503,58 @@ void drawLoadScreen() {
     DrawButton(170, 60, 150, 40, "Treasures", 0, btn_l_border, btn_l_text, 2);
   }
 
-  tft.fillRect(0, 414, 320, 2, btn_d_border);
+  tft.fillRect2(0, 414, 320, 2, btn_d_border);
   tft.drawLine(0, 415, 320, 415, btn_l_border);
 
   DrawButton(210, 5, 100, 40, "<Back", btn_d_border, btn_l_border, btn_l_text, 3);
   DrawButton(0, 420, 100, 60, "< Prev", btn_d_border, btn_l_border, btn_l_text, 2);
   DrawButton(220, 420, 100, 60, "Next >", btn_d_border, btn_l_border, btn_l_text, 2);
 
-  ///////     Messier Screen /////////////
-
-  if (LOAD_SELECTOR == 1) {
-    // I'll draw 24 objects per page, thus "(pager*24)" will give me the start of the [index_]
-    int kk = MESS_PAGER * 24;
-
-    for (int i = 0; i < 6; i++) {
-      for (int j = 0; j < 4; j++) {
-        String M_NAME = Messier_Array[kk].substring(0, Messier_Array[kk].indexOf(';'));
-        if (M_NAME == "") {
-          break;
-        }
-        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 2);
-        // 75 box width ,12start from left , 50 box hight , 110 start from up
-        kk += 1;
-      }
-    }
-
-
-    ///////     Treasures Screen /////////////
-  } else if (LOAD_SELECTOR == 2) {
-    tft.setTextSize(1);
-    int ll = TREAS_PAGER * 24;
-
-    for (int i = 0; i < 6; i++) {
-      for (int j = 0; j < 4; j++) {
-        String M_NAME = Treasure_Array[ll].substring(0, Treasure_Array[ll].indexOf(';'));
-        if (M_NAME == "") {
-          break;
-        }
-        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 1);
-        ll += 1;
-      }
-    }
-  }
+//  ///////     Messier Screen /////////////
+//  if (LOAD_SELECTOR == 1)
+//  {
+//    // I'll draw 24 objects per page, thus "(pager*24)" will give me the start of the [index_]
+//    int kk = MESS_PAGER * 24;
+//
+//    for (int i = 0; i < 6; i++)
+//    {
+//      for (int j = 0; j < 4; j++)
+//      {
+//        String M_NAME = Messier_Array[kk].substring(0, Messier_Array[kk].indexOf(';'));
+//        if (M_NAME == "") {
+//          break;
+//        }
+//        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 2);
+//        // 75 box width ,12start from left , 50 box hight , 110 start from up
+//        kk += 1;
+//      }
+//    }
+//  }
+//  ///////     Treasures Screen /////////////
+//  else if (LOAD_SELECTOR == 2)
+//  {
+//    tft.setTextSize(1);
+//    int ll = TREAS_PAGER * 24;
+//
+//    for (int i = 0; i < 6; i++) {
+//      for (int j = 0; j < 4; j++) {
+//        String M_NAME = Treasure_Array[ll].substring(0, Treasure_Array[ll].indexOf(';'));
+//        if (M_NAME == "") {
+//          break;
+//        }
+//        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 1);
+//        ll += 1;
+//      }
+//    }
+//  }
+  drawLoadObjects();
 }
 
 void drawOptionsScreen()
 {
   CURRENT_SCREEN = 7;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(5, 13);
   tft.setTextColor(title_texts);
@@ -637,7 +640,7 @@ void drawOptionsScreen()
   //  }else{
   //    DrawButton(275,230,45,40, "10m", 0, btn_l_border, btn_l_text, 1);
   //  }
-  updateBrightness_opt();
+  updateScreenTimeout_opt();
 
   // Auto Meridian Flip
   //  tft.setCursor(5, 280);
@@ -690,8 +693,8 @@ void drawOptionsScreen()
 
 void drawSTATScreen() {
   CURRENT_SCREEN = 10;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(5, 13);
   tft.setTextColor(title_texts);
@@ -784,8 +787,8 @@ void drawSTATScreen() {
 void drawStarSyncScreen()
 {
   CURRENT_SCREEN = 12;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 320, 52, title_bg); // yellow line
   tft.setCursor(5, 13);
   tft.setTextColor(title_texts);
@@ -795,7 +798,7 @@ void drawStarSyncScreen()
   tft.setTextSize(2);
   DrawButton(210, 5, 100, 40, "DONE>", btn_d_border, btn_l_border, btn_l_text, 3);
 
-  tft.fillRect(0, 414, 320, 2, btn_d_border);
+  tft.fillRect2(0, 414, 320, 2, btn_d_border);
   tft.drawLine(0, 415, 320, 415, btn_l_border);
 
   DrawButton(0, 420, 100, 60, "< Prev", btn_d_border, btn_l_border, btn_l_text, 2);
@@ -817,7 +820,7 @@ void drawStarSyncScreen()
 //        if (S_NAME == "") {
 //          break;
 //        }
-//        tft.fillRect(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
+//        tft.fillRect2(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
 //        int l = (S_NAME.length() / 2) * 6;
 //        tft.setCursor(((j * 75) + (44 - l)), ((i * 50) + 93));
 //        tft.setTextSize(1);
@@ -841,7 +844,7 @@ void drawStarSyncScreen()
 //        if (S_NAME == "") {
 //          break;
 //        }
-//        tft.fillRect(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
+//        tft.fillRect2(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
 //        int l = (S_NAME.length() / 2) * 6;
 //        tft.setCursor(((j * 75) + (44 - l)), ((i * 50) + 93));
 //        tft.setTextSize(1);
@@ -858,8 +861,8 @@ void drawStarSyncScreen()
 void drawConstelationScreen(int indx)
 {
   CURRENT_SCREEN = 13;
-  tft.fillScreen(BLACK);
-  tft.fillRect(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
+  tft.fillScreen2(BLACK);
+  tft.fillRect2(0, 0, 400, 50, title_bg); // yellow Rectangle  Was (1, 1, 239, 35, title_bg);
   tft.drawLine(0, 52, 400, 52, title_bg); // yellow line
   tft.setCursor(60, 13);
   tft.setTextColor(title_texts);
@@ -868,7 +871,7 @@ void drawConstelationScreen(int indx)
   tft.setTextColor(btn_l_text);
   tft.setTextSize(2);
 
-  tft.fillRect(0, 414, 320, 2, btn_d_border);
+  tft.fillRect2(0, 414, 320, 2, btn_d_border);
   tft.drawLine(0, 415, 320, 415, btn_l_border);
 
   if (ALLIGN_TYPE != 3)
@@ -922,7 +925,7 @@ void OnScreenMsg(int Msg) {
   // Msg = 2 -> Tracking Off;
   // Msg = 3 -> Select Different Star;
   String m1, m2, m3;
-  tft.fillRect(80, 215, 160, 100, MsgBox_bg );
+  tft.fillRect2(80, 215, 160, 100, MsgBox_bg );
   tft.drawRect(80, 215, 160, 100, MsgBox_t);
   tft.setTextColor(MsgBox_t);
   if (Msg == 1) {
@@ -1066,7 +1069,7 @@ void considerDayNightMode() {
 
 void drawMainScreen_Menu(int fill) {
   //  if (fill == 1){
-  //    tft.fillRect(0, 278, 239, 122, BLACK);
+  //    tft.fillRect2(0, 278, 239, 122, BLACK);
   //  }
 
   if (MAIN_SCREEN_MENU == 0) {
@@ -1119,19 +1122,19 @@ void TimerUpdateDraw(int z) {
   tft.setTextColor(d_text);
   w_DateTime[dateEntryPos] = z;
   if (dateEntryPos >= 0 && dateEntryPos < 2) {
-    tft.fillRect((dateEntryPos * 18) + 70, 80, 18, 22, BLACK);
+    tft.fillRect2((dateEntryPos * 18) + 70, 80, 18, 22, BLACK);
     tft.setCursor((dateEntryPos * 18) + 70, 80);
   } else if (dateEntryPos > 1 && dateEntryPos < 4) {
-    tft.fillRect((dateEntryPos * 18) + 88, 80, 18, 22, BLACK);
+    tft.fillRect2((dateEntryPos * 18) + 88, 80, 18, 22, BLACK);
     tft.setCursor((dateEntryPos * 18) + 88, 80);
   } else if (dateEntryPos > 3 && dateEntryPos < 8) {
-    tft.fillRect((dateEntryPos * 18) + 106, 80, 18, 22, BLACK);
+    tft.fillRect2((dateEntryPos * 18) + 106, 80, 18, 22, BLACK);
     tft.setCursor((dateEntryPos * 18) + 106, 80);
   } else if (dateEntryPos > 7 && dateEntryPos < 10) {
-    tft.fillRect(((dateEntryPos - 8) * 18) + 110, 115, 18, 22, BLACK);
+    tft.fillRect2(((dateEntryPos - 8) * 18) + 110, 115, 18, 22, BLACK);
     tft.setCursor(((dateEntryPos - 8) * 18) + 110, 115);
   } else if (dateEntryPos > 9) {
-    tft.fillRect(((dateEntryPos - 8) * 18) + 128, 115, 18, 22, BLACK);
+    tft.fillRect2(((dateEntryPos - 8) * 18) + 128, 115, 18, 22, BLACK);
     tft.setCursor(((dateEntryPos - 8) * 18) + 128, 115);
   }
   tft.print(w_DateTime[dateEntryPos]);
@@ -1145,8 +1148,8 @@ void TimerUpdateDraw(int z) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void drawStarMap() {
   CURRENT_SCREEN = 11;
-  tft.fillScreen(BLACK);;
-  tft.fillRect(1, 1, 319, 35, title_bg);
+  tft.fillScreen2(BLACK);;
+  tft.fillRect2(1, 1, 319, 35, title_bg);
   tft.drawLine(0, 37, 320, 37, title_bg);
   tft.setCursor(10, 6);
   tft.setTextColor(title_texts);
@@ -1262,7 +1265,7 @@ void drawStarMap() {
 
 void drawStatusBar()
 {
-  tft.fillRect(0, 1, 320, 26, title_bg);
+  tft.fillRect2(0, 1, 320, 26, title_bg);
 
   tft.setTextSize(1);
   tft.setTextColor(Button_Title);
@@ -1322,7 +1325,7 @@ void drawStatusBar()
   }
 
   tft.setTextColor(Button_State_OFF);
-  tft.fillRect(140, 14, 30, 10, title_bg);
+  tft.fillRect2(140, 14, 30, 10, title_bg);
   tft.setCursor(141, 15);
   if (Mer_Flip_State.equals("AUTO"))
   {
@@ -1405,7 +1408,7 @@ void updateTrackingMode_opt()
   }
 }
 
-void updateBrightness_opt()
+void updateScreenTimeout_opt()
 {
   if (TFT_timeout == 0) {
     DrawButton(0, 230, 45, 40, "NEVER", btn_d_border, btn_l_border, btn_l_text, 1);
@@ -1521,7 +1524,7 @@ void updateTriangleBrightness_opt()
 
 void drawAlignObjects_ali()
 {
-  tft.fillRect(0, 80, 320, 340, BLACK);
+  tft.fillRect2(0, 80, 320, 340, BLACK);
   if (ALLIGN_TYPE == 3)
   {
     int kk = STARS_PAGER * 24;
@@ -1534,7 +1537,7 @@ void drawAlignObjects_ali()
         if (S_NAME == "") {
           break;
         }
-        tft.fillRect(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
+        tft.fillRect2(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
         int l = (S_NAME.length() / 2) * 6;
         tft.setCursor(((j * 75) + (44 - l)), ((i * 50) + 93));
         tft.setTextSize(1);
@@ -1558,7 +1561,7 @@ void drawAlignObjects_ali()
         if (S_NAME == "") {
           break;
         }
-        tft.fillRect(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
+        tft.fillRect2(((j * 75) + 12), ((i * 50) + 85), 71, 45, messie_btn);
         int l = (S_NAME.length() / 2) * 6;
         tft.setCursor(((j * 75) + (44 - l)), ((i * 50) + 93));
         tft.setTextSize(1);
@@ -1571,4 +1574,46 @@ void drawAlignObjects_ali()
     }
   }
 }
+
+void drawLoadObjects()
+{
+  ///////     Messier Screen /////////////
+  if (LOAD_SELECTOR == 1)
+  {
+    // I'll draw 24 objects per page, thus "(pager*24)" will give me the start of the [index_]
+    int kk = MESS_PAGER * 24;
+
+    for (int i = 0; i < 6; i++)
+    {
+      for (int j = 0; j < 4; j++)
+      {
+        String M_NAME = Messier_Array[kk].substring(0, Messier_Array[kk].indexOf(';'));
+        if (M_NAME == "") {
+          break;
+        }
+        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 2);
+        // 75 box width ,12start from left , 50 box hight , 110 start from up
+        kk += 1;
+      }
+    }
+  }
+  ///////     Treasures Screen /////////////
+  else if (LOAD_SELECTOR == 2)
+  {
+    tft.setTextSize(1);
+    int ll = TREAS_PAGER * 24;
+
+    for (int i = 0; i < 6; i++) {
+      for (int j = 0; j < 4; j++) {
+        String M_NAME = Treasure_Array[ll].substring(0, Treasure_Array[ll].indexOf(';'));
+        if (M_NAME == "") {
+          break;
+        }
+        DrawButton(((j * 75) + 12), ((i * 50) + 110), 71, 45, M_NAME, messie_btn, 0, btn_l_text, 1);
+        ll += 1;
+      }
+    }
+  }
+}
+
 

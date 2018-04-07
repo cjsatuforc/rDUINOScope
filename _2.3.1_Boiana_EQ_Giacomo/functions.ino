@@ -1,4 +1,5 @@
-void calculateLST_HA() {
+void calculateLST_HA()
+{
   //  HA = LST - RA
   String Date_q = String(rtc.getDateStr());
   String Time_q = String(rtc.getTimeStr());
@@ -781,15 +782,15 @@ void DrawButton(int X, int Y, int Width, int Height, String Caption, int16_t Bod
 
   if ((BodyColor != 0) && (BorderColor == 0)) {
     // Button Type = 0 ... Solid color, no Frame
-    tft.fillRect(X, Y, Width, Height, BodyColor);
+    tft.fillRect2(X, Y, Width, Height, BodyColor);
   } else if ((BodyColor == 0) && (BorderColor != 0)) {
     // Button Type = 1 ... Frame Only button
     tft.drawRect(X, Y, Width, Height, BorderColor);
-    tft.fillRect(X + 1, Y + 1, Width - 2, Height - 2, BLACK);
+    tft.fillRect2(X + 1, Y + 1, Width - 2, Height - 2, BLACK);
   } else if ((BodyColor != 0) && (BorderColor != 0)) {
     // Button Type = 1 ... Frame Only button
     tft.drawRect(X, Y, Width, Height, BorderColor);
-    tft.fillRect(X + 1, Y + 1, Width - 2, Height - 2, BodyColor);
+    tft.fillRect2(X + 1, Y + 1, Width - 2, Height - 2, BodyColor);
   } else {
     // Will not Draw Button and will return to code!
     return;
@@ -1146,6 +1147,8 @@ void loadOptions_SD()
       IS_SOUND_ON                = valoriIn[6].toInt();
       IS_STEPPERS_ON             = valoriIn[7].toInt();
 
+      analogWrite(TFTBright, TFT_Brightness);
+
       if (Tracking_type == 0) Tracking_Mode = "Lunar";
       else if (Tracking_type == 2) Tracking_Mode = "Solar";
       else
@@ -1154,16 +1157,21 @@ void loadOptions_SD()
         Tracking_Mode = "Celest";
       }
 
-      if      (TFT_Time.equals("30 s" )) TFT_timeout = 30000;
-      else if (TFT_Time.equals("60 s" )) TFT_timeout = 60000;
-      else if (TFT_Time.equals("2 m"  )) TFT_timeout = 120000;
-      else if (TFT_Time.equals("5 m"  )) TFT_timeout = 300000;
-      else if (TFT_Time.equals("10 m" )) TFT_timeout = 600000;
+      if      (TFT_Time.equals("30 s"  )) TFT_timeout = 30000;
+      else if (TFT_Time.equals("60 s"  )) TFT_timeout = 60000;
+      else if (TFT_Time.equals("2 min" )) TFT_timeout = 120000;
+      else if (TFT_Time.equals("5 min" )) TFT_timeout = 300000;
+      else if (TFT_Time.equals("10 min")) TFT_timeout = 600000;
       else
       {
         TFT_Time = "AL-ON";
         TFT_timeout = 0;
       }
+
+      #ifdef serial_debug
+        Serial.print("TFT_timeout = ");
+        Serial.println(TFT_timeout);
+      #endif
 
       if (IS_MERIDIAN_FLIP_AUTOMATIC) Mer_Flip_State = "AUTO";
       else

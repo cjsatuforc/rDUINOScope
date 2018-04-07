@@ -86,6 +86,7 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <SD.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <ILI9488.h>
+//#include "ILI9488_DMA.h"
 #include <DueTimer.h> // interruptions library0
 #include <DS3231.h>
 //#include <math.h>
@@ -303,7 +304,7 @@ void setup(void)
   dht.begin();
   tft.begin();
 
-  tft.fillScreen(BLACK);
+  tft.fillScreen2(BLACK);
   tft.setCursor(15, 10);
 
   // DRB8825 - drive mode pins (determine Steppping Modes 1/8, 1/16 and etc.
@@ -634,14 +635,14 @@ void setup(void)
     SoundOn(note_f, 48);
   }
 
-  delay(1000);
+  delay(500);
   CURRENT_SCREEN = 0;
   drawGPSScreen();
   UPD_T = millis();
   UPD_LST = millis();
   DELAY_Slew = millis();
   TFT_Timer = millis();
-  TFT_timeout = 0;
+  //TFT_timeout = 0;
   RA_move_ending = 0;
   considerTempUpdates();
 
@@ -675,7 +676,7 @@ void loop(void)
     // I use 12V and 1.6A (70% in full step = 1.10A) to drive my NEMA 17 SY42STH47-1684B Motors.
     // Please note that Potentiometer does not really give consistent results for current on every restart (it drifted between 1.12A - 0.9A).
 
-    // HINT: you can try to play with the Current/Voltage that powers the mottors to get faster speeds.
+    // HINT: you can try to play with the Current/Voltage that powers the motors to get faster speeds.
     if (IS_STEPPERS_ON) {
       cosiderSlewTo();
     } else {
@@ -693,9 +694,8 @@ void loop(void)
   // The fastes possible from this board in the current state of the software is approx 3 turns/sec (600 steps/sec)
   // IS_OBJ_FOUND == true --> Means that SLEW command have completed
   //
-  if (IS_OBJ_FOUND == true) {
-
-
+  if (IS_OBJ_FOUND == true)
+  {
     // BLUETOOTH Considerations ? ... if any
     if ((IS_BT_MODE_ON == true) && (Serial3.available() > 0) && (IS_MANUAL_MOVE == false))
     {
@@ -713,7 +713,8 @@ void loop(void)
     if ((xPosition < x_cal-100) || (xPosition > x_cal+100) || (yPosition < y_cal-100) || (yPosition > x_cal+100))
     {
       IS_MANUAL_MOVE = true;
-      if (IS_STEPPERS_ON) {
+      if (IS_STEPPERS_ON)
+      {
         consider_Manual_Move(xPosition, yPosition);
       }
     }
