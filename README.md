@@ -14,7 +14,7 @@
 -  Options page settings such as tft brightness or sound state, are now saved and restored at each boot.
 -  Added custom.csv wich can be used to add more custom sky objects (still to be implemented).
 
-![Board](http://i68.tinypic.com/wjvyow.jpg)
+![Board](http://i65.tinypic.com/25sr4va.jpg)
 
 ## THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
