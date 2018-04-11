@@ -2,9 +2,8 @@
 
 ### ILI9488 SPI version:
 
--  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used. You can buy a breakout board with display, touch controller, SD card and RTC with battery [here](http://giacu92.bigcartel.com/product/ili9488-3-5-display-spi-breakout-board).
-
-ILI9488 display: [https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488](https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488)
+-  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used. You can buy a breakout board with display, touch controller, SD card and RTC with battery [here](http://giacu92.bigcartel.com/product/ili9488-3-5-display-spi-breakout-board) or 
+ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488](https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488)
 -  Using AD7873 touch IC. Also compatibile with TSC2046/XPT2046 and ADS7843/AD7843 ICs. The software is able to detect and display any communications error with the touch IC.
 -  Small code optimization to maximize speed (the ILI9488 supports only 24bit/px so it's quite slow as screen compared to HX... ones).
 -  Joypad calibration at startup. No more panic to find the right values for the joypad.
@@ -40,7 +39,7 @@ Facebook: https://www.facebook.com/rDUINOScope/
 Release date: 03 August 2017
 Status: Stable Version
 Author: Dessislav Gouzgounov / Десислав Гузгнов /(deskog@gmail.com) 
-Edited: Giacomo Mammarella (mammarella.g@gmail.com)
+Edited: Giacomo Mammarella (giacomo.mammarella@student.univaq.it)
 
 v2.3.1 aims to bring all existing hardware platforms into one code base. Additionally this version introduces new features to the rDUINOScope like Screensaver, TFT brightness, MosFET to control power to DRV8825 and etc.
 
