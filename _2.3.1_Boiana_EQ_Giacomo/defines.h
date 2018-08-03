@@ -30,6 +30,8 @@
 #define  note_C     1912    // 523 Hz
 #define  note_X     1650    //
 
+const String ss_planet_names[11] = {"SUN", "MERCURY", "VENUS", "EARTH", "MARS", "JUPITER", "SATURN", "URANUS", "NEPTUNE", "PLUTO", "MOON"};
+
 const String Stars[] =
 {
   // Definition of the ALIGNMENT Stars. Add as many stars as you like in here
