@@ -132,7 +132,7 @@ void considerTimeUpdates()
           tft.setTextSize(1);
           tft.setCursor(2,250);
           tft.setTextColor(l_text);
-          tft.fillRect2(1,239,200,18, BLACK); // COPRE L'UPDATE DI AZ/ALT
+          tft.fillRect2(1,249,200,8, BLACK); // COPRE L'UPDATE DI AZ/ALT
           tft.print("Az/Alt: ");
           tft.print(floor(AZ), 0);
           tft.print("^ ");
