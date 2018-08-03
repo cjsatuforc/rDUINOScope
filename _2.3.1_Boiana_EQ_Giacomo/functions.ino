@@ -148,10 +148,13 @@ void calculateLST_HA()
   }
 }
 
-void selectOBJECT_M(int index_, int objects) {
+void selectOBJECT_M(int index_, int objects)
+{
   OBJECT_Index = index_;
 
-  if (objects == 0) {                                          // I've selected a Messier Object
+  if (objects == 0)
+  { // I've selected a Messier Object
+    TRACKING_MOON = false;
     int i1 = Messier_Array[index_].indexOf(';');
     int i2 = Messier_Array[index_].indexOf(';', i1 + 1);
     int i3 = Messier_Array[index_].indexOf(';', i2 + 1);
@@ -169,7 +172,7 @@ void selectOBJECT_M(int index_, int objects) {
     String sign = OBJ_DEC.substring(1, 2);
     OBJECT_DEC_D = OBJ_DEC.substring(2, OBJ_DEC.indexOf('°')).toFloat();
     OBJECT_DEC_M = OBJ_DEC.substring(OBJ_DEC.indexOf('°') + 1, OBJ_DEC.length() - 1).toFloat();
-    if (sign == "-") {
+    if (sign.equals("-")) {
       OBJECT_DEC_D *= -1;
       OBJECT_DEC_M *= -1;
     }
@@ -180,7 +183,10 @@ void selectOBJECT_M(int index_, int objects) {
     OBJECT_DETAILS += Messier_Array[index_].substring(i6 + 1, i7);
     OBJECT_DETAILS += "\n" + Messier_Array[index_].substring(i8 + 1, Messier_Array[index_].length() - 1);
 
-  } else if (objects == 1) {                                    // I've selected a Treasure Object
+  }
+  else if (objects == 1)
+  { // I've selected a Treasure Object
+    TRACKING_MOON = false;
     int i1 = Treasure_Array[index_].indexOf(';');
     int i2 = Treasure_Array[index_].indexOf(';', i1 + 1);
     int i3 = Treasure_Array[index_].indexOf(';', i2 + 1);
@@ -209,7 +215,11 @@ void selectOBJECT_M(int index_, int objects) {
     OBJECT_DETAILS += Treasure_Array[index_].substring(i6 + 1, i7);
     OBJECT_DETAILS += "\n" + Treasure_Array[index_].substring(i8 + 1, Treasure_Array[index_].length() - 1);
 
-  } else if (objects == 2) {                                    // I'm selecting a STAR for Synchronization - 1 Star ALLIGNMENT
+  }
+  else if (objects == 2)
+  {
+    // I'm selecting a STAR for Synchronization - 1 Star ALLIGNMENT
+    TRACKING_MOON = false;
     int i1 = Stars[index_].indexOf(';');
     int i2 = Stars[index_].indexOf(';', i1 + 1);
     int i3 = Stars[index_].indexOf(';', i2 + 1);
@@ -224,7 +234,11 @@ void selectOBJECT_M(int index_, int objects) {
       OBJECT_DEC_D *= (-1);
     }
     OBJECT_DEC_M = 0;
-  } else if (objects == 3) {                                    // I'm selecting a STAR for Synchronization - Iterative ALLIGNMENT
+  }
+  else if (objects == 3)
+  {
+    // I'm selecting a STAR for Synchronization - Iterative ALLIGNMENT
+    TRACKING_MOON = false;
     int i1 = Iter_Stars[index_].indexOf(';');
     int i2 = Iter_Stars[index_].indexOf(';', i1 + 1);
     int i3 = Iter_Stars[index_].indexOf(';', i2 + 1);
@@ -240,7 +254,40 @@ void selectOBJECT_M(int index_, int objects) {
     }
     OBJECT_DEC_M = 0;
   }
-}
+  else if (objects == 4)
+  {
+    // I've selected a custom Object
+    TRACKING_MOON = false;
+    int i1 = custom_Array[index_].indexOf(';');
+    int i2 = custom_Array[index_].indexOf(';', i1 + 1);
+    int i3 = custom_Array[index_].indexOf(';', i2 + 1);
+    int i4 = custom_Array[index_].indexOf(';', i3 + 1);
+    int i5 = custom_Array[index_].indexOf(';', i4 + 1);
+    int i6 = custom_Array[index_].indexOf(';', i5 + 1);
+    int i7 = custom_Array[index_].indexOf(';', i6 + 1);
+    int i8 = custom_Array[index_].indexOf(';', i7 + 1);
+    OBJECT_NAME = custom_Array[index_].substring(0, i1);
+    OBJECT_DESCR = custom_Array[index_].substring(i7 + 1, i8);
+    String OBJ_RA = custom_Array[index_].substring(i1, i2);
+    OBJECT_RA_H = OBJ_RA.substring(1, OBJ_RA.indexOf('h')).toFloat();
+    OBJECT_RA_M = OBJ_RA.substring(OBJ_RA.indexOf('h') + 1, OBJ_RA.length() - 1).toFloat();
+    String OBJ_DEC = custom_Array[index_].substring(i2, i3);
+    String sign = OBJ_DEC.substring(1, 2);
+    OBJECT_DEC_D = OBJ_DEC.substring(2, OBJ_DEC.indexOf('°')).toFloat();
+    OBJECT_DEC_M = OBJ_DEC.substring(OBJ_DEC.indexOf('°') + 1, OBJ_DEC.length() - 1).toFloat();
+    if (sign == "-")
+    {
+      OBJECT_DEC_D *= -1;
+      OBJECT_DEC_M *= -1;
+    }
+    OBJECT_DETAILS = OBJECT_NAME + " is a ";
+    OBJECT_DETAILS += custom_Array[index_].substring(i4 + 1, i5) + " in constelation ";
+    OBJECT_DETAILS += custom_Array[index_].substring(i3 + 1, i4) + ", with visible magnitude of ";
+    OBJECT_DETAILS += custom_Array[index_].substring(i5 + 1, i6) + " and size of ";
+    OBJECT_DETAILS += custom_Array[index_].substring(i6 + 1, i7);
+    OBJECT_DETAILS += "\n" + custom_Array[index_].substring(i8 + 1, custom_Array[index_].length() - 1);
+  }
+ }
 
 void Sidereal_rate() {
   // when a manual movement of the drive happens. - This will avoid moving the stepepers with a wrong Step Mode.
@@ -1215,5 +1262,178 @@ void loadOptions_SD()
     }
     
     dataFile.close();
+  }
+}
+
+//uint32_t cx, cy, text_y_center;
+uint32_t rx[8], ry[8];
+double clx, crx, cty, cby, cx, cy, slope_x, slope_y;
+
+void calibrateTFT()
+{
+  #define dispx tft.width()
+  #define dispy tft.height()
+  #define text_y_center = (dispy / 2) - 6
+
+  drawCrossHair(dispx - 10, 10, ILI9488_YELLOW);
+  drawCrossHair(dispx / 2, 10, ILI9488_YELLOW);
+  drawCrossHair(10, 10, ILI9488_YELLOW);
+  drawCrossHair(dispx - 10, dispy / 2, ILI9488_YELLOW);
+  drawCrossHair(10, dispy / 2, ILI9488_YELLOW);
+  drawCrossHair(dispx - 10, dispy - 10, ILI9488_YELLOW);
+  drawCrossHair(dispx / 2, dispy - 10, ILI9488_YELLOW);
+  drawCrossHair(10, dispy - 10, ILI9488_YELLOW);
+  tft.setTextColor(ILI9488_WHITE, ILI9488_RED);
+  tft.fillRect(120, 100, 80, 40, ILI9488_RED);
+  tft.drawRect(120, 100, 80, 40, ILI9488_WHITE);
+
+  calibrate(10, 10, 0);
+  calibrate(10, dispy / 2, 1);
+  calibrate(10, dispy - 10, 2);
+  calibrate(dispx / 2, 10, 3);
+  calibrate(dispx / 2, dispy - 10, 4);
+  calibrate(dispx - 10, 10, 5);
+  calibrate(dispx - 10, dispy / 2, 6);
+  calibrate(dispx - 10, dispy - 10, 7);
+  
+  clx = (((ry[0] + ry[1] + ry[2]) / 3));  // "LANDSCAPE"
+  crx = (((ry[5] + ry[6] + ry[7]) / 3));  // "LANDSCAPE"
+
+  cty = ((rx[0] + rx[3] + rx[5]) / 3);
+  cby = ((rx[2] + rx[4] + rx[7]) / 3);
+
+  slope_x = ((crx-clx)/(dispx-20)); 
+  slope_y = ((cby-cty)/(dispy-20));
+
+  done();
+  waitForTouch();
+
+  // Serial.println(slope_x);
+  // Serial.println(slope_y);
+}
+
+void drawCrossHair(int x, int y, uint16_t color)
+{
+  tft.drawRect(x - 10, y - 10, 20, 20, color);
+  tft.drawLine(x - 5, y, x + 5, y, color);
+  tft.drawLine(x, y - 5, x, y + 5, color);
+}
+
+void waitForTouch()
+{
+  while (myTouch.touched() == true) {}
+  while (myTouch.touched() == false) {}
+  while (myTouch.touched() == true) {}
+}
+
+void calibrate(int x, int y, int i)
+{
+  drawCrossHair(x, y, ILI9488_WHITE);
+  readCoordinates();
+  tft.setTextColor(ILI9488_WHITE, ILI9488_RED);
+  tft.fillRect(110, 100, 100, 40, ILI9488_RED);
+  tft.drawRect(110, 100, 100, 40, ILI9488_WHITE);
+  tft.setCursor(120, 112);
+  tft.print("RELEASE");
+  drawCrossHair(x, y, ILI9488_YELLOW);
+  rx[i] = cx;
+  ry[i] = cy;
+  while (myTouch.touched() == true) {}
+}
+
+void readCoordinates()
+{
+  int iter = 50;
+  int failcount = 0;
+  int cnt = 0;
+  uint32_t tx = 0;
+  uint32_t ty = 0;
+  boolean OK = false;
+
+  while (OK == false)
+  {
+    tft.setTextColor(ILI9488_WHITE, ILI9488_RED);
+    tft.fillRect(110, 100, 100, 40, ILI9488_RED);
+    tft.drawRect(110, 100, 100, 40, ILI9488_WHITE);
+    tft.setTextSize(2);
+    tft.setCursor(131, 112);
+    tft.println("PRESS"); 
+    while (myTouch.touched() == false) {}
+    tft.fillRect(110, 100, 100, 40, ILI9488_RED);
+    tft.drawRect(110, 100, 100, 40, ILI9488_WHITE);
+    tft.setCursor(133, 112);
+    tft.println("HOLD!");
+    while ((myTouch.touched() == true) && (cnt < iter) && (failcount < 10000))
+    {
+      TS_Point p = myTouch.getPoint();
+      if (((p.x > 0) || (p.y > 0)))
+      {
+        tx += p.x;
+        ty += p.y;
+        cnt++;
+        //Serial.println(cnt);
+      }
+      else
+      {
+        failcount++;
+        
+      }
+    }
+    if (cnt >= iter)
+    {
+      OK = true;
+    }
+    else
+    {
+      tx = 0;
+      ty = 0;
+      cnt = 0;
+    }
+    if (failcount >= 10000) {Serial.println("fail");}
+      //fail();
+  }
+
+  cx = tx / iter;
+  cy = ty / iter;
+
+  #ifdef serial_debug
+    Serial.print("cx = ");
+    Serial.println(cx);
+    Serial.print("cy = ");
+    Serial.println(cy);
+    Serial.println("");
+  #endif
+}
+
+void done()
+{
+  tft.fillScreen2(ILI9488_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextSize(1);
+  tft.setTextColor(ILI9488_WHITE, ILI9488_RED);
+  tft.fillRect(0, 0, dispx, 13, ILI9488_RED);
+  tft.drawLine(0, 13, dispx - 1, 13, ILI9488_WHITE);
+  tft.println("Touchscreen calibration");//, gTextAlignTopCenter, 0, 2);
+
+  tft.setTextColor(ILI9488_WHITE, ILI9488_BLACK);
+  tft.println("CALIBRATION COMPLETE\nNew calibration parameters have been saved. Touch the area below to test the calibration results and save or discard the changes.");
+  tft.fillRect(0, 100, dispx, 300, ILI9488_RED);
+
+  int tx, ty = 0;
+  while(ty < 440)
+  {
+    if(myTouch.touched())
+    {
+      p = myTouch.getPoint();
+      tx = p.x/slope_y;
+      ty = p.y/slope_x;
+      if(ty > 100 && ty < 400)
+      {
+        tft.fillRect2(0, 100, dispx, 300, ILI9488_RED);
+        tft.drawRect(0, 100, dispx, 300, ILI9488_WHITE);
+        drawCrossHair(tx, ty, ILI9488_WHITE);
+      }
+      delay(100);
+    }
   }
 }
