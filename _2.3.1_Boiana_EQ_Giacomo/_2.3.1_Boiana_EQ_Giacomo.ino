@@ -1,4 +1,3 @@
-//
 //    rDUINOScope - Arduino based telescope control system (GOTO).
 //    Copyright (C) 2016 Dessislav Gouzgounov (Desso)
 //    This program is free software: you can redistribute it and/or modify
@@ -85,11 +84,10 @@ int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized 
 #include <SPI.h>
 #include <SD.h>
 #include <Adafruit_GFX.h>    // Core graphics library
-#include <ILI9488.h>
-//#include "ILI9488_DMA.h"
+#include <ILI9488.h>  //Use DMA version to increase speed
 #include <DueTimer.h> // interruptions library0
 #include <DS3231.h>
-//#include <math.h>
+#include <math.h>
 
 #include "defines.h"  //notes, colors and stars
 
@@ -132,8 +130,9 @@ const String FirmwareName   = "rDUINOScope";
 const String FirmwareTime   = "03:14:15";
 
 // Variables:
-String Messier_Array[120];
+String Messier_Array[112];
 String Treasure_Array[130];
+String custom_Array[100];
 String ObservedObjects[50];
 String Iter_Stars[50];
 int int_star_count = 0;       // Counter for how many stars are loaded into Iter_Stars[] array.... to be used with Pages, so that it does not show more pages than needed
@@ -176,7 +175,7 @@ double LST, HAHour, HAMin, ALT, AZ;
 double JD;
 String BTs;
 
-int last_button, MESS_PAGER, TREAS_PAGER, STARS_PAGER;
+int last_button, MESS_PAGER, TREAS_PAGER, STARS_PAGER, CUSTOM_PAGER;
 boolean IS_TFT_ON = true;
 boolean IS_STEPPERS_ON = true;
 boolean IS_OBJ_VISIBLE = false;
@@ -199,6 +198,7 @@ int TFT_Brightness = 230;
 int MAIN_SCREEN_MENU = 0;
 int CURRENT_SCREEN = 0;
 int LOAD_SELECTOR;   // selector to show which LOADING mechanism is used: 1 - Messier, 2 - File, 3 - NGCs
+boolean TRACKING_MOON;
 
 String Fan1_State = "ON";
 String Fan2_State = "ON";
@@ -247,7 +247,7 @@ double err_AZ = 0;
 double det = 0;
 
 // PIN selection
-int speakerOut = 28;
+int speakerOut = DAC1;
 int RA_STP = 8;
 int RA_DIR = 5;
 int DEC_STP = 6;
@@ -273,6 +273,7 @@ int TFTBright = DAC0;
 int Joy_SW = A11;
 int POWER_DRV8825 = A8;
 int x_cal, y_cal = 0;
+int calx = 8, caly = 11.59;
 
 
 void setup(void)
@@ -427,6 +428,7 @@ void setup(void)
   MESS_PAGER = 0;
   TREAS_PAGER = 0;
   STARS_PAGER = 0;
+  CUSTOM_PAGER = 0;
 
   volatile bool check = true;
   tft.print("--> Initializing touchscreen... ");
@@ -498,10 +500,10 @@ void setup(void)
   tft.setTextColor(d_text);
   //loadOptions_SD();
   //delay(100);
+  
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
   File dataFile = SD.open("messier.csv");
-
   // if the file is available, write to it:
   if (dataFile)
   {
@@ -537,14 +539,13 @@ void setup(void)
   j = 0;
   k = 0;
   dataFile = SD.open("treasure.csv");
-
-
   // if the file is available, write to it:
   if (dataFile)
   {
     tft.print("--> loading Treasure cathalog... ");
     delay(100);
-    while (dataFile.available()) {
+    while (dataFile.available())
+    {
       in_char = dataFile.read();
       items += in_char;
       k = k + 1;
@@ -559,7 +560,6 @@ void setup(void)
     tft.println("OK");
     tft.setTextColor(d_text);
     delay(100);
-
   }
   else
   {
@@ -571,9 +571,48 @@ void setup(void)
   last_button = 0;
   LOAD_SELECTOR = 0;
 
+  items = "";
+  j = 0;
+  k = 0;
+  dataFile = SD.open("custom.csv");
+
+
+  // if the file is available, write to it:
+  if (dataFile)
+  {
+    tft.print("--> loading custom.csv... ");
+    delay(100);
+    while (dataFile.available())
+    {
+      in_char = dataFile.read();
+      items += in_char;
+      k = k + 1;
+      if (in_char == '\n')
+      {
+        custom_Array[j] = items;
+        j = j + 1;
+        //          Serial.print(items);
+        items = "";
+      }
+    }
+    tft.setTextColor(GREEN);
+    tft.println("OK");
+    tft.setTextColor(d_text);
+    delay(100);
+  }
+  else
+  {
+    tft.setTextColor(RED);
+    tft.println("ERROR opening: custom.csv");
+    tft.setTextColor(d_text);
+  }
+  dataFile.close();
+  last_button = 0;
+  LOAD_SELECTOR = 0;
+
   tft.println("\n.................................\n");
   
-  tft.print("--> loading custom options...");
+  tft.print("--> loading options...");
   if(SD.exists("options.txt"))
   {
     loadOptions_SD();
@@ -738,8 +777,12 @@ void loop(void)
     {
       p = myTouch.getPoint();
       if (p.z < 600) myTouch.getPoint(); //to remove noise
-      tx = (p.x - 257) >> 3;
-      ty = (p.y - 445) / 11.56;
+      tx = (p.x - 257) / calx;
+      ty = (p.y - 445) / caly;
+
+      //tx = p.x/7.98;
+      //ty = p.y/11.59;
+      
       delay(100); // slow down touch identification
 
       //Useful to debug touch:
