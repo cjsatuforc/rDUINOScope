@@ -54,23 +54,30 @@ void considerTempUpdates() // Temperature && Humidity Updates
   }
 }
 
-void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Screen and Main Screen
+void considerTimeUpdates()
+{   // UPDATEs time on Screen1 && Screen4 -  Clock Screen and Main Screen
    int changes=0;
-   for (int y=0; y<12; y++){
-       if (w_DateTime[y]!=0){
+   for (int y=0; y<12; y++)
+   {
+       if (w_DateTime[y]!=0)
+       {
            changes=1;
        }
    }
   int mer_flp_sound = HAHour + ((HAMin + MIN_TO_MERIDIAN_FLIP + MIN_SOUND_BEFORE_FLIP)/60);
-  if((millis()- update_time) > 10000 && mer_flp_sound >= 24){
-    if (IS_SOUND_ON){
+  if((millis()- update_time) > 10000 && mer_flp_sound >= 24)
+  {
+    if (IS_SOUND_ON)
+    {
       SoundOn(3830,8);
     }
   }
-  if (CURRENT_SCREEN == 4 && (millis()-update_time) > 10000){
+  if (CURRENT_SCREEN == 4 && (millis()-update_time) > 10000)
+  {
       tft.setTextSize(1);
       tft.setTextColor(l_text);
-      if (old_d != rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/')){
+      if (old_d != rtc.getDateStr(FORMAT_LONG, FORMAT_LITTLEENDIAN, '/'))
+      {
             tft.fillRect2(35,102,60,6, title_texts);
             tft.setCursor(35,102);
             tft.print(String(rtc.getDateStr()).substring(0,2));
@@ -87,20 +94,27 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
            
       tft.fillRect2(90,65,95,22, title_bg);
       tft.setCursor(90, 65);
-      if ((int)LST < 10){
+      if ((int)LST < 10)
+      {
         tft.print("0");
         tft.print((int)LST);
-      }else{
+      }
+      else
+      {
         tft.print((int)LST);
       }
       tft.print(":");
-      if ((LST - (int)LST)*60 < 10){
+      if ((LST - (int)LST)*60 < 10)
+      {
         tft.print("0");
         tft.print((LST - (int)LST)*60, 0);
-      }else{
+      }
+      else
+      {
         tft.print((LST - (int)LST)*60, 0);
       }
-      if ((OBJECT_NAME != "") && (OBJECT_NAME != "CP") && (IS_BT_MODE_ON == false)){
+      if ((OBJECT_NAME != "") && (OBJECT_NAME != "CP") && (IS_BT_MODE_ON == false))
+      {
           tft.setCursor(135,290);
           tft.setTextSize(2);
           tft.setTextColor(l_text);
@@ -110,10 +124,15 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           tft.print(HAMin,1);
           tft.print("m");
 
+          if(TRACKING_MOON)
+          {
+            planet_pos(10);
+          }
+
           tft.setTextSize(1);
-          tft.setCursor(2,240);
+          tft.setCursor(2,250);
           tft.setTextColor(l_text);
-          tft.fillRect2(1,239,200,18, BLACK);
+          tft.fillRect2(1,239,200,18, BLACK); // COPRE L'UPDATE DI AZ/ALT
           tft.print("Az/Alt: ");
           tft.print(floor(AZ), 0);
           tft.print("^ ");
@@ -248,7 +267,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
           
           if(isSummerTime())
           {
-            //If in summer time sum 1h and put summer_time flag as 1
+            //If in summer time sum 1h and put Summer_Time flag as 1
             time_delay += 1;
             Summer_Time = 1;
           }
@@ -263,7 +282,7 @@ void considerTimeUpdates(){   // UPDATEs time on Screen1 && Screen4 -  Clock Scr
             date_delay = 1;
           }
 
-          setTime(ora, gps.time.minute(), gps.time.second(), gps.date.day()+date_delay, gps.date.month(), gps.date.year());
+          //setTime(ora, gps.time.minute(), gps.time.second(), gps.date.day()+date_delay, gps.date.month(), gps.date.year()); <-- too mantain sync with UTC
           rtc.setDate(gps.date.day()+date_delay, gps.date.month(), gps.date.year());
           rtc.setTime(ora, gps.time.minute(), gps.time.second());
           
