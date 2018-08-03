@@ -334,31 +334,31 @@ void considerTouchInput(int lx, int ly){
        if (lx > 220 && lx < 320 && ly > 420 && ly < 480){
        // BTN next> pressed  TREAS_PAGER
           if (LOAD_SELECTOR == 1)
-          {
+          { 
              MESS_PAGER += 1;
-             if (MESS_PAGER < 8){
-                //drawLoadScreen();
+             if (MESS_PAGER <= 5)
+             {
                 drawLoadObjects();
              }
              else
              {
-               MESS_PAGER = 6;
-               drawLoadScreen();
+               MESS_PAGER = 5;
              }
           }
-          else
+          else if (LOAD_SELECTOR == 2)
           {
              TREAS_PAGER += 1;
-             if (TREAS_PAGER < 9)
+             if (TREAS_PAGER <= 6)
              {
                 drawLoadObjects();
              }
              else
              {
-               TREAS_PAGER = 8;
-               drawLoadScreen();
+               TREAS_PAGER = 6;
+               //drawLoadScreen();
              }
           }
+
        }
        if (lx > 0 && lx < 100 && ly > 420 && ly < 480)
        {
@@ -368,7 +368,6 @@ void considerTouchInput(int lx, int ly){
              MESS_PAGER -= 1;
              if (MESS_PAGER >= 0)
              {
-                //drawLoadScreen();
                 drawLoadObjects();
              }
              else
@@ -376,12 +375,11 @@ void considerTouchInput(int lx, int ly){
                 MESS_PAGER = 0;
              }
           }
-          else
+          else if (LOAD_SELECTOR == 2)
           {
              TREAS_PAGER -= 1;
              if (TREAS_PAGER >= 0)
              {
-                //drawLoadScreen();
                 drawLoadObjects();
              }
              else
@@ -396,8 +394,10 @@ void considerTouchInput(int lx, int ly){
         LOAD_SELECTOR = 1;
         if (LOAD_SELECTOR == 1)
         {
-          DrawButton(0, 60, 150, 40, "Messier", btn_d_border, btn_l_border, btn_l_text, 2);
-          DrawButton(170, 60, 150, 40, "Treasures", 0, btn_l_border, btn_l_text, 2);
+          DrawButton(  0,  60, 150, 40, "Messier", btn_d_border, btn_l_border, btn_l_text, 2);
+          DrawButton(170,  60, 150, 40, "Treasures",          0, btn_l_border, btn_l_text, 2);
+          DrawButton( 0,  110, 150, 40, "Solar System",       0, btn_l_border, btn_l_text, 2);
+          DrawButton(170, 110, 150, 40, "custom.csv"  ,       0, btn_l_border, btn_l_text, 2);
           drawLoadObjects();
         }
        }
@@ -405,22 +405,43 @@ void considerTouchInput(int lx, int ly){
        {
         // BTN Treasures pressed
         LOAD_SELECTOR = 2;
-        DrawButton(0, 60, 150, 40, "Messier", 0, btn_l_border, btn_l_text, 2);
-        DrawButton(170, 60, 150, 40, "Treasures", btn_d_border, btn_l_border, btn_l_text, 2);
+        DrawButton(  0,  60, 150, 40, "Messier",              0, btn_l_border, btn_l_text, 2);
+        DrawButton(170,  60, 150, 40, "Treasures", btn_d_border, btn_l_border, btn_l_text, 2);
+        DrawButton( 0,  110, 150, 40, "Solar System",         0, btn_l_border, btn_l_text, 2);
+        DrawButton(170, 110, 150, 40, "custom.csv"  ,         0, btn_l_border, btn_l_text, 2);
         drawLoadObjects();
-
-           //////////////      Messier Screen //////////////
-       }       
+       }  
+       if (lx > 0 && lx < 150 && ly > 110 && ly < 150)
+       {
+        // BTN Solar System pressed
+        LOAD_SELECTOR = 3;
+        DrawButton(  0,  60, 150, 40, "Messier",                 0, btn_l_border, btn_l_text, 2);
+        DrawButton(170,  60, 150, 40, "Treasures",               0, btn_l_border, btn_l_text, 2);
+        DrawButton( 0,  110, 150, 40, "Solar System", btn_d_border, btn_l_border, btn_l_text, 2);
+        DrawButton(170, 110, 150, 40, "custom.csv"  ,            0, btn_l_border, btn_l_text, 2);
+        drawLoadObjects();
+       } 
+       if (lx > 170 && lx < 320 && ly > 110 && ly < 150)
+       {
+        // BTN custom.csv pressed
+        LOAD_SELECTOR = 4;
+        DrawButton(  0,  60, 150, 40, "Messier",               0, btn_l_border, btn_l_text, 2);
+        DrawButton(170,  60, 150, 40, "Treasures",             0, btn_l_border, btn_l_text, 2);
+        DrawButton( 0,  110, 150, 40, "Solar System",          0, btn_l_border, btn_l_text, 2);
+        DrawButton(170, 110, 150, 40, "custom.csv", btn_d_border, btn_l_border, btn_l_text, 2);
+        drawLoadObjects();
+       }
+       
        if (LOAD_SELECTOR == 1)
        {       
          // I'm in MESSIER selector and need to check which Messier object is pressed
-         for (int i=0; i<6; i++){
+         for (int i=0; i<5; i++){
             for (int j=0; j<4; j++){
-              if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+110) && ly < ((i*50)+153)){
+              if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+160) && ly < ((i*50)+203)){
                 //75 box width ,12start from left , 50 box hight , 110 start from up
                 
                  // found button pressed.... now I need to get his ID and link to the ARRAY;
-                int zz = (MESS_PAGER*24) + (i*4) + j;
+                int zz = (MESS_PAGER*20) + (i*4) + j;
                 if (Messier_Array[zz] != ""){
                   selectOBJECT_M(zz,0);
                   calculateLST_HA();
@@ -456,19 +477,25 @@ void considerTouchInput(int lx, int ly){
        else if (LOAD_SELECTOR == 2)
        {       
          // I'm in TREASURES selector and need to check which Treasure object is pressed
-         for (int i=0; i<6; i++){
-            for (int j=0; j<4; j++){
-             if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+110) && ly < ((i*50)+153)){
+         for (int i=0; i<5; i++)
+         {
+            for (int j=0; j<4; j++)
+            {
+             if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+160) && ly < ((i*50)+203))
+             {
                   //75 box width ,12start from left , 50 box hight , 110 start from up
                   
                  // found button pressed.... now I need to get his ID and link to the ARRAY;
-                int zz = (TREAS_PAGER*24) + (i*4) + j;
-                if (Treasure_Array[zz] != ""){
+                int zz = (TREAS_PAGER*20) + (i*4) + j;
+                if (Treasure_Array[zz] != "")
+                {
                   selectOBJECT_M(zz,1);
                   calculateLST_HA();
-                  if (ALT > 0){
+                  if (ALT > 0)
+                  {
                      OnScreenMsg(1);
-                     if (IS_SOUND_ON){
+                     if (IS_SOUND_ON)
+                     {
                        SoundOn(note_C,32);
                        delay(200);
                        SoundOn(note_C,32);
@@ -488,6 +515,108 @@ void considerTouchInput(int lx, int ly){
                   }
                   UpdateObservedObjects();
                   TREAS_PAGER == 0;
+                  drawMainScreen();
+                }
+              }
+            }
+         }
+       }
+       else if (LOAD_SELECTOR == 3)
+       {
+        // I'm in Solar System selector and need to check which Solar System object is pressed
+         for (int i=0; i<5; i++)
+         {
+            for (int j=0; j<4; j++)
+            {
+             if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+160) && ly < ((i*50)+203))
+             {
+              // found button pressed.... now I need to get his ID and link to the ARRAY;
+              int zz = (i*4) + j;
+              #ifdef serial_debug
+                Serial.print("zz = ");
+                Serial.println(zz);
+              #endif
+              if (zz == 3)
+              {
+                OnScreenMsg(5);
+                delay(2000);
+                drawMainScreen();
+              }
+              else if (zz <= 10)
+              {
+                planet_pos(zz);
+                calculateLST_HA();
+                if (ALT > 0)
+                {
+                  OnScreenMsg(1);
+                  if (IS_SOUND_ON)
+                  {
+                    SoundOn(note_C,32);
+                    delay(200);
+                    SoundOn(note_C,32);
+                    delay(200);
+                    SoundOn(note_C,32);
+                    delay(1000);
+                  }
+                  // Stop Interrupt procedure for tracking.
+                  Timer3.stop(); // 
+                  IS_TRACKING = false;
+
+                  IS_OBJ_FOUND = false;
+                  IS_OBJECT_RA_FOUND = false;
+                  IS_OBJECT_DEC_FOUND = false;
+                  Slew_timer = millis();
+                  Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
+                }
+                UpdateObservedObjects();
+                //CUSTOM_PAGER == 0;
+                drawMainScreen();
+               }
+             }
+           }
+         }
+       }
+       else if (LOAD_SELECTOR == 4)
+       {
+        // I'm in CUSTOM.CSV selector and need to check which Custom object is pressed
+         for (int i=0; i<5; i++)
+         {
+            for (int j=0; j<4; j++)
+            {
+             if (lx > ((j*75)+12) && lx < ((j*75)+81) && ly > ((i*50)+160) && ly < ((i*50)+203))
+             {
+                  //75 box width ,12start from left , 50 box hight , 110 start from up
+                  
+                 // found button pressed.... now I need to get his ID and link to the ARRAY;
+                int zz = (CUSTOM_PAGER*20) + (i*4) + j;
+                if (custom_Array[zz] != "")
+                {
+                  selectOBJECT_M(zz,4);
+                  calculateLST_HA();
+                  if (ALT > 0)
+                  {
+                     OnScreenMsg(1);
+                     if (IS_SOUND_ON)
+                     {
+                       SoundOn(note_C,32);
+                       delay(200);
+                       SoundOn(note_C,32);
+                       delay(200);
+                       SoundOn(note_C,32);
+                       delay(1000);
+                     }
+                     // Stop Interrupt procedure for tracking.
+                      Timer3.stop(); // 
+                      IS_TRACKING = false;
+
+                     IS_OBJ_FOUND = false;
+                     IS_OBJECT_RA_FOUND = false;
+                     IS_OBJECT_DEC_FOUND = false;
+                     Slew_timer = millis();
+                     Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
+                  }
+                  UpdateObservedObjects();
+                  CUSTOM_PAGER == 0;
                   drawMainScreen();
                 }
               }
@@ -630,18 +759,37 @@ void considerTouchInput(int lx, int ly){
        }
 
        //Touched GPS configuration
-       if(lx > 230 && lx < 320 && ly > 300 && ly < 480)
+       if(lx > 230 && lx < 320 && ly > 300 && ly < 400)
        {
-        DrawButton(230, 300, 80, 180, "", btn_l_border, 0, btn_l_text, 2);
-        tft.setCursor(252, 330);
+        DrawButton(230, 300, 80, 100, "", btn_l_border, 0, btn_l_text, 2);
+        tft.setCursor(252, 320);
+        tft.print("Set");
+        tft.setCursor(252, 340);
         tft.print("GPS");
-        tft.setCursor(240, 375);
+        tft.setCursor(242, 360);
         tft.print("Clock");
-        tft.setCursor(240, 420);
-        tft.print("Align");
-       
+
+        storeOptions_SD();
+        
         CURRENT_SCREEN = 0;
         drawGPSScreen();
+       }
+
+       //Touched TFT Calibration
+       if(lx > 230 && lx < 320 && ly > 410 && ly < 480)
+       {
+        DrawButton(230, 410, 80, 70, "", btn_l_border, 0, btn_l_text, 2);
+
+        tft.setCursor(252, 430);
+        tft.print("TFT");
+        tft.setCursor(252, 450);
+        tft.print("Cal");
+
+        CURRENT_SCREEN = 14;
+        drawTFTCalibrationScreen();
+        
+        CURRENT_SCREEN = 7;
+        drawOptionsScreen();
        }
     }
     else if (CURRENT_SCREEN == 10) // captures touches on drawSTATScreen()
