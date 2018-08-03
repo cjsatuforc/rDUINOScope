@@ -367,7 +367,7 @@ void considerBTCommands(){
            int i11 = BT_COMMAND_STR.indexOf(';',i10+1);
            OBJECT_NAME = BT_COMMAND_STR.substring(i1+1, i2);
            OBJECT_DESCR = "Pushed via BlueTooth";
-           OBJECT_DETAILS = "The "+OBJECT_NAME+" is a type "+BT_COMMAND_STR.substring(i10+1, i11)+" object in constellation "+BT_COMMAND_STR.substring(i9+1, i10);
+           OBJECT_DETAILS = "The "+OBJECT_NAME+" is a type "+BT_COMMAND_STR.substring(i10+1, i11)+" object in constelation "+BT_COMMAND_STR.substring(i9+1, i10);
            OBJECT_DETAILS += ", with visible magnitude of "+BT_COMMAND_STR.substring(i7+1, i8)+" and size of "+BT_COMMAND_STR.substring(i6+1, i7)+"'. ";
            OBJECT_DETAILS += OBJECT_NAME+" is "+ BT_COMMAND_STR.substring(i8+1, i9)+"mil. l.y from Earth";
            if (BT_COMMAND_STR.substring(i11+1, BT_COMMAND_STR.length()) != "0" && BT_COMMAND_STR.substring(i11+1, BT_COMMAND_STR.length()) != ""){
