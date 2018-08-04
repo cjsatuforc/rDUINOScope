@@ -199,6 +199,7 @@ int MAIN_SCREEN_MENU = 0;
 int CURRENT_SCREEN = 0;
 int LOAD_SELECTOR;   // selector to show which LOADING mechanism is used: 1 - Messier, 2 - File, 3 - NGCs
 boolean TRACKING_MOON;
+boolean sun_confirm = false;
 
 String Fan1_State = "ON";
 String Fan2_State = "ON";
@@ -776,12 +777,14 @@ void loop(void)
     if (myTouch.touched())
     {
       p = myTouch.getPoint();
-      if (p.z < 600) myTouch.getPoint(); //to remove noise
+      while (p.z < 600)
+      {
+        p = myTouch.getPoint(); //to remove noise
+        delay(100);
+      }
+
       tx = (p.x - 257) / calx;
       ty = (p.y - 445) / caly;
-
-      //tx = p.x/7.98;
-      //ty = p.y/11.59;
       
       delay(100); // slow down touch identification
 
