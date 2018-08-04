@@ -34,21 +34,25 @@
 //    * CURRENT_SCREEN==11  -               - not used
 //    * CURRENT_SCREEN==12  - drawStarSyncScreen() - To Select Alignment Star; 
 //    * CURRENT_SCREEN==13  - drawConstelationScreen(int indx) - to actually align on Star. Called few times per alignment procedure.
+//    * CURRENT_SCREEN==15  - confirm_sun_track()
 //
 //  - Please note, that Touches are separated in 2 section to capture OnPress && OnRelease!
 //    You will notice that "if (lx > 0 && ly > 0 )" this part defines OnPress activities.
 
-void considerTouchInput(int lx, int ly){
+void considerTouchInput(int lx, int ly)
+{
   //**************************************************************
   //
   //      BUTTON DOWN Events start here
   //
   //      - only executed when the user touches the screen - PRESS
   //**************************************************************
-  if (lx > 0 && ly > 0 ){
+  if (lx > 0 && ly > 0 )
+  {
     // Make sure you WakeUp the TFT
     // in case the lid is OFF
-    if (IS_TFT_ON == false){
+    if (IS_TFT_ON == false)
+    {
       analogWrite(TFTBright, TFT_Brightness);
       IS_TFT_ON = true;
       TFT_Timer = millis();
@@ -319,13 +323,17 @@ void considerTouchInput(int lx, int ly){
       }
 
       
-    }else if (CURRENT_SCREEN == 5){   // captures touches on drawCoordinatesScreen()
+    }
+    else if (CURRENT_SCREEN == 5)
+    {   // captures touches on drawCoordinatesScreen()
       if (lx > 210 && lx < 320 && ly > 10 && ly < 60){
        // BTN back pressed
          drawMainScreen();
        }
        
-    }else if (CURRENT_SCREEN == 6){   // captures touches on drawLoadScreen() .. the one that loads objects from DB
+    }
+    else if (CURRENT_SCREEN == 6)
+    {   // captures touches on drawLoadScreen() .. the one that loads objects from DB
        if (lx > 210 && lx < 320 && ly > 10 && ly < 60)
        {
        // BTN Back pressed
@@ -467,6 +475,7 @@ void considerTouchInput(int lx, int ly){
                   }
                   UpdateObservedObjects();
                   MESS_PAGER == 0;
+                  sun_confirm = false;
                   drawMainScreen();
                 }
               }
@@ -515,6 +524,7 @@ void considerTouchInput(int lx, int ly){
                   }
                   UpdateObservedObjects();
                   TREAS_PAGER == 0;
+                  sun_confirm = false;
                   drawMainScreen();
                 }
               }
@@ -544,33 +554,44 @@ void considerTouchInput(int lx, int ly){
               }
               else if (zz <= 10)
               {
-                planet_pos(zz);
-                calculateLST_HA();
-                if (ALT > 0)
+                if(zz == 0) // Ho scelto il sole
                 {
-                  OnScreenMsg(1);
-                  if (IS_SOUND_ON)
-                  {
-                    SoundOn(note_C,32);
-                    delay(200);
-                    SoundOn(note_C,32);
-                    delay(200);
-                    SoundOn(note_C,32);
-                    delay(1000);
-                  }
-                  // Stop Interrupt procedure for tracking.
-                  Timer3.stop(); // 
-                  IS_TRACKING = false;
-
-                  IS_OBJ_FOUND = false;
-                  IS_OBJECT_RA_FOUND = false;
-                  IS_OBJECT_DEC_FOUND = false;
-                  Slew_timer = millis();
-                  Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
+                  drawConfirmSunTrack();
                 }
-                UpdateObservedObjects();
-                //CUSTOM_PAGER == 0;
-                drawMainScreen();
+                else
+                {
+                  planet_pos(zz);
+                }
+                if(sun_confirm || zz != 0)
+                {
+                  calculateLST_HA();
+                  if (ALT > 0)
+                  {
+                    OnScreenMsg(1);
+                    if (IS_SOUND_ON)
+                    {
+                      SoundOn(note_C,32);
+                      delay(200);
+                      SoundOn(note_C,32);
+                      delay(200);
+                      SoundOn(note_C,32);
+                      delay(1000);
+                    }
+                    // Stop Interrupt procedure for tracking.
+                    Timer3.stop(); // 
+                    IS_TRACKING = false;
+  
+                    IS_OBJ_FOUND = false;
+                    IS_OBJECT_RA_FOUND = false;
+                    IS_OBJECT_DEC_FOUND = false;
+                    Slew_timer = millis();
+                    Slew_RA_timer = Slew_timer + 20000;   // Give 20 sec. advance to the DEC. We will revise later.
+                  }
+                  UpdateObservedObjects();
+                  //CUSTOM_PAGER == 0;
+                  sun_confirm = false;
+                  drawMainScreen();
+                }
                }
              }
            }
@@ -617,6 +638,7 @@ void considerTouchInput(int lx, int ly){
                   }
                   UpdateObservedObjects();
                   CUSTOM_PAGER == 0;
+                  sun_confirm = false;
                   drawMainScreen();
                 }
               }
@@ -994,33 +1016,43 @@ void considerTouchInput(int lx, int ly){
          }             
        }
     }
-    else if (CURRENT_SCREEN==13){    // captures touches on drawConstelationScreen(int indx)
-       if (lx > 0 && lx < 100 && ly > 420 && ly < 480){
+    else if (CURRENT_SCREEN==13)
+    {    // captures touches on drawConstelationScreen(int indx)
+       if (lx > 0 && lx < 100 && ly > 420 && ly < 480)
+       {
           // BTN "<Repeat" or "<EXIT" pressed
-          if (ALLIGN_TYPE == 3){
+          if (ALLIGN_TYPE == 3)
+          {
               // delta_a_RA = 0;
               // delta_a_DEC = 0;
               STARS_PAGER = 0;
               IS_TRACKING = false;
               IS_IN_OPERATION = true;
               drawMainScreen();
-          }else{
+          }
+          else
+          {
               ALLIGN_STEP -= 1;
               drawStarSyncScreen();
           }
        }
-       if (lx > 220 && lx < 320 && ly > 420 && ly < 480){
+       if (lx > 220 && lx < 320 && ly > 420 && ly < 480)
+       {
           // BTN "ALIGN!" pressed
           // Here we need to know which Star is this - 1st, 2nd, 3rd... etc ?
           // In order to use Ralph Pass alignment procedure described on http://rppass.com/  
           // http://rppass.com/align.pdf - the actual PDF
           
-          if (ALLIGN_STEP == 1){
-              if (ALLIGN_TYPE == 1){
+          if (ALLIGN_STEP == 1)
+          {
+              if (ALLIGN_TYPE == 1)
+              {
                 IS_TRACKING = false;
                 IS_IN_OPERATION = true;
                 drawMainScreen();
-              }else if (ALLIGN_TYPE == 3){
+              }
+              else if (ALLIGN_TYPE == 3)
+              {
                 // Select Polaris and SlewTo...                
                 IS_TRACKING = false; // Select Polaris and SlewTo...                
                 IS_TRACKING = false;         
@@ -1033,7 +1065,8 @@ void considerTouchInput(int lx, int ly){
                 selectOBJECT_M(192,2);  // Polaris in on Index 192 in the Stars Array
                 calculateLST_HA();
                 OnScreenMsg(1);
-                if (IS_SOUND_ON){
+                if (IS_SOUND_ON)
+                {
                   SoundOn(note_C,32);
                   delay(200);
                   SoundOn(note_C,32);
@@ -1053,14 +1086,18 @@ void considerTouchInput(int lx, int ly){
                 //drawConstelationScreen(0);
                 ALLIGN_STEP = 2;
               }
-          }else if (ALLIGN_STEP == 2){
-              if(ALLIGN_TYPE == 3){
+          }
+          else if (ALLIGN_STEP == 2)
+          {
+              if(ALLIGN_TYPE == 3)
+              {
                 // Select First Star Again and SlewTo...                
                 IS_TRACKING = false;
                 selectOBJECT_M(Iterative_Star_Index,3);  // Load First Star from the Stars Array
                 calculateLST_HA();
                     OnScreenMsg(1);
-                    if (IS_SOUND_ON){
+                    if (IS_SOUND_ON)
+                    {
                       SoundOn(note_C,32);
                       delay(200);
                       SoundOn(note_C,32);
@@ -1083,7 +1120,23 @@ void considerTouchInput(int lx, int ly){
           }
       }
     }
-  }else{
+    else if(CURRENT_SCREEN==15)
+    {
+      // Capture touch inputs on drawConfirmSunTrack()
+      if(lx > 10 && lx < 150 && ly > 380 && ly < 460) //BTN YES
+      {
+        planet_pos(0);
+        sun_confirm = true;
+      }
+      else //(lx > 170 && lx < 310 && ly > 380 && ly < 460) //BTN NO
+      {
+        drawLoadScreen();
+        sun_confirm = false;
+      }
+    }
+  }
+  else
+  {
   //**************************************************************
   //
   //      BUTTON UP Events start here
@@ -1316,4 +1369,5 @@ void considerTouchInput(int lx, int ly){
     }
   }
 }
+
 
