@@ -39,6 +39,7 @@
 //    * CURRENT_SCREEN==12  - drawStarSyncScreen() - To Select Alignment Star;
 //    * CURRENT_SCREEN==13  - drawConstelationScreen(int indx) - to actually align on Star. Called few times per alignment procedure.
 //    * CURRENT_SCREEN==14  - drawTFTCalibrationScreen - To calibrate the TFT Touchscreen
+//    * CURRENT_SCREEN==15  - drawConfirmSunTrack()
 //
 
 void removeTime_addXX() {
@@ -1669,6 +1670,66 @@ void drawLoadObjects()
       }
     }
   }
+}
+
+void drawConfirmSunTrack()
+{
+  CURRENT_SCREEN = 15;
+  tft.fillScreen2(ILI9488_BLACK);
+  tft.fillRect2(0,0,320,100, RED);
+  tft.drawRect(10,10, 300, 80, YELLOW);
+  tft.setTextSize(3);
+  tft.setTextColor(YELLOW);
+  tft.setCursor(42, 35);
+  tft.println("!! WARNING !!");
+
+  tft.setTextColor(WHITE);
+  tft.setCursor(0, 120);
+  tft.setTextSize(2);
+  tft.print("Looking directly at Sun, without any protection filter like the BAADER ASTROSOLAR FILTER, may result in ");
+  tft.setTextColor(RED);
+  tft.print("permanent damage to your eye or telescope!\n\n");
+  tft.setTextColor(YELLOW);
+  tft.setTextSize(1);
+  tft.println("The programmer is not resposible for damages caused by the improper use of the rDUINOScope GoTo controller.\n");
+
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.print("Do you want to continue?");
+
+  DrawButton(10, 380, 140, 80, "YES", 0, btn_l_border, btn_l_text, 3);
+  DrawButton(170, 380, 140, 80, "NO", 0, btn_l_border, btn_l_text, 3);
+
+  while (!myTouch.touched()) {}
+
+  int tx = 0;
+  int ty = 0;
+  while (ty < 10 || ty > 150 && ty < 170 || ty > 310 || tx < 380 || tx > 460)
+  {
+    if(myTouch.touched())
+    {
+      
+      p = myTouch.getPoint();
+      while (p.z < 600)
+      {
+        p = myTouch.getPoint(); //to remove noise
+        delay(200);
+      }
+    
+      tx = (p.x - 257) / calx;
+      ty = (p.y - 445) / caly;
+
+      //Useful to debug touch:
+      #ifdef serial_debug
+        Serial.print(" -> Touched: x = ");
+        Serial.print(tx);
+        Serial.print(", y = ");
+        Serial.println(ty);
+      #endif
+    }
+    else  delay(100);
+  }
+  considerTouchInput(ty, tx);
 }
 
 
