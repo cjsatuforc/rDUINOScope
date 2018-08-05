@@ -1125,11 +1125,13 @@ void considerTouchInput(int lx, int ly)
       // Capture touch inputs on drawConfirmSunTrack()
       if(lx > 10 && lx < 150 && ly > 380 && ly < 460) //BTN YES
       {
+        //DrawButton(10, 380, 140, 80, "YES", 0, btn_d_border, btn_l_text, 3);
         planet_pos(0);
         sun_confirm = true;
       }
       else //(lx > 170 && lx < 310 && ly > 380 && ly < 460) //BTN NO
       {
+        //DrawButton(170, 380, 140, 80, "NO", 0, btn_d_border, btn_l_text, 3);
         drawLoadScreen();
         sun_confirm = false;
       }
