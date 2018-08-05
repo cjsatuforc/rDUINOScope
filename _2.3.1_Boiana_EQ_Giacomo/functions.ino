@@ -1416,24 +1416,33 @@ void done()
   tft.println("Touchscreen calibration");//, gTextAlignTopCenter, 0, 2);
 
   tft.setTextColor(ILI9488_WHITE, ILI9488_BLACK);
-  tft.println("CALIBRATION COMPLETE\nNew calibration parameters have been saved. Touch the area below to test the calibration results and save or discard the changes.");
+  tft.println("CALIBRATION COMPLETE\nTouch the area below to test the calibration results and save or discard the use of new calibration parameters.");
   tft.fillRect(0, 100, dispx, 300, ILI9488_RED);
 
+  DrawButton(10, 410, 140, 60, "YES", 0, btn_l_border, btn_l_text, 3);
+  DrawButton(170, 410, 140, 60, "NO", 0, btn_l_border, btn_l_text, 3);
+  
   int tx, ty = 0;
-  while(ty < 440)
+  while(tx < 410)
   {
-    if(myTouch.touched())
+    if (myTouch.touched())
     {
       p = myTouch.getPoint();
+      while (p.z < 600)
+      {
+        p = myTouch.getPoint(); //to remove noise
+        delay(100);
+      }
       tx = p.x/slope_y;
       ty = p.y/slope_x;
-      if(ty > 100 && ty < 400)
+      if(tx > 100 && tx < 400)
       {
         tft.fillRect2(0, 100, dispx, 300, ILI9488_RED);
         tft.drawRect(0, 100, dispx, 300, ILI9488_WHITE);
-        drawCrossHair(tx, ty, ILI9488_WHITE);
+        drawCrossHair(ty, tx, ILI9488_WHITE);
       }
-      delay(100);
+      
+      delay(10);
     }
   }
 }
