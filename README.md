@@ -1,6 +1,7 @@
 # rDUINOScope
 
 ### ILI9488 3.5" SPI version: [buy pre-assembled kit](https://giacu92.bigcartel.com/product/rduinoscope-ili9488)
+This rDUINOScope is an enanched version of the main release. The main differences are the following:
 
 -  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used. You can get a pre-assembled version in my [bigcartel shop](https://giacu92.bigcartel.com/product/rduinoscope-ili9488) or get yourself the 
 ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488](https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488)
