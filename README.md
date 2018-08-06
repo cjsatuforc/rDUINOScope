@@ -16,7 +16,7 @@ ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-t
 -  Added custom.csv wich can be used to add more custom sky objects.
 -  Added pictures of all objects when tracking.
 
-![Board](http://i65.tinypic.com/25sr4va.jpg)
+![Board](http://i63.tinypic.com/fxs58l.jpg)
 
 New features in development:
 ===========================================================
