@@ -115,6 +115,11 @@ void considerTimeUpdates()
       }
       if ((OBJECT_NAME != "") && (OBJECT_NAME != "CP") && (IS_BT_MODE_ON == false))
       {
+          if(TRACKING_MOON)
+          {
+            planet_pos(10);
+          }
+          
           tft.setCursor(135,290);
           tft.setTextSize(2);
           tft.setTextColor(l_text);
@@ -124,11 +129,6 @@ void considerTimeUpdates()
           tft.print(HAMin,1);
           tft.print("m");
 
-          if(TRACKING_MOON)
-          {
-            planet_pos(10);
-          }
-
           tft.setTextSize(1);
           tft.setCursor(2,250);
           tft.setTextColor(l_text);
@@ -136,6 +136,7 @@ void considerTimeUpdates()
           tft.print("Az/Alt: ");
           tft.print(floor(AZ), 0);
           tft.print("^ ");
+          //tft.print((char)248);
           tft.print((AZ - floor(AZ))*60, 0);
           tft.print("' / ");
           tft.print(floor(ALT),0);

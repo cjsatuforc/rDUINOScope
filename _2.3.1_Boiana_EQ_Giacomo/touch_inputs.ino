@@ -85,10 +85,10 @@ void considerTouchInput(int lx, int ly)
            if (changes == 1)
            {
              // Do the magic as the date and time has been updated... Update the RTC accordingly
-             int hh = (w_DateTime[8]*10) + w_DateTime[9];
-             int mm = (w_DateTime[10]*10) + w_DateTime[11];
-             int dd = (w_DateTime[0]*10) + w_DateTime[1];
-             int mo = (w_DateTime[2]*10) + w_DateTime[3];
+             int hh = (w_DateTime[8]*10)   + w_DateTime[9];
+             int mm = (w_DateTime[10]*10)  + w_DateTime[11];
+             int dd = (w_DateTime[0]*10)   + w_DateTime[1];
+             int mo = (w_DateTime[2]*10)   + w_DateTime[3];
              int yy = (w_DateTime[4]*1000) + (w_DateTime[5]*100) + (w_DateTime[6]*10) + w_DateTime[7];
              rtc.setTime(hh,mm,00);
              rtc.setDate(dd,mo,yy);

@@ -1421,6 +1421,7 @@ void done()
 
   DrawButton(10, 410, 140, 60, "YES", 0, btn_l_border, btn_l_text, 3);
   DrawButton(170, 410, 140, 60, "NO", 0, btn_l_border, btn_l_text, 3);
+  tft.drawRect(0, 100, dispx, 300, ILI9488_WHITE);
   
   int tx, ty = 0;
   while(tx < 410)
@@ -1438,11 +1439,107 @@ void done()
       if(tx > 100 && tx < 400)
       {
         tft.fillRect2(0, 100, dispx, 300, ILI9488_RED);
-        tft.drawRect(0, 100, dispx, 300, ILI9488_WHITE);
         drawCrossHair(ty, tx, ILI9488_WHITE);
       }
       
       delay(10);
     }
   }
+}
+
+double J2000(double yy, double m, double dd, double hh, double mm)
+{
+    double DD = 0; // use 0 for J2000
+    double d = (double)367*yy - (double)7*((double)yy+((double)m+(double)9)/(double)12.0)/(double)4.0+(double)275*m/(double)9.0 + DD + (double)dd - (double)730531; // days since J2000
+    d = floor(d) + hh/24.0 + mm/(24.0*60.0);
+    return d;
+}
+
+double ipart(double xx)
+{
+  double sgn;
+  
+  if(xx<0)
+  {
+     sgn=-1.0;
+  }
+
+  else if(xx==0)
+  {
+   sgn=0.0;
+  }
+
+  else if(xx>0)
+  {
+    sgn=1.0;
+  }
+  double ret=sgn*((int)fabs(xx));
+
+  return ret;
+}
+
+
+double FNdegmin(double xx)
+{
+  double a = ipart(xx) ;
+  double b = xx - a ;
+  double e = ipart(60 * b) ;
+  //   deal with carry on minutes
+  if( e>= 60 )
+  {
+    e = 0 ;
+    a = a + 1 ;
+  }
+  return (a + (e / 100) );
+}
+
+double dayno(int dx,int mx, int yx, double fx)
+{
+  dno=(367 * yx) -  (int)(7*(yx + (int)((mx + 9) / 12)) / 4) + (int)(275 * mx / 9) + dx - 730531.5 + fx;
+  dno-=4975.5;
+  return dno;
+}
+
+double frange(double x)
+{
+  x=x/(2*M_PI);
+  x=(2*M_PI)*(x-ipart(x));
+  if(x<0) x=x+(2*M_PI);
+  return x;
+}
+
+double fkep( double m, double ecc)
+{
+  double e = ecc;
+  double v = m + (2 * e - 0.25 *pow(e,3) + 5/96 * pow(e,5)) * sin(m) + (1.25 * pow(e,2) - 11/24 * pow(e,4)) * sin(2*m) + (13/12 * pow(e,3) - 43/64 * pow(e,5)) * sin(3*m) + 103/96 * pow(e,4) * sin(4*m) + 1097/960 * pow(e,5) * sin(5*m);
+
+  if (v < 0)  v = v + (2 * PI);
+  return v;
+}
+
+double fnatan(double x,double y)
+{
+    double a=atan(y/x);
+    if(x<0)
+        a=a+PI;
+    if((y<0)&&(x>0))
+        a=a+(2*PI);
+    return a;
+}
+
+void earth()
+{
+  M[3]=((n[3]*rads)*(d))+(L[3]-pl[3])*rads;
+  M[3]=frange(M[3]);
+  v[3]=fkep(M[3],e[3]);
+  r[3]=a[3]*((1 - (pow(e[3],2)))/(1+ (e[3]*cos(v[3]))));
+  x[3]=r[3]*cos(v[3]+pl[3]*rads);
+  y[3]=r[3]*sin(v[3]+pl[3]*rads);
+  z[3]=0;
+}
+
+double JulianDay (int j_date, int j_month, int j_year, double UT)
+{
+  if (j_month<=2) {j_month = j_month+12; j_year = j_year-1;}
+  return (int)(365.25*j_year) + (int)(30.6001*(j_month+1)) - 15 + 1720996.5 + j_date + UT/24.0;
 }
