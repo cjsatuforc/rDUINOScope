@@ -1,6 +1,7 @@
 # rDUINOScope
 
 ### ILI9488 3.5" SPI version: [buy pre-assembled kit](https://giacu92.bigcartel.com/product/rduinoscope-ili9488)
+This rDUINOScope is an enanched version of the main release. The main differences are the following:
 
 -  Uses ILI9488 480x320 px display in SPI, instead of HX8352B 400x240 px display, so bigger screen and less pin used. You can get a pre-assembled version in my [bigcartel shop](https://giacu92.bigcartel.com/product/rduinoscope-ili9488) or get yourself the 
 ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488](https://www.buydisplay.com/default/serial-spi-3-5-inch-tft-lcd-module-in-320x480-optl-touchscreen-ili9488)
@@ -12,10 +13,17 @@ ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-t
 -  Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv.
 -  Changed color for Name and Description when tracking objects.
 -  Different pin arrangement.
--  Options page settings such as tft brightness or sound state, are now saved and restored at each boot.
--  Added custom.csv wich can be used to add more custom sky objects (still to be implemented).
+-  Options page settings such as tft brightness or sound state, are now saved onto the SD card and restored at each boot.
+-  Added custom.csv wich can be used to add more custom sky objects.
+-  Added pictures of all objects when tracking.
 
-![Board](http://i65.tinypic.com/25sr4va.jpg)
+![Board](http://i63.tinypic.com/fxs58l.jpg)
+
+New features in development:
+===========================================================
+- Onboard touchscreen calibration
+- Solar system objects tracking
+
 
 ## THE WORLD'S FIRST STAND ALONE ARDUINO BASED TELESCOPE CONTROL GOTO (handheld controller). 
 
