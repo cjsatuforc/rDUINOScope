@@ -1158,11 +1158,13 @@ void considerTouchInput(int lx, int ly)
             STP_FWD = HIGH;
             STP_BACK = LOW;
           }
-          Serial.println(OBSERVATION_LATTITUDE);
-          Serial.print("STP_FWD = ");
-          Serial.println(STP_FWD);
-          Serial.print("STP_BACK = ");
-          Serial.println(STP_BACK);          
+          #ifdef serial_debug
+            Serial.println(OBSERVATION_LATTITUDE);
+            Serial.print("STP_FWD = ");
+            Serial.println(STP_FWD);
+            Serial.print("STP_BACK = ");
+            Serial.println(STP_BACK); 
+          #endif         
           CURRENT_SCREEN = 1;
           drawClockScreen();
       }
@@ -1334,8 +1336,10 @@ void considerTouchInput(int lx, int ly)
             IS_FAN1_ON = true;
             tft.fillRect2(220, 325, 100, 70,BLACK);
             DrawButton( 220, 325, 100, 70, "FAN 1", btn_d_border, btn_l_border, btn_l_text, 2);
-            digitalWrite(FAN1,HIGH);
-            Fan1_State="ON";     
+            //digitalWrite(FAN1,HIGH);
+            analogWrite(FAN1, 100); //5V PWM over 13V VDD
+            Fan1_State = "39%";
+            //Fan1_State="ON";     
             drawStatusBar();
          }
          storeOptions_SD();
