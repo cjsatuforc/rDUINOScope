@@ -35,11 +35,14 @@
  *     -  Custom line of text can be appended to any .csv file to display custom "Description" strings. Example: I added "rich cluster with more than 100 stars" to M11 in messier.csv
  *        color for Name and Description when tracking objects.
  *     -  Different pin arrangement
- *     -  Added custom.csv wich can be used to add more custom sky objects (still to be implemented)
+ *     -  Added custom.csv wich can be used to add more custom sky objects
+ *     -  Added tracking for Solar System objects
 */
 
 #define reverse_logic true //set true if the stepper drivers logic is "neglected enabled"
-#define serial_debug    // comment out to deactivate the serial debug mode
+#define serial_debug       // comment out to deactivate the serial debug mode
+
+#define use_battery_level
 
 // HERE GOES THE Mount, Gears and Drive information.
 // ... used to calculate the HourAngle to microSteps ratio
@@ -48,17 +51,18 @@
 // NB: RA and DEC uses the same gear ratio (144 tooth in my case)!
 //----------------------------------------------
 #ifdef serial_debug
-  int WORM = 144;
+  #define WORM 253
 #else
-  int WORM = 144;
+  #define WORM 144
 #endif
-int REDUCTOR = 4;      // 1:4 gear reduction
-int DRIVE_STP = 200;   // Stepper drive have 200 steps per revolution
-int MICROSteps = 16;   // I'll use 1/16 microsteps mode to drive sidereal - also determines the LOWEST speed.
+#define REDUCTOR 1     // 1:4 gear reduction
+#define GEARBOX 5
+#define DRIVE_STP 200  // Stepper drive have 200 steps per revolution
+#define MICROSteps 16  // I'll use 1/16 microsteps mode to drive sidereal - also determines the LOWEST speed.
 
 // below variables are used to calculate the paramters where the drive works
-int ARCSEC_F_ROTAT = 1296000;    // ArcSeconds in a Full earth rotation;
-float SIDEREAL_DAY = 86164.0905;   // Sidereal day in seconds
+#define ARCSEC_F_ROTAT 1296000   // ArcSeconds in a Full earth rotation;
+#define SIDEREAL_DAY 86164.0905   // Sidereal day in seconds
 float ArcSECstep;
 int MicroSteps_360;
 int RA_90;  // How much in microSteps the RA motor have to turn in order to make 6h = 90 degrees;
@@ -77,19 +81,19 @@ int Clock_Solar;  // Variable for the Interruptions. nterruption is initialized 
 int Clock_Lunar;  // Variable for the Interruptions. nterruption is initialized depending on the DATA above -in miliseconds
 
 ////////////////////////////////////////////////
-#include "DHT.h"
+#include <DHT.h>
 #include <TinyGPS++.h>
 #include <TimeLib.h>
-#include <XPT2046_Touchscreen.h>
+#include <XPT2046_Touchscreen.h>  // Use edited library from rDUINOScope ILI9488 repo
 #include <SPI.h>
 #include <SD.h>
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <ILI9488.h>  //Use DMA version to increase speed
-#include <DueTimer.h> // interruptions library0
+#include <Adafruit_GFX.h>  // Core graphics library
+#include <ILI9488.h>       // Use DMA version to increase speed
+#include <DueTimer.h>      // interruptions library0
 #include <DS3231.h>
 #include <math.h>
 
-#include "defines.h"  //notes, colors and stars
+#include "defines.h"       //notes, colors, stars and planets
 
 ////////////////////////////////////////////////
 /** ILI9488 pin map */
@@ -260,17 +264,17 @@ int DEC_DIR = 7;
 // int RA_MODE2 = 12;
 
 int RA_MODE0 = 11;
-int RA_MODE1 = 13;
-int RA_MODE2 = 12;
+int RA_MODE1 = 12;
+int RA_MODE2 = 23;
 int DEC_MODE0 = 10;
 int DEC_MODE1 = 9;
-int DEC_MODE2 = 8;
+int DEC_MODE2 = 22;
 
 int yPin = A0;
 int xPin = A1;
 int FAN1 = 37;
 int FAN2 = 39;
-int TFTBright = DAC0;
+int TFTBright = 13;
 int Joy_SW = A11;
 int POWER_DRV8825 = A8;
 int x_cal, y_cal = 0;
@@ -288,7 +292,7 @@ void setup(void)
   pinMode(speakerOut, OUTPUT);
 
   // below variables are used to calculate the paramters where the drive works
-  int ww = WORM * REDUCTOR;
+  int ww = WORM * REDUCTOR * GEARBOX;
   int www = DRIVE_STP * MICROSteps;
 
   MicroSteps_360 = ww * www;
@@ -300,6 +304,11 @@ void setup(void)
   Clock_Sidereal = 1000000 / (MicroSteps_360 / SIDEREAL_DAY); // This way I make the interruption occuer 2wice faster than needed - REASON: allow max time for Pin-UP, Pin-DOWN action
   Clock_Solar = 1000000 / (MicroSteps_360 / (SIDEREAL_DAY - 235.9095));
   Clock_Lunar = 1000000 / (MicroSteps_360 / (SIDEREAL_DAY - 2089.2292));
+
+  #ifdef serial_debug
+    Serial.print("Clock_Sidereal = ");
+    Serial.println(Clock_Sidereal, 6);
+  #endif
 
   bool touch_init = myTouch.begin();  //ADS7873 begin();
   rtc.begin();
@@ -462,7 +471,6 @@ void setup(void)
   }
 
   tft.print("--> Initializing RTC... ");
-  int prev_mil = millis(); 
   if(isnan(rtc.getTemp()))
   {
     tft.setTextColor(RED);
@@ -533,6 +541,7 @@ void setup(void)
     tft.setTextColor(RED);
     tft.println("ERROR opening: messier.csv");
     tft.setTextColor(d_text);
+    //check = false;
   }
 
   dataFile.close();
@@ -567,6 +576,7 @@ void setup(void)
     tft.setTextColor(RED);
     tft.println("ERROR opening: treasure.csv");
     tft.setTextColor(d_text);
+    //check = false;
   }
   dataFile.close();
   last_button = 0;
@@ -606,6 +616,7 @@ void setup(void)
     tft.setTextColor(RED);
     tft.println("ERROR opening: custom.csv");
     tft.setTextColor(d_text);
+    //check = false;
   }
   dataFile.close();
   last_button = 0;
@@ -750,8 +761,15 @@ void loop(void)
     xPosition = analogRead(xPin);
     yPosition = analogRead(yPin);
 
+
     if ((xPosition < x_cal-100) || (xPosition > x_cal+100) || (yPosition < y_cal-100) || (yPosition > x_cal+100))
     {
+      #ifdef serial_debug
+        Serial.print("xPin = ");
+        Serial.println(xPosition);
+        Serial.print("yPin = ");
+        Serial.println(yPosition);
+      #endif
       IS_MANUAL_MOVE = true;
       if (IS_STEPPERS_ON)
       {
@@ -795,7 +813,7 @@ void loop(void)
         Serial.print(", y = ");
         Serial.println(ty);
       #endif
-      
+    
     }
     considerTouchInput(ty, tx);
 
