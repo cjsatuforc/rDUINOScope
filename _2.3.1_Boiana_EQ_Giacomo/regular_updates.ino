@@ -22,7 +22,7 @@
 //  - On each TimeInterval (~10 sec.) - Updates screens accordingly (e.g. Time, LST, Temperature, Humidity and etc.)
 //
 
-void considerTempUpdates() // Temperature && Humidity Updates
+void considerTempUpdates() // Temperature && Humidity Updates && battery voltage
 {                                
   if (CURRENT_SCREEN == 4 && (millis()-Tupdate_time) > 30000)
   {
@@ -38,6 +38,7 @@ void considerTempUpdates() // Temperature && Humidity Updates
           _temp = tTemp;
           _humid = tHum;
        }
+       
        tft.setTextSize(2);
        tft.setTextColor(title_texts);
        if (_temp > -75 && _temp < 75 && _humid < 100 && _humid > 0)
@@ -51,6 +52,10 @@ void considerTempUpdates() // Temperature && Humidity Updates
          tft.print(_humid,0);
        }
        Tupdate_time = millis();
+
+       #ifdef use_battery_level
+        drawBatteryLevel(285, 8, calculateBatteryLevel());
+       #endif
   }
 }
 
@@ -86,8 +91,9 @@ void considerTimeUpdates()
             tft.print(" ");
             tft.print(String(rtc.getDateStr()).substring(6));
       }
+      
       tft.setTextColor(title_texts);
-      tft.fillRect2(90,35,95,22, title_bg);
+      tft.fillRect2(90,35,109,22, title_bg);
       tft.setTextSize(3);
       tft.setCursor(90, 35);
       tft.print(String(rtc.getTimeStr()).substring(0,5));  
