@@ -24,16 +24,16 @@
 //  - Draws OnScreen Messages
 //
 //  Screens are separated like:
-//    * CURRENT_SCREEN==0  - drawGPSScreen() Where the GPS coordinates are displayed
-//    * CURRENT_SCREEN==1  - drawClockScreen() Captures updates on the time and date
-//    * CURRENT_SCREEN==2  -                - not used
-//    * CURRENT_SCREEN==3  - drawSelectAlignment() Select Alignment method (only have 3 buttons)
-//    * CURRENT_SCREEN==4  - drawMainScreen() Captures all clicks on the MAIN Screen of the application
-//    * CURRENT_SCREEN==5  - drawCoordinatesScreen() Only have "back" button
-//    * CURRENT_SCREEN==6  - drawLoadScreen() Captures input on Load screen (all of them: Messier && Treasurres)
-//    * CURRENT_SCREEN==7  - drawOptionsScreen();
-//    * CURRENT_SCREEN==8  -                - not used
-//    * CURRENT_SCREEN==9  -                - not used
+//    * CURRENT_SCREEN==0   - drawGPSScreen() Where the GPS coordinates are displayed
+//    * CURRENT_SCREEN==1   - drawClockScreen() Captures updates on the time and date
+//    * CURRENT_SCREEN==2   - not used
+//    * CURRENT_SCREEN==3   - drawSelectAlignment() Select Alignment method (only have 3 buttons)
+//    * CURRENT_SCREEN==4   - drawMainScreen() Captures all clicks on the MAIN Screen of the application
+//    * CURRENT_SCREEN==5   - drawCoordinatesScreen() Only have "back" button
+//    * CURRENT_SCREEN==6   - drawLoadScreen() Captures input on Load screen (all of them: Messier && Treasurres)
+//    * CURRENT_SCREEN==7   - drawOptionsScreen();
+//    * CURRENT_SCREEN==8   - not used
+//    * CURRENT_SCREEN==9   - not used
 //    * CURRENT_SCREEN==10  - drawSTATScreen()
 //    * CURRENT_SCREEN==11  - drawStarMap();
 //    * CURRENT_SCREEN==12  - drawStarSyncScreen() - To Select Alignment Star;
@@ -42,8 +42,10 @@
 //    * CURRENT_SCREEN==15  - drawConfirmSunTrack()
 //
 
-void removeTime_addXX() {
-  if (dateEntryPos == 0) {
+void removeTime_addXX()
+{
+  if (dateEntryPos == 0)
+  {
     tft.fillRect2(70, 80, 200, 30, BLACK);
     tft.fillRect2(110, 115, 200, 30, BLACK);
     tft.setTextColor(btn_l_text);
@@ -146,7 +148,8 @@ void drawSelectAlignment() {
 
   DrawButton(30, 150, 250, 65, "1 Star Alignment", btn_d_border, btn_l_border, btn_l_text, 2);
   //  DrawButton(30,150,250,65, "2 Star Alignment", btn_d_border, btn_l_border, btn_l_text, 2);
-  if (OBSERVATION_LONGITUDE > 0) {
+  if (OBSERVATION_LONGITUDE > 0)
+  {
     DrawButton(30, 250, 250, 65, "Iterative Align", btn_d_border, btn_l_border, btn_l_text, 2);
   }
   DrawButton(30, 400, 250, 55, "Skip Alignment", 0, btn_l_border, btn_l_text, 2);
@@ -174,129 +177,188 @@ void drawMainScreen()
   tft.setCursor(47, 4);
   tft.print("T-out");
 
-  tft.setCursor(85, 4);
-  tft.print("Track-M");
-
-  tft.setCursor(138, 4);
-  tft.print("Mer-F");
-
-  tft.setCursor(177, 4);
-  tft.print("Fan1");
-
-  tft.setCursor(210, 4);
-  tft.print("Fan2");
-
-  tft.setCursor(244, 4);
-  tft.print("Sound");
-
-  tft.setCursor(283, 4);
-  tft.print("Motors");
-
-
-  if (TFT_Brightness >= 254)
-  {
-    tft.setTextColor(Button_State_ON);
-    tft.setCursor(5, 15);
-    tft.print(TFT_Brightness * 100 / 255);
-  }
-
-  if (TFT_Brightness <= 253)
-  {
-    tft.setTextColor(Button_State_OFF);
-    tft.setCursor(5, 15);
-    tft.print(TFT_Brightness * 100 / 255);
-  }
-
-  tft.setCursor(30, 15);
+  tft.setTextColor(Button_State_OFF);
+  tft.setCursor(10, 15);
+  tft.print(TFT_Brightness * 100 / 255);
   tft.print("%");
-
-  tft.setCursor(47, 15);
+  
+  tft.setCursor(50, 15);
   tft.setTextColor(Button_State_ON);
   tft.print(TFT_Time);
 
-  if (Tracking_Mode == "Celest") {
-    tft.setCursor(88, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("Celest");
-  }
-
-  if (Tracking_Mode == "Lunar") {
-    tft.setCursor(88, 15);
+  #ifndef use_battery_level
     tft.setTextColor(Button_State_OFF);
-    tft.print("Lunar");
-  }
-
-  if (Tracking_Mode == "Solar") {
-    tft.setCursor(88, 15);
-    tft.setTextColor(Purple);
-    tft.print("Solar");
-  }
-
-  tft.setCursor(141, 15);
-  tft.setTextColor(Button_State_ON);
-  tft.print("AUTO");
-
-  if (Mer_Flip_State == "AUTO") {
-    tft.fillRect2(140, 14, 30, 10, title_bg);
-    tft.setCursor(141, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("AUTO");
-  }
-
-  if (Mer_Flip_State == "OFF") {
-    tft.fillRect2(140, 14, 30, 10, title_bg);
-    tft.setCursor(141, 15);
+    
+    tft.setCursor(85, 4);
+    tft.print("Track-M");
+  
+    tft.setCursor(138, 4);
+    tft.print("Mer-F");
+  
+    tft.setCursor(177, 4);
+    tft.print("Fan1");
+  
+    tft.setCursor(210, 4);
+    tft.print("Fan2");
+  
+    tft.setCursor(244, 4);
+    tft.print("Sound");
+  
+    tft.setCursor(283, 4);
+    tft.print("Motors");
+  
+    if (Tracking_Mode == "Celest")
+    {
+      tft.setCursor(88, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("Celest");
+    }
+    else if (Tracking_Mode == "Lunar")
+    {
+      tft.setCursor(88, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("Lunar");
+    }
+    else (Tracking_Mode == "Solar")
+    {
+      tft.setCursor(88, 15);
+      tft.setTextColor(Purple);
+      tft.print("Solar");
+    }
+  
+    if (Mer_Flip_State == "AUTO") {
+      tft.fillRect2(140, 14, 30, 10, title_bg);
+      tft.setCursor(141, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("AUTO");
+    }
+  
+    if (Mer_Flip_State == "OFF") {
+      tft.fillRect2(140, 14, 30, 10, title_bg);
+      tft.setCursor(141, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Fan1_State == "ON")
+    {
+      tft.setCursor(180, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Fan1_State == "OFF") {
+      tft.setCursor(180, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Fan2_State == "ON")
+    {
+      tft.setCursor(214, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Fan2_State == "OFF")
+    {
+      tft.setCursor(214, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Sound_State == "ON")
+    {
+      tft.setCursor(252, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Sound_State == "OFF") {
+      tft.setCursor(252, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Stepper_State == "ON")
+    {
+      tft.setCursor(292, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Stepper_State == "OFF") {
+      tft.setCursor(292, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+    
+  #else
     tft.setTextColor(Button_State_OFF);
-    tft.print("OFF");
-  }
+    tft.setCursor(85, 4);
+    tft.print("Fan1");
+  
+    tft.setCursor(125, 4);
+    tft.print("Fan2");
+  
+    tft.setCursor(160, 4);
+    tft.print("Sound");
+  
+    tft.setCursor(200, 4);
+    tft.print("Motors");
 
-  if (Fan1_State == "ON") {
-    tft.setCursor(180, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("ON");
-  }
+    if (Fan1_State == "ON")
+    {
+      tft.setCursor(88, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Fan1_State == "OFF")
+    {
+      tft.setCursor(85, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
 
-  if (Fan1_State == "OFF") {
-    tft.setCursor(180, 15);
-    tft.setTextColor(Button_State_OFF);
-    tft.print("OFF");
-  }
+    if (Fan2_State == "ON")
+    {
+      tft.setCursor(128, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Fan2_State == "OFF")
+    {
+      tft.setCursor(128, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Sound_State == "ON")
+    {
+      tft.setCursor(168, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Sound_State == "OFF")
+    {
+      tft.setCursor(168, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
+  
+    if (Stepper_State == "ON")
+    {
+      tft.setCursor(209, 15);
+      tft.setTextColor(Button_State_ON);
+      tft.print("ON");
+    }
+    else //(Stepper_State == "OFF")
+    {
+      tft.setCursor(209, 15);
+      tft.setTextColor(Button_State_OFF);
+      tft.print("OFF");
+    }
 
-  if (Fan2_State == "ON") {
-    tft.setCursor(214, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("ON");
-  }
-
-  if (Fan2_State == "OFF") {
-    tft.setCursor(214, 15);
-    tft.setTextColor(Button_State_OFF);
-    tft.print("OFF");
-  }
-
-  if (Sound_State == "ON") {
-    tft.setCursor(252, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("ON");
-  }
-
-  if (Sound_State == "OFF") {
-    tft.setCursor(252, 15);
-    tft.setTextColor(Button_State_OFF);
-    tft.print("OFF");
-  }
-
-  if (Stepper_State == "ON") {
-    tft.setCursor(292, 15);
-    tft.setTextColor(Button_State_ON);
-    tft.print("ON");
-  }
-
-  if (Stepper_State == "OFF") {
-    tft.setCursor(292, 15);
-    tft.setTextColor(Button_State_OFF);
-    tft.print("OFF");
-  }
+    #ifdef use_battery_level
+        drawBatteryLevel(285, 8, calculateBatteryLevel());
+    #endif
+  #endif
 
   tft.setTextColor(title_texts);
 
@@ -308,7 +370,8 @@ void drawMainScreen()
 
   tft.setCursor(1, 65);
   tft.print("LST :");
-  if ((int)LST < 10) {
+  if ((int)LST < 10)
+  {
     tft.print("0");
     tft.print((int)LST);
   } else {
@@ -445,14 +508,15 @@ void drawMainScreen()
     tft.print(abs(OBJECT_DEC_M), 2);
     tft.println("'");
     // End data for the observed object...
-  } else {
+  }
+  else
+  {
     tft.setTextSize(2);
     tft.setTextColor(texts);
     tft.println("");
     tft.println("No object is selected!");
     tft.setTextSize(1);
-    tft.println("Use LOAD button below to select");
-    tft.println("object from Messier or NGC Catalogue.");
+    tft.println("Use LOAD button below to select objects from Solar System, Messier, NGC or custom.csv catalogues");
   }
 
   tft.drawLine(1, 321, 320, 321, btn_d_border);
@@ -665,12 +729,12 @@ void drawSTATScreen() {
   tft.setTextSize(4);
   tft.print("Stats");
   tft.setTextColor(btn_l_text);
-  tft.setTextSize(2);
+  //tft.setTextSize(1);
   DrawButton(210, 5, 100, 40, "<back", btn_d_border, btn_l_border, btn_l_text, 3);
 
   // Draw staistics...
   tft.setTextColor(l_text);
-  tft.setTextSize(2);
+  tft.setTextSize(1);
   tft.setCursor(0, 58);
   tft.print("Observation on ");
   tft.print(Start_date);
@@ -680,20 +744,23 @@ void drawSTATScreen() {
   tft.print("Report generated at: ");
   tft.println(String(rtc.getTimeStr()).substring(0, 5));
   tft.println(" ");
-  tft.setCursor(100, 105);
+  tft.setCursor(100, 85);
+  tft.setTextSize(2);
   tft.println("LOCATION:");
-  tft.setCursor(70, 125);
+  tft.setCursor(70, 110);
   tft.print("LAT : ");
   tft.println(OBSERVATION_LATTITUDE, 4);
-  tft.setCursor(70, 145);
+  tft.setCursor(70, 130);
   tft.print("LONG: ");
   tft.println(OBSERVATION_LONGITUDE, 4);
-  tft.setCursor(70, 165);
+  tft.setCursor(70, 150);
   tft.print("ALT : ");
   tft.println(OBSERVATION_ALTITUDE, 0);
-  tft.println("");
-  tft.setCursor(5, 195);
-  tft.print(" OBSERVATION: ");
+  tft.setCursor(70, 170);
+  tft.print("SAT :");
+  tft.print(gps.satellites.value());
+  tft.setCursor(0, 190);
+  tft.print("OBSERVATION: ");
   double st;
   int st_h;
   int st_m;
