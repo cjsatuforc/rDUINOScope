@@ -39,7 +39,7 @@ void calculateLST_HA()
 
   // Now I'll use the global Variables OBJECT_RA_H and OBJECT_RA_M  To calculate the Hour angle of the selected object.
 
-  double dec_RA = OBJECT_RA_M / 60 + OBJECT_RA_H;
+  double dec_RA = OBJECT_RA_M / 60.0 + OBJECT_RA_H;
 
   double HA_decimal = LST - dec_RA;
 
@@ -290,18 +290,16 @@ void selectOBJECT_M(int index_, int objects)
  }
 
 void Sidereal_rate() {
-  // when a manual movement of the drive happens. - This will avoid moving the stepepers with a wrong Step Mode.
+  // when a manual movement of the drive happens. - This will avoid moving the steppers with a wrong Step Mode.
   if ((IS_MANUAL_MOVE == false) && (IS_TRACKING) && (IS_STEPPERS_ON)) {
     if (RA_mode_steps != MICROSteps) {
       setmStepsMode("R", MICROSteps);
     }
     digitalWrite(RA_DIR, STP_BACK);
-    PIOC->PIO_SODR = (1u << 22);
+    PIOC->PIO_SODR = (1u << 22); // digitalWrite(RA_STP,HIGH);
     delayMicroseconds(2);
-    PIOC->PIO_CODR = (1u << 22);
-    //    digitalWrite(RA_STP,HIGH);
-    RA_microSteps += 1;
-    //    digitalWrite(RA_STP,LOW);
+    PIOC->PIO_CODR = (1u << 22); // digitalWrite(RA_STP,LOW);
+    RA_microSteps += 1; 
   }
 }
 
@@ -435,16 +433,21 @@ void cosiderSlewTo() {
   }
 
 
-  // RA_STP, HIGH - PIOC->PIO_SODR=(1u<<26)
-  // RA_STP, LOW - PIOC->PIO_CODR=(1u<<26)
+  // RA_STP, HIGH  - PIOC->PIO_SODR=(1u<<26)
+  // RA_STP, LOW   - PIOC->PIO_CODR=(1u<<26)
   // DEC_STP, HIGH - PIOC->PIO_SODR=(1u<<24)
   // DEC_STP, LOW - PIOC->PIO_CODR=(1u<<24)
 
-  if ((IS_OBJECT_RA_FOUND == false) && (RA_finish_last == 1)) {
-    if (SLEW_RA_microsteps >= (RA_microSteps - RA_mode_steps) && SLEW_RA_microsteps <= (RA_microSteps + RA_mode_steps)) {
+  if ((IS_OBJECT_RA_FOUND == false) && (RA_finish_last == 1))
+  {
+    if (SLEW_RA_microsteps >= (RA_microSteps - RA_mode_steps) && SLEW_RA_microsteps <= (RA_microSteps + RA_mode_steps))
+    {
       IS_OBJECT_RA_FOUND = true;
-    } else {
-      if (SLEW_RA_microsteps > RA_microSteps) {
+    }
+    else
+    {
+      if (SLEW_RA_microsteps > RA_microSteps)
+      {
         digitalWrite(RA_DIR, STP_BACK);
         //digitalWrite(RA_STP,HIGH);
         //digitalWrite(RA_STP,LOW);
@@ -452,7 +455,9 @@ void cosiderSlewTo() {
         delayMicroseconds(5);
         PIOC->PIO_CODR = (1u << 22);
         RA_microSteps += RA_mode_steps;
-      } else {
+      }
+      else
+      {
         digitalWrite(RA_DIR, STP_FWD);
         //digitalWrite(RA_STP,HIGH);
         //digitalWrite(RA_STP,LOW);
@@ -465,11 +470,16 @@ void cosiderSlewTo() {
   }
 
   // Taking care of the DEC Slew_To....
-  if (IS_OBJECT_DEC_FOUND == false) {
-    if (SLEW_DEC_microsteps >= (DEC_microSteps - DEC_mode_steps) && SLEW_DEC_microsteps <= (DEC_microSteps + DEC_mode_steps)) {
+  if (IS_OBJECT_DEC_FOUND == false)
+  {
+    if (SLEW_DEC_microsteps >= (DEC_microSteps - DEC_mode_steps) && SLEW_DEC_microsteps <= (DEC_microSteps + DEC_mode_steps))
+    {
       IS_OBJECT_DEC_FOUND = true;
-    } else {
-      if (SLEW_DEC_microsteps > DEC_microSteps) {
+    }
+    else
+    {
+      if (SLEW_DEC_microsteps > DEC_microSteps)
+      {
         digitalWrite(DEC_DIR, STP_BACK);
         //digitalWrite(DEC_STP,HIGH);
         //digitalWrite(DEC_STP,LOW);
@@ -477,7 +487,9 @@ void cosiderSlewTo() {
         delayMicroseconds(5);
         PIOC->PIO_CODR = (1u << 24);
         DEC_microSteps += DEC_mode_steps;
-      } else {
+      }
+      else
+      {
         digitalWrite(DEC_DIR, STP_FWD);
         //digitalWrite(DEC_STP,HIGH);
         //digitalWrite(DEC_STP,LOW);
@@ -519,83 +531,86 @@ void cosiderSlewTo() {
       drawConstelationScreen(SELECTED_STAR);
     }
   }
-
 }
 
-void consider_Manual_Move(int xP, int yP) {
-  if ((xP > 0) && (xP <= 150)) {
+void consider_Manual_Move(int xP, int yP)
+{
+  if ((xP > 0) && (xP <= 150))
+  {
     setmStepsMode("R", 1);
     digitalWrite(RA_DIR, STP_BACK);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps += RA_mode_steps;
-  } else if ((xP > 150) && (xP <= 320)) {
+  } else if ((xP > 150) && (xP <= 320))
+  {
     setmStepsMode("R", 4);
     digitalWrite(RA_DIR, STP_BACK);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps += RA_mode_steps;
   } else if ((xP > 320) && (xP <= 470)) {
     setmStepsMode("R", 8);
     digitalWrite(RA_DIR, STP_BACK);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps += RA_mode_steps;
   } else if ((xP > 620) && (xP <= 770)) {
     setmStepsMode("R", 8);
     digitalWrite(RA_DIR, STP_FWD);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps -= RA_mode_steps;
   } else if ((xP > 770) && (xP <= 870)) {
     setmStepsMode("R", 4);
     digitalWrite(RA_DIR, STP_FWD);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps -= RA_mode_steps;
   } else if ((xP > 870) && (xP <= 1023)) {
     setmStepsMode("R", 1);
     digitalWrite(RA_DIR, STP_FWD);
-    digitalWrite(RA_STP, HIGH);
-    digitalWrite(RA_STP, LOW);
+    PIOC->PIO_SODR=(1u<<22);  //digitalWrite(RA_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<22);  //digitalWrite(RA_STP, LOW);
     RA_microSteps -= RA_mode_steps;
   }
 
   if ((yP > 0) && (yP <= 150)) {
     setmStepsMode("D", 1);
     digitalWrite(DEC_DIR, STP_BACK);
-    digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     digitalWrite(DEC_STP, LOW);
     DEC_microSteps += DEC_mode_steps;
   } else if ((yP > 150) && (yP <= 320)) {
     setmStepsMode("D", 4);
     digitalWrite(DEC_DIR, STP_BACK);
-    digitalWrite(DEC_STP, HIGH);
-    digitalWrite(DEC_STP, LOW);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     DEC_microSteps += DEC_mode_steps;
   } else if ((yP > 320) && (yP <= 470)) {
     setmStepsMode("D", 8);
     digitalWrite(DEC_DIR, STP_BACK);
-    digitalWrite(DEC_STP, HIGH);
-    digitalWrite(DEC_STP, LOW);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     DEC_microSteps += DEC_mode_steps;
   } else if ((yP > 620) && (yP <= 770)) {
     setmStepsMode("D", 8);
     digitalWrite(DEC_DIR, STP_FWD);
-    digitalWrite(DEC_STP, HIGH);
-    digitalWrite(DEC_STP, LOW);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     DEC_microSteps -= DEC_mode_steps;
   } else if ((yP > 770) && (yP <= 870)) {
     setmStepsMode("D", 4);
     digitalWrite(DEC_DIR, STP_FWD);
-    digitalWrite(DEC_STP, HIGH);
-    digitalWrite(DEC_STP, LOW);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     DEC_microSteps -= DEC_mode_steps;
   } else if ((yP > 870) && (yP <= 1023)) {
     setmStepsMode("D", 1);
     digitalWrite(DEC_DIR, STP_FWD);
-    digitalWrite(DEC_STP, HIGH);
-    digitalWrite(DEC_STP, LOW);
+    PIOC->PIO_SODR=(1u<<24);  //digitalWrite(DEC_STP, HIGH);
+    PIOC->PIO_CODR=(1u<<24);  //digitalWrite(DEC_STP, LOW);
     DEC_microSteps -= DEC_mode_steps;
   }
   delayMicroseconds(1500);
@@ -621,30 +636,33 @@ void setmStepsMode(char* P, int mod) {
 
 
   // PINS Mapping for fast switching
-  // DEC_M2 - Pin 8 UP - PC22 - PIOC->PIO_SODR=(1u<<22);
-  // DEC_M1 - Pin 9 UP - PC21 -  PIOC->PIO_SODR=(1u<<21);
-  // DEC_M0 - Pin 10 UP - PC29 -  PIOC->PIO_SODR=(1u<<29);
-  // RA_M0 - Pin 11 UP - PD7 -  PIOD->PIO_SODR=(1u<<7);
-  // RA_M1 - Pin 12 UP - PD8 -  PIOD->PIO_SODR=(1u<<8);
-  // RA_M2 - Pin 13 UP - PB27 -  PIOB->PIO_SODR=(1u<<27);
-  // DEC_M2 - Pin 8 DOWN - PC22 - PIOC->PIO_CODR=(1u<<22);
-  // DEC_M1 - Pin 9 DOWN - PC21 -  PIOC->PIO_CODR=(1u<<21);
-  // DEC_M0 - Pin 10 DOWN - PC29 -  PIOC->PIO_CODR=(1u<<29);
-  // RA_M0 - Pin 11 DOWN - PD7 -  PIOD->PIO_CODR=(1u<<7);
-  // RA_M1 - Pin 12 DOWN - PD8 -  PIOD->PIO_CODR=(1u<<8);
-  // RA_M2 - Pin 13 DOWN - PB27 -  PIOB->PIO_CODR=(1u<<27);
+  // DEC_M2 - Pin 22 UP   - PC22 - PIOB->PIO_SODR=(1u<<26);
+  // DEC_M1 - Pin 9  UP   - PC21 - PIOC->PIO_SODR=(1u<<21);
+  // DEC_M0 - Pin 10 UP   - PC29 - PIOC->PIO_SODR=(1u<<29);
+  // RA_M0  - Pin 11 UP   - PD7  - PIOD->PIO_SODR=(1u<<7);
+  // RA_M1  - Pin 12 UP   - PD8  - PIOD->PIO_SODR=(1u<<8);
+  // RA_M2  - Pin 23 UP   - PB27 - PIOA->PIO_SODR=(1u<<14);
+  // DEC_M2 - Pin 22 DOWN - PC22 - PIOB->PIO_CODR=(1u<<26);
+  // DEC_M1 - Pin 9  DOWN - PC21 - PIOC->PIO_CODR=(1u<<21);
+  // DEC_M0 - Pin 10 DOWN - PC29 - PIOC->PIO_CODR=(1u<<29);
+  // RA_M0  - Pin 11 DOWN - PD7  - PIOD->PIO_CODR=(1u<<7);
+  // RA_M1  - Pin 12 DOWN - PD8  - PIOD->PIO_CODR=(1u<<8);
+  // RA_M2  - Pin 23 DOWN - PB27 - PIOA->PIO_CODR=(1u<<14);
   //
   // PIOC->PIO_SODR=(1u<<25); // Set Pin High
   // PIOC->PIO_CODR=(1u<<25); // Set Pin Low
 
-  if (P == "R") { // Set RA modes
-    if (mod == 1) {                     // Full Step
+  if (P == "R")
+  {
+    // Set RA modes
+    if (mod == 1)
+    {                     // Full Step
       //digitalWrite(RA_MODE0, LOW);
       //digitalWrite(RA_MODE1, LOW);
       //digitalWrite(RA_MODE2, LOW);
       PIOD->PIO_CODR = (1u << 7);
       PIOD->PIO_CODR = (1u << 8);
-      PIOB->PIO_CODR = (1u << 27);
+      PIOA->PIO_CODR = (1u << 14);
     }
     if (mod == 2) {                     // 1/2 Step
       //digitalWrite(RA_MODE0, HIGH);
@@ -652,7 +670,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(RA_MODE2, LOW);
       PIOD->PIO_SODR = (1u << 7);
       PIOD->PIO_CODR = (1u << 8);
-      PIOB->PIO_CODR = (1u << 27);
+      PIOA->PIO_CODR = (1u << 14);
     }
     if (mod == 4) {                     // 1/4 Step
       //digitalWrite(RA_MODE0, LOW);
@@ -660,7 +678,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(RA_MODE2, LOW);
       PIOD->PIO_CODR = (1u << 7);
       PIOD->PIO_SODR = (1u << 8);
-      PIOB->PIO_CODR = (1u << 27);
+      PIOA->PIO_CODR = (1u << 14);
     }
     if (mod == 8) {                     // 1/8 Step
       //digitalWrite(RA_MODE0, HIGH);
@@ -668,7 +686,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(RA_MODE2, LOW);
       PIOD->PIO_SODR = (1u << 7);
       PIOD->PIO_SODR = (1u << 8);
-      PIOB->PIO_CODR = (1u << 27);
+      PIOA->PIO_CODR = (1u << 14);
     }
     if (mod == 16) {                     // 1/16 Step
       //digitalWrite(RA_MODE0, LOW);
@@ -695,7 +713,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(DEC_MODE2, LOW);
       PIOC->PIO_CODR = (1u << 29);
       PIOC->PIO_CODR = (1u << 21);
-      PIOC->PIO_CODR = (1u << 22);
+      PIOB->PIO_CODR = (1u << 26);
     }
     if (mod == 2) {                     // 1/2 Step
       //digitalWrite(DEC_MODE0, HIGH);
@@ -703,7 +721,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(DEC_MODE2, LOW);
       PIOC->PIO_SODR = (1u << 29);
       PIOC->PIO_CODR = (1u << 21);
-      PIOC->PIO_CODR = (1u << 22);
+      PIOB->PIO_CODR = (1u << 26);
     }
     if (mod == 4) {                     // 1/4 Step
       //digitalWrite(DEC_MODE0, LOW);
@@ -711,7 +729,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(DEC_MODE2, LOW);
       PIOC->PIO_CODR = (1u << 29);
       PIOC->PIO_SODR = (1u << 21);
-      PIOC->PIO_CODR = (1u << 22);
+      PIOB->PIO_CODR = (1u << 26);
     }
     if (mod == 8) {                     // 1/8 Step
       //digitalWrite(DEC_MODE0, HIGH);
@@ -719,7 +737,7 @@ void setmStepsMode(char* P, int mod) {
       //digitalWrite(DEC_MODE2, LOW);
       PIOC->PIO_SODR = (1u << 29);
       PIOC->PIO_SODR = (1u << 21);
-      PIOC->PIO_CODR = (1u << 22);
+      PIOB->PIO_CODR = (1u << 26);
     }
     if (mod == 16) {                     // 1/16 Step
       //digitalWrite(DEC_MODE0, LOW);
@@ -915,6 +933,8 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
     #ifdef serial_debug
       Serial.print("BMP file found.\nImage offset: ");
       Serial.println(read32(bmpFile), HEX);
+    #else
+      read32(bmpFile); //dummy read
     #endif
     (void)read32(bmpFile); // Read & ignore creator bytes
     bmpImageoffset = read32(bmpFile); // Start of image data
@@ -923,6 +943,8 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
     #ifdef serial_debug
       Serial.print("Image DIB header: ");
       Serial.println(read32(bmpFile), HEX);
+    #else
+      read32(bmpFile);  //dummy read
     #endif
     bmpWidth  = read32(bmpFile);
     bmpHeight = read32(bmpFile);
@@ -964,7 +986,8 @@ void bmpDraw(char *filename, uint8_t x, uint16_t y) {
             pos = bmpImageoffset + (bmpHeight - 1 - row) * rowSize;
           else     // Bitmap is stored top-to-bottom
             pos = bmpImageoffset + row * rowSize;
-          if (bmpFile.position() != pos) { // Need seek?
+          if (bmpFile.position() != pos)
+          { // Need seek?
             bmpFile.seek(pos);
             buffidx = sizeof(sdbuffer); // Force buffer reload
           }
@@ -1104,6 +1127,7 @@ void calibrateJoypad(int *x_cal, int *y_cal)
       tft.print(".. ");
       prev_t = millis();
     }
+    analogReadResolution(10);
     *x_cal = (*x_cal + analogRead(A0)) / 2;
     *y_cal = (*y_cal + analogRead(A1)) / 2;
   }
@@ -1542,4 +1566,87 @@ double JulianDay (int j_date, int j_month, int j_year, double UT)
 {
   if (j_month<=2) {j_month = j_month+12; j_year = j_year-1;}
   return (int)(365.25*j_year) + (int)(30.6001*(j_month+1)) - 15 + 1720996.5 + j_date + UT/24.0;
+}
+
+void drawBatteryLevel(int x, int y, int level)
+{
+  tft.drawRect(x,    y,   23, 12, ILI9488_BLACK);
+  tft.drawRect(x+22, y+3,  3,  6, ILI9488_BLACK);
+
+  tft.fillRect2(x+1, y+1, 20, 10, title_bg); //sfondo batteria vuota
+  
+  if (level == -1)  //USB as power supply
+  {
+    tft.setCursor(x+3, y+3);
+    tft.setTextSize(1);
+    tft.setTextColor(btn_d_text);
+    tft.print("USB");
+  }
+  else if(level > 20)  tft.fillRect2(x+2, y+2, round((double)level/5)-1, 8, ILI9488_BLACK);
+  else
+    if(IS_NIGHTMODE)  tft.fillRect2(x+2, y+2, round((double)level/5)-1, 8, btn_d_text);
+    else              tft.fillRect2(x+2, y+2, round((double)level/5), 8, ILI9488_RED);
+}
+
+int calculateBatteryLevel()
+{
+  int voltageLevel = 0;
+  int pmin = -1;
+  
+  #ifdef use_battery_level
+    analogReadResolution(12);
+    voltageLevel = analogRead(A2);
+    voltageLevel += 270;  //To compensate OPAMP OFFSET
+    analogReadResolution(10);
+  
+    double a = 3350;
+    double b = 0.001042;
+    double c = -271.6;
+    double d = -0.129;
+    
+    double minim = 100;
+    
+    for(int p=100; p>0; p--)
+    {
+        double vq = a*exp(b*p)+c*exp(d*p); //From SLA curve fitting.. Vedi file di Numbers
+
+        int val = abs(vq-voltageLevel);
+        
+        if(val < 15)  break;
+        else if(val < minim)
+        {
+            minim = val;
+            pmin = p;
+        }
+    }
+
+    #ifdef serial_debug
+      Serial.print("batteryLevel = ");
+      Serial.print(pmin);
+      Serial.println(" %");
+    #endif
+  #endif
+  /*
+  double voltageLevel = 0;
+  #ifdef use_battery_level
+    analogReadResolution(12);
+    voltageLevel = analogRead(A2);
+    #ifdef serial_debug
+      Serial.print("voltageLevel = ");
+      Serial.println(voltageLevel);
+    #endif
+    //voltageLevel *= 0.0243956;
+    voltageLevel = (voltageLevel * 0.07326007326 - 200);
+    #ifdef serial_debug
+      Serial.print("voltageLevel1 = ");
+      Serial.println(voltageLevel);
+    #endif
+    if(voltageLevel > 100)      voltageLevel = 100;
+    else if (voltageLevel < 0)
+    {
+      //I'm using USB to power device
+      voltageLevel = -1;
+    }
+  #endif*/
+  return pmin;
 }
