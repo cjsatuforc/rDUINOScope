@@ -1551,17 +1551,6 @@ double fnatan(double x,double y)
     return a;
 }
 
-void earth()
-{
-  M[3]=((n[3]*rads)*(d))+(L[3]-pl[3])*rads;
-  M[3]=frange(M[3]);
-  v[3]=fkep(M[3],e[3]);
-  r[3]=a[3]*((1 - (pow(e[3],2)))/(1+ (e[3]*cos(v[3]))));
-  x[3]=r[3]*cos(v[3]+pl[3]*rads);
-  y[3]=r[3]*sin(v[3]+pl[3]*rads);
-  z[3]=0;
-}
-
 double JulianDay (int j_date, int j_month, int j_year, double UT)
 {
   if (j_month<=2) {j_month = j_month+12; j_year = j_year-1;}
@@ -1596,23 +1585,33 @@ int calculateBatteryLevel()
   #ifdef use_battery_level
     analogReadResolution(12);
     voltageLevel = analogRead(A2);
-    voltageLevel += 270;  //To compensate OPAMP OFFSET
+    voltageLevel += 270;  //To compensate OPAMP OFFSET (do I need to use an automatic routine??)
     analogReadResolution(10);
-  
+
+    /*
+     * Since SLA batteries have very non linear voltage to capacity response I'm approximating the function that describes the discharge of
+     * such batteries. To do so I have:
+     * 1 - Measured battery voltages on known capacities.
+     * 2 - Collected data on a table.
+     * 3 - Find the best curve function that fit those data: V = a*exp(b*x)+c*exp(d*x), x is the left-charge percentage.
+     * 4 - Solve the equation to find the value x that gives me the battery voltage V. I have percentage p = x.
+     */
+
+    // Data from SLA curve fitting.. Vedi file di Numbers: battery_calc.numbers
     double a = 3350;
     double b = 0.001042;
     double c = -271.6;
     double d = -0.129;
     
     double minim = 100;
-    
+
+    // This is a very simple way to solve the following equation: a*exp(b*x)+c*exp(d*x) since it can't be solved analitically.
+    // Since I will probably have a fully charged battery most of the times I start solving the equations from 100% battery level.
     for(int p=100; p>0; p--)
     {
-        double vq = a*exp(b*p)+c*exp(d*p); //From SLA curve fitting.. Vedi file di Numbers
-
-        int val = abs(vq-voltageLevel);
-        
-        if(val < 15)  break;
+        double vq = a*exp(b*p)+c*exp(d*p);
+        int val = abs(vq-voltageLevel);     
+        if(val < 15)  break;  // Is 15 a good threshold? Decrese to increase accuracy (may fail?)
         else if(val < minim)
         {
             minim = val;
