@@ -45,6 +45,7 @@ int dd,mm,yy,hh,mu;
 const double rads = (M_PI/180.0);
 const double degs = 180.0/(M_PI);
 
+//Don't alter or you're screwed!!
 const volatile double tab[13][6] =
 {
     {0, 0,  1, 0, 6288774, -20905355},
