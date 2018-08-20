@@ -1,3 +1,12 @@
+/*
+ * There is some mess with the reference day when calculating coordinates.
+ * I'm using Julius Day for planets and J2000 reference frame for Moon.
+ * I will certainly unify the reference day in the future to save space (~33% used) and speed up the calculations.
+ * Planets calculations are nicely refined and I can get very small errors. Moon's calculation are going to get more and more errors by time.
+ * In the future I will switch to a different alghoritm for Moon's positioning.
+ * 
+ * For help or suggesions -> e-mail: giacomo.mammarella@student.univaq.it
+ */
 
 void planet_pos(int pno)
 {
@@ -9,7 +18,6 @@ void planet_pos(int pno)
   mm = minute();
 
   OBJECT_NAME = ss_planet_names[pno];
-  
 
   #ifdef serial_debug
     Serial.print("pno = ");
@@ -30,8 +38,9 @@ void planet_pos(int pno)
     Serial.println(d);
   #endif
 
-  earth();
-  
+  earth();  //Calculates the position of the Earth in the coordinate system used
+
+  //Since Earth coordinates have been already calculated I need to calculate some parameter for the requested planet.
   if(pno!=3 && pno!=10)
   {
     TRACKING_MOON = false;
@@ -57,7 +66,7 @@ void planet_pos(int pno)
     OBJ_RA  = FNdegmin((ra[pno]*degs)/15);
     OBJ_DEC = FNdegmin(dec[pno]*degs);
     
-    bool flag = false;
+    bool flag = false;  //I'm using this flag to invert the value of the OBJ_DEC if needed
 
     OBJECT_RA_H = floor(OBJ_RA);
     OBJECT_RA_M = (OBJ_RA-OBJECT_RA_H)*100;
@@ -69,16 +78,15 @@ void planet_pos(int pno)
     }
 
     OBJECT_DEC_D = floor(OBJ_DEC);
-    //OBJECT_DEC_M = map((OBJ_DEC-OBJECT_DEC_D)*100, 0, 100, 0, 60);
     OBJECT_DEC_M = (OBJ_DEC-OBJECT_DEC_D)*100;
 
     if(flag)
     {
       OBJECT_DEC_D *= -1;
-      //OBJECT_DEC_M *= -1;
       flag = false;
     }
 
+    //Some object details can be added in this code. Remember that pno is the number of the planet starting from 0 (Sun) to 9 (Pluto) with 10 (Moon)
     if(pno == 0)
       OBJECT_DETAILS = "The Sun is the star at the center of the Solar System";
     else
@@ -100,6 +108,7 @@ void planet_pos(int pno)
       Serial.println(" coordinates: ");
     #endif
   }
+  //If I selected Moon different calculations need to be done
   else if (pno == 10)
   {
     // CALCOLI PER LA LUNA
@@ -220,7 +229,7 @@ void planet_pos(int pno)
     #endif
 
     double alpha = atan2(sin(lambda*rads)*cos(ec*rads) - tan(beta*rads)*sin(ec*rads), cos(lambda*rads))*degs;
-    double delta = asin((sin(beta*rads)*cos(ec*rads)+cos(beta*rads)*sin(ec*rads)*sin(lambda*rads)))*degs;
+    double delta = asin((sin(beta*rads)  *cos(ec*rads) + cos(beta*rads)*sin(ec*rads)*sin(lambda*rads)))*degs;
 
     #ifdef serial_debug
       Serial.print("alpha = ");
@@ -241,7 +250,7 @@ void planet_pos(int pno)
       Serial.println(sin(lambda*rads));
     #endif
     
-    alpha /= 15;
+    alpha /= 15;  //to convert to degs
     
     OBJECT_RA_H = floor(alpha);
     OBJECT_RA_M = (alpha-floor(alpha))*60;
@@ -253,7 +262,7 @@ void planet_pos(int pno)
     OBJECT_DEC_M = (abs(delta)-abs(OBJECT_DEC_D))*6;
     OBJ_DEC = mult*(abs(OBJECT_DEC_D)+OBJECT_DEC_M/100);
 
-    //ILLUMINATED FRACTION OF MOON
+    //Calculation of the ILLUMINATED FRACTION OF MOON
     double i = 180 - D - 6.280 * sin(Mm*rads)
                        + 2.100 * sin(Ms*rads)
                        - 1.274 * sin((2*D-Mm)*rads)
@@ -274,7 +283,7 @@ void planet_pos(int pno)
     #endif
   }
 
-    OBJECT_DESCR = "";
+    OBJECT_DESCR = "";  //Still not using OBJECT_DESCR for Solar System planets. May be used in some way?
 
     #ifdef serial_debug
       Serial.print("OBJ_RA = ");
@@ -282,18 +291,15 @@ void planet_pos(int pno)
       Serial.print("OBJ_DEC = ");
       Serial.println(OBJ_DEC);
     #endif
-    /*
-    #ifdef serial_debug
-      Serial.print("OBJECT_RA_H = ");
-      Serial.println(OBJECT_RA_H);
-      Serial.print("OBJECT_RA_M = ");
-      Serial.println(OBJECT_RA_M);
+}
 
-      
-      Serial.print("OBJECT_DEC_D = ");
-      Serial.println(OBJECT_DEC_D);
-      Serial.print("OBJECT_DEC_M = ");
-      Serial.println(OBJECT_DEC_M);
-    #endif
-    */
+void earth()
+{
+  M[3]=((n[3]*rads)*(d))+(L[3]-pl[3])*rads;
+  M[3]=frange(M[3]);
+  v[3]=fkep(M[3],e[3]);
+  r[3]=a[3]*((1 - (pow(e[3],2)))/(1+ (e[3]*cos(v[3]))));
+  x[3]=r[3]*cos(v[3]+pl[3]*rads);
+  y[3]=r[3]*sin(v[3]+pl[3]*rads);
+  z[3]=0;
 }
