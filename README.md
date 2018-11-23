@@ -18,6 +18,7 @@ ILI9488 display alone: [https://www.buydisplay.com/default/serial-spi-3-5-inch-t
 -  Added pictures of all objects when tracking.
 
 ![Board](http://i63.tinypic.com/fxs58l.jpg)
+![Board2](https://image.ibb.co/d4uxvV/Be-Funky-collage2.jpg)
 
 New features in development:
 ===========================================================
